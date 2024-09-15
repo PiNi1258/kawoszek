@@ -237,14 +237,14 @@ function showReports() {
 // Funkcja do rysowania wykresów
 function updateCharts() {
 
-    let coffeeHistory = JSON.parse(getCookie('coffeeHistory') || '{}');
-    let waterHistory = JSON.parse(getCookie('waterHistory') || '{}');
-    let supplementStatus = JSON.parse(getCookie('supplementStatus') || '{}');
+    const coffeeHistory = JSON.parse(getCookie('coffeeHistory') || '{}');
+    const waterHistory = JSON.parse(getCookie('waterHistory') || '{}');
+    const supplementStatus = JSON.parse(getCookie('supplementStatus') || '{}');
 
     // Sprawdzanie, czy kontekst jest dostępny
-    let ctxCoffee = document.getElementById('coffeeChart')?.getContext('2d');
-    let ctxWater = document.getElementById('waterChart')?.getContext('2d');
-    let ctxSupplement = document.getElementById('supplementChart')?.getContext('2d');
+    const ctxCoffee = document.getElementById('coffeeChart')?.getContext('2d');
+    const ctxWater = document.getElementById('waterChart')?.getContext('2d');
+    const ctxSupplement = document.getElementById('supplementChart')?.getContext('2d');
 
     if (ctxCoffee) {
         new Chart(ctxCoffee, {
