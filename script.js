@@ -360,6 +360,8 @@ function init() {
     updateCoffeeHistory();
     updateWaterHistory();
     updateSupplementHistory();
+
+    setDefaultDate()
 }
 
 // Wywołanie funkcji inicjalizującej przy załadowaniu strony
