@@ -83,6 +83,25 @@
         </section>
 
         <section class="section">
+            <h2>Hiszpański</h2>
+            <div id="spanishSection">
+                <p id="spanishStatusResult">Czy zażyłeś suplementy dzisiaj?</p>
+                <button id="didSpanishYes" onclick="didSpanish('TAK')" aria-label="Zaznacz, olejowałaś">TAK</button>
+                <button id="didSpanishNo" onclick="didSpanish('NIE')" aria-label="Zaznacz, że nie olejowałaś">NIE</button>
+            </div>
+            <table id="spanishHistoryTable">
+                <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Hiszpański (5 słówek)</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section">
             <h2>Kawa</h2>
             <button onclick="addCoffee()" aria-label="Dodaj kawę">Dodaj kawę</button>
             <div class="results" id="coffeeResult">Liczba wypitych kaw: 0</div>
