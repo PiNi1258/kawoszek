@@ -1,79 +1,73 @@
-/* Resetowanie domyślnych stylów dla lepszej spójności */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Styl dla całego dokumentu */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f7f9fc;
-    color: #333;
-    line-height: 1.6;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 0;
     text-align: center;
-    padding: 20px;
 }
 
 /* Styl kontenera głównego */
 .container {
     max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
+    margin: 10px ;
+    padding: 10px;
     background-color: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
 }
 
 /* Styl dla nagłówków */
 h1 {
     color: #333;
     margin-bottom: 20px;
-    font-size: 2rem;
 }
 
 /* Styl dla kontenera nawigacji */
 .nav {
     display: flex;
-    justify-content: center; /* Wyśrodkowanie linków */
-    flex-wrap: wrap; /* Umożliwia zawijanie linków na mniejszych ekranach */
-    margin-bottom: 20px;
+    justify-content: space-around; /* Rozciąga linki na całą szerokość */
+    margin: 1px;
+    padding: 1px;
+    list-style: none;
 }
 
 /* Styl dla linków nawigacyjnych */
 .nav-link {
+    display: inline-block;
     padding: 10px 20px;
     text-decoration: none;
     color: #007bff;
-    font-weight: 600;
-    font-size: 1rem;
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin: 5px;
+    font-weight: normal;
+    font-size: 18px;
+    background: #f8f9fa; /* Tło zakładki */
+    border: 1px solid #ddd; /* Obramowanie zakładki */
+    border-radius: 5px; /* Zaokrąglenie górnych rogów */
+    position: relative;
     transition: background 0.3s, color 0.3s;
-    flex: 1 1 auto; /* Rozciąga linki, ale umożliwia zawijanie */
-    text-align: center;
+    flex: 1; /* Sprawia, że linki rozciągają się równomiernie */
+    text-align: center; /* Wyśrodkowanie tekstu */
 }
 
 /* Styl dla aktywnej zakładki */
 .nav-link.active {
-    font-weight: 700;
-    color: #ffffff;
-    background: #007bff;
-    border-bottom: 1px solid #007bff;
+    font-weight: bold;
+    color: #fff;
+    background: #007bff; /* Kolor tła aktywnej zakładki */
+    border-bottom: 1px solid #007bff; /* Dolna granica aktywnej zakładki */
 }
 
 /* Efekt podświetlenia dla nawigacyjnych zakładek */
 .nav-link:hover {
-    background: #e9ecef;
-    color: #0056b3;
+    background: #e9ecef; /* Tło najechania */
+    color: #0056b3; /* Kolor tekstu najechania */
 }
 
 /* Styl dla przycisków */
 button {
     padding: 12px 24px;
-    font-size: 1rem;
+    font-size: 16px;
     background-color: #007bff;
     color: #ffffff;
     border: none;
@@ -90,7 +84,7 @@ button:hover {
 /* Styl dla sekcji z wynikami */
 .results {
     margin-top: 20px;
-    font-size: 1.2rem;
+    font-size: 20px;
     color: #333;
 }
 
@@ -112,14 +106,13 @@ th, td {
 
 th {
     background-color: #f8f9fa;
-    font-weight: 700;
 }
 
 /* Styl dla linków resetowania */
 .reset-link {
     display: block;
     margin-top: 20px;
-    font-size: 1rem;
+    font-size: 16px;
     color: #dc3545;
     text-decoration: none;
 }
@@ -133,36 +126,42 @@ th {
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* Zmniejszenie marginesu dolnego dla lepszej spójności */
+    max-width: 100%; /* Ustawienie maksymalnej szerokości sekcji */
+    box-sizing: border-box; /* Zapewnia, że padding i border są uwzględnione w szerokości */
+    position: relative; /* Umożliwia ewentualne pozycjonowanie względne elementów wewnętrznych */
 }
 
 /* Styl dla nagłówków w sekcji */
 .section h2 {
     color: #333;
-    margin-bottom: 20px;
-    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 20px; /* Większa przestrzeń poniżej nagłówka */
+    font-size: 24px;
 }
 
 /* Styl dla paragrafów w sekcji */
 .section p {
     color: #555;
-    margin-bottom: 15px;
+    line-height: 1.6; /* Zwiększenie interlinii dla lepszej czytelności */
+    margin-bottom: 15px; /* Odstęp między paragrafami */
 }
 
 /* Styl dla formularzy w sekcji */
 .section form {
-    margin-top: 20px;
+    margin-top: 20px; /* Przestrzeń nad formularzem */
 }
 
 .section input {
-    width: calc(100% - 22px); /* Uwzględnia padding */
-    margin-bottom: 15px;
+    margin-bottom: 15px; /* Przestrzeń między polami formularza */
     padding: 10px;
-    font-size: 1rem;
+    font-size: 16px;
     border: 1px solid #ced4da;
     border-radius: 8px;
+    box-sizing: border-box;
 }
 
 .section button {
@@ -180,7 +179,12 @@ th {
 
 /* Styl dla zakładki raportów */
 #reportsPage {
-    display: none;
+    display: none; /* Początkowo ukryte */
+}
+
+.section h3 {
+    margin-bottom: 10px;
+    font-size: 20px;
 }
 
 /* Styl dla wykresów */

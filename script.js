@@ -165,11 +165,9 @@ function updateWaterHistory() {
 function takeSupplement(status) {
     supplementStatus[today] = status;
     setCookie('supplementStatus', JSON.stringify(supplementStatus), 7);
+
     updateSupplementResult();
     updateSupplementHistory();
-
-    can
-    drawCharts();
 }
 
 // Funkcja do aktualizacji wyświetlanej informacji o suplementach
@@ -207,6 +205,7 @@ function showHome() {
     document.getElementById('homePage').style.display = 'block';
     document.getElementById('editPage').style.display = 'none';
     document.getElementById('reportsPage').style.display = 'none';
+
     document.getElementById('homeLink').classList.add('active');
     document.getElementById('editLink').classList.remove('active');
     document.getElementById('reportsLink').classList.remove('active');
@@ -217,6 +216,7 @@ function showEdit() {
     document.getElementById('homePage').style.display = 'none';
     document.getElementById('reportsPage').style.display = 'none';
     document.getElementById('editPage').style.display = 'block';
+
     document.getElementById('homeLink').classList.remove('active');
     document.getElementById('reportsLink').classList.remove('active');
     document.getElementById('editLink').classList.add('active');
@@ -227,6 +227,7 @@ function showReports() {
     document.getElementById('homePage').style.display = 'none';
     document.getElementById('editPage').style.display = 'none';
     document.getElementById('reportsPage').style.display = 'block';
+
     document.getElementById('homeLink').classList.remove('active');
     document.getElementById('editLink').classList.remove('active');
     document.getElementById('reportsLink').classList.add('active');
