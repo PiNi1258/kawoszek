@@ -32,6 +32,7 @@ let coffeeHistory = JSON.parse(getCookie('coffeeHistory')) || {};
 let waterCount = parseFloat(getCookie('waterCount') || 0);
 let waterHistory = JSON.parse(getCookie('waterHistory')) || {};
 let supplementStatus = JSON.parse(getCookie('supplementStatus')) || {};
+let oilStatus = JSON.parse(getCookie('oilStatus')) || {};
 const today = new Date().toISOString().split('T')[0]; // Data w formacie YYYY-MM-DD
 let coffeeChart = null;
 let waterChart = null;
@@ -199,6 +200,45 @@ function resetSupplementHistory() {
 
     updateSupplementHistory();
     updateSupplementResult();
+}
+
+// Funkcja do zaznaczenia, czy zażyłeś suplementy
+function didOil(status) {
+    oilStatus[today] = status;
+    setCookie('oilStatus', JSON.stringify(oilStatus), 7);
+
+    updateOilStatusResult();
+    updateOilStatusHistory();
+}
+
+// Funkcja do aktualizacji wyświetlanej informacji o suplementach
+function updateOilResult() {
+    const status = oilStatus[today] || 'Brak danych';
+    document.getElementById('oilStatusResult').innerHTML = `Czy olejowałaś dzisiaj? <b>${status}</b>`;
+}
+
+// Funkcja do aktualizacji tabeli historycznej suplementów
+function updateOilHistory() {
+    const tbody = document.getElementById('oilHistoryTable').getElementsByTagName('tbody')[0];
+    tbody.innerHTML = ''; // Wyczyść tabelę przed dodaniem nowych danych
+
+    for (const [date, status] of Object.entries(oilStatus)) {
+        const row = tbody.insertRow();
+        const cellDate = row.insertCell(0);
+        const cellStatus = row.insertCell(1);
+
+        cellDate.textContent = date;
+        cellStatus.textContent = status;
+    }
+}
+
+// Funkcja do resetowania historii suplementów
+function resetOilHistory() {
+    oilStatus = {}; // Wyczyszczenie historii suplementów
+    setCookie('oilStatus', JSON.stringify(oilStatus), 7); // Zapisz w ciasteczkach
+
+    updateOilHistory();
+    updateOilResult();
 }
 
 // Funkcja do pokazania strony głównej
