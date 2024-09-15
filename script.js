@@ -316,10 +316,15 @@ function updateCharts() {
     const coffeeHistory = JSON.parse(getCookie('coffeeHistory') || '{}');
     const waterHistory = JSON.parse(getCookie('waterHistory') || '{}');
     const supplementHistory = JSON.parse(getCookie('supplementStatus') || '{}');
+    const oilHistory = JSON.parse(getCookie('oilStatus') || '{}');
+    const spanishHistory = JSON.parse(getCookie('spanishStatus') || '{}');
+
 
     const ctxCoffee = document.getElementById('coffeeChart').getContext('2d');
     const ctxWater = document.getElementById('waterChart').getContext('2d');
     const ctxSupplement = document.getElementById('supplementChart').getContext('2d');
+    const ctxOil = document.getElementById('oilChart').getContext('2d');
+    const ctxSpanish = document.getElementById('spanishChart').getContext('2d');
 
     // Sprawdzenie i zniszczenie poprzednich wykresów
     if (coffeeChart) {
@@ -330,6 +335,12 @@ function updateCharts() {
     }
     if (supplementChart) {
         supplementChart.destroy();
+    }
+    if (oilChart) {
+        oilChart.destroy();
+    }
+    if (spanishChart) {
+        spanishChart.destroy();
     }
 
     // Tworzenie nowych wykresów
@@ -395,13 +406,33 @@ function updateCharts() {
             }
         }
     });
-     supplementChart = new Chart(ctxSupplement, {
+    oilChart = new Chart(ctxOil, {
         type: 'bar',
         data: {
             labels: Object.keys(oilHistory),
             datasets: [{
                 label: 'Olejowanie',
                 data: Object.keys(oilHistory).map(date => oilHistory[date] === 'TAK' ? 1 : 0),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+     spanishChart = new Chart(ctxSpanish, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(spanishHistory),
+            datasets: [{
+                label: 'Hiszpański',
+                data: Object.keys(spanishHistory).map(date => spanishHistory[date] === 'TAK' ? 1 : 0),
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1
