@@ -252,6 +252,7 @@ input:focus {
     font-size: 16px;
     color: #f8f9fa; /* Light text color */
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Slight shadow above the footer */
+    border-radius: 12px 12px 0px 0px;
 }
 
 .footer a {
