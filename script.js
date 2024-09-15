@@ -132,12 +132,12 @@ function updateWaterCount() {
 
 // Funkcja do aktualizacji wyświetlanej liczby kawy
 function updateCoffeeResult() {
-    document.getElementById('coffeeResult').textContent = `Liczba wypitych kaw: ${coffeeCount}`;
+    document.getElementById('coffeeResult').textContent = `Liczba wypitych kaw: <b>${coffeeCount}</b>`;
 }
 
 // Funkcja do aktualizacji wyświetlanej liczby wody
 function updateWaterResult() {
-    document.getElementById('waterResult').textContent = `Liczba wypitych litrów wody: ${parseFloat(waterCount).toFixed(2)}`;
+    document.getElementById('waterResult').textContent = `Liczba wypitych litrów wody: <b>${parseFloat(waterCount).toFixed(2)}</b>`;
 }
 
 // Funkcja do aktualizacji tabeli historycznej kaw
@@ -182,7 +182,7 @@ function takeSupplement(status) {
 // Funkcja do aktualizacji wyświetlanej informacji o suplementach
 function updateSupplementResult() {
     const status = supplementStatus[today] || 'Brak danych';
-    document.getElementById('supplementResult').textContent = `Czy zażyłeś suplementy dzisiaj? ${status}`;
+    document.getElementById('supplementResult').innerHTML = `Czy zażyłeś suplementy dzisiaj? <b>${status}</b>`;
 }
 
 // Funkcja do aktualizacji tabeli historycznej suplementów
