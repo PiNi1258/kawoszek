@@ -207,8 +207,8 @@ function didOil(status) {
     oilStatus[today] = status;
     setCookie('oilStatus', JSON.stringify(oilStatus), 7);
 
-    updateOilStatusResult();
-    updateOilStatusHistory();
+    updateOilResult();
+    updateOilHistory();
 }
 
 // Funkcja do aktualizacji wyświetlanej informacji o suplementach
