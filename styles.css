@@ -33,6 +33,7 @@ h1 {
 /* Navigation */
 .nav {
     display: flex;
+    flex-direction: row; /* Default flex direction for wider screens */
     justify-content: space-around;
     margin: 0;
     padding: 0;
@@ -59,13 +60,29 @@ h1 {
     font-weight: bold;
     color: #fff;
     background: #007bff;
-    border-bottom: 1px solid #007bff;
+    border-bottom: 10px solid #007bff;
 }
 
 .nav-link:hover {
     background: #e9ecef;
     color: #0056b3;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .nav {
+        flex-direction: column; /* Stack navigation links vertically on small screens */
+    }
+
+    .nav-link {
+        padding: 15px;
+        font-size: 16px;
+        margin-bottom: 5px; /* Add space between links */
+    }
+
+    .nav-link.active {
+        border-bottom: none; /* Remove bottom border when active on small screens */
+    }
 }
 
 /* Buttons */
