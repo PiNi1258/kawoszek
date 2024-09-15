@@ -230,11 +230,13 @@ function showReports() {
     document.getElementById('reportsPage').style.display = 'block';
 
     setActiveLink('reportsLink');
+
     updateCharts(); // Rysowanie wykresów po przejściu na stronę raportów
 }
 
 // Funkcja do rysowania wykresów
 function updateCharts() {
+
     let coffeeHistory = JSON.parse(getCookie('coffeeHistory') || '{}');
     let waterHistory = JSON.parse(getCookie('waterHistory') || '{}');
     let supplementStatus = JSON.parse(getCookie('supplementStatus') || '{}');
