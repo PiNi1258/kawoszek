@@ -33,6 +33,8 @@ let waterCount = parseFloat(getCookie('waterCount') || 0);
 let waterHistory = JSON.parse(getCookie('waterHistory')) || {};
 let supplementStatus = JSON.parse(getCookie('supplementStatus')) || {};
 let oilStatus = JSON.parse(getCookie('oilStatus')) || {};
+let spanishStatus = JSON.parse(getCookie('spanishStatus')) || {};
+
 const today = new Date().toISOString().split('T')[0]; // Data w formacie YYYY-MM-DD
 let coffeeChart = null;
 let waterChart = null;
@@ -393,6 +395,26 @@ function updateCharts() {
             }
         }
     });
+     supplementChart = new Chart(ctxSupplement, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(oilHistory),
+            datasets: [{
+                label: 'Olejowanie',
+                data: Object.keys(oilHistory).map(date => oilHistory[date] === 'TAK' ? 1 : 0),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 }
 
 
@@ -419,6 +441,7 @@ function init() {
     waterHistory = JSON.parse(getCookie('waterHistory')) || {};
     supplementStatus = JSON.parse(getCookie('supplementStatus')) || {};
     oilStatus = JSON.parse(getCookie('oilStatus')) || {};
+    spanishStatus = JSON.parse(getCookie('spanishStatus')) || {};
 
     console.log('Retrieved coffeeCount:', coffeeCount);
     console.log('Retrieved coffeeHistory:', coffeeHistory);
@@ -426,14 +449,20 @@ function init() {
     console.log('Retrieved waterHistory:', waterHistory);
     console.log('Retrieved supplementStatus:', supplementStatus);
     console.log('Retrieved oilStatus:', oilStatus);
+    console.log('Retrieved spanishStatus:', spanishStatus);
+
     updateCoffeeResult();
     updateWaterResult();
     updateSupplementResult();
     updateCoffeeHistory();
     updateWaterHistory();
     updateSupplementHistory();
+
     updateOilResult();
     updateOilHistory();
+
+    updateSpanishResult();
+    updateSpanishHistory();
 
     setDefaultDate()
 }
