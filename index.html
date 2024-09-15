@@ -6,31 +6,24 @@
     <title>Śledź Suplementy, Kawę i Wodę</title>
     <meta name="description" content="Aplikacja do śledzenia spożycia suplementów, kawy i wody. Monitoruj swoje spożycie i osiągaj swoje cele zdrowotne z naszą prostą aplikacją.">
 
-    <!-- PWA Configuration -->
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Śledź Suplementy, Kawę i Wodę">
 
-    <!-- Icons -->
     <link rel="icon" href="icon.png" type="image/png">
     <link rel="apple-touch-icon" href="icon.png">
 
-    <!-- Stylesheets -->
     <link rel="stylesheet" href="styles.css">
 
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Open Graph / Facebook -->
     <meta property="og:title" content="Śledź Suplementy, Kawę i Wodę">
     <meta property="og:description" content="Aplikacja do śledzenia spożycia suplementów, kawy i wody. Monitoruj swoje spożycie i osiągaj swoje cele zdrowotne z naszą prostą aplikacją.">
     <meta property="og:image" content="/icon.png">
     <meta property="og:url" content="https://yourwebsite.com">
     <meta property="og:type" content="website">
-
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Śledź Suplementy, Kawę i Wodę">
     <meta name="twitter:description" content="Aplikacja do śledzenia spożycia suplementów, kawy i wody. Monitoruj swoje spożycie i osiągaj swoje cele zdrowotne z naszą prostą aplikacją.">
@@ -49,10 +42,8 @@
 </header>
 
 <main class="container">
-    <!-- Strona główna -->
     <div id="homePage">
 
-        <!-- Sekcja suplementów -->
         <section class="section">
             <h2>Suplementy</h2>
             <div id="supplementSection">
@@ -68,12 +59,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Wiersze tabeli będą dodawane dynamicznie przez JavaScript -->
                 </tbody>
             </table>
         </section>
 
-        <!-- Sekcja kawy -->
         <section class="section">
             <h2>Kawa</h2>
             <button onclick="addCoffee()" aria-label="Dodaj kawę">Dodaj kawę</button>
@@ -86,12 +75,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Tabela historyczna kaw zostanie wypełniona przez JavaScript -->
                 </tbody>
             </table>
         </section>
 
-        <!-- Sekcja wody -->
         <section class="section">
             <h2>Woda</h2>
             <button onclick="addWater()" aria-label="Dodaj wodę">Dodaj wodę</button>
@@ -104,13 +91,11 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Tabela historyczna wody zostanie wypełniona przez JavaScript -->
                 </tbody>
             </table>
         </section>
     </div>
 
-    <!-- Strona edycji -->
     <div id="editPage" style="display: none;">
         <section class="section">
             <h2>Suplementy</h2>
@@ -132,7 +117,6 @@
         </section>
     </div>
 
-    <!-- Sekcja Raporty -->
     <div id="reportsPage" style="display: none;">
         <div class="section">
             <h2>Raporty</h2>
