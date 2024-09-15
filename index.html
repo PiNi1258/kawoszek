@@ -2,17 +2,22 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Śledź Kawę i Wodę</title>
-    <meta content="Aplikacja do śledzenia spożycia suplementów, kawy i wody." name="description">
+    <meta name="description" content="Aplikacja do śledzenia spożycia suplementów, kawy i wody.">
     <link href="styles.css" rel="stylesheet">
     <link href="/manifest.json" rel="manifest">
-    <meta content="yes" name="mobile-web-app-capable">
-    <meta content="black-translucent" name="mobile-web-app-status-bar-style">
-    <meta content="Śledź Kawę i Wodę" name="mobile-web-app-title">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-title" content="Śledź Kawę i Wodę">
     <link href="/icon.png" rel="apple-touch-icon">
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Optional: Add Open Graph and Twitter Card meta tags -->
+    <meta property="og:title" content="Śledź Kawę i Wodę">
+    <meta property="og:description" content="Aplikacja do śledzenia spożycia suplementów, kawy i wody.">
+    <meta property="og:image" content="/path/to/your/image.png">
+    <meta property="og:url" content="https://yourwebsite.com">
+    <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 <header>
@@ -34,8 +39,8 @@
             <h2>Suplementy</h2>
             <div id="supplementSection">
                 <p id="supplementResult">Czy zażyłeś suplementy dzisiaj?</p>
-                <button id="takeSupplementYes" onClick="takeSupplement('TAK')">TAK</button>
-                <button id="takeSupplementNo" onClick="takeSupplement('NIE')">NIE</button>
+                <button id="takeSupplementYes" onclick="takeSupplement('TAK')" aria-label="Zaznacz, że zażyłeś suplementy dzisiaj">TAK</button>
+                <button id="takeSupplementNo" onclick="takeSupplement('NIE')" aria-label="Zaznacz, że nie zażyłeś suplementów dzisiaj">NIE</button>
             </div>
 
             <h2>Historia Suplementów</h2>
@@ -55,7 +60,7 @@
         <!-- Sekcja kawy -->
         <section class="section">
             <h2>Kawa</h2>
-            <button onclick="addCoffee()">Dodaj kawę</button>
+            <button onclick="addCoffee()" aria-label="Dodaj kawę">Dodaj kawę</button>
             <div class="results" id="coffeeResult">Liczba wypitych kaw: 0</div>
             <table id="coffeeHistoryTable">
                 <thead>
@@ -73,7 +78,7 @@
         <!-- Sekcja wody -->
         <section class="section">
             <h2>Woda</h2>
-            <button onclick="addWater()">Dodaj wodę</button>
+            <button onclick="addWater()" aria-label="Dodaj wodę">Dodaj wodę</button>
             <div class="results" id="waterResult">Liczba wypitych litrów wody: 0</div>
             <table id="waterHistoryTable">
                 <thead>
@@ -93,24 +98,21 @@
     <div id="editPage" style="display: none;">
         <section class="section">
             <h2>Suplementy</h2>
-            <a class="reset-link" href="#" onclick="resetSupplementHistory()">Resetuj suplementy</a>
+            <a class="reset-link" href="#" onclick="resetSupplementHistory()" aria-label="Resetuj historię suplementów">Resetuj suplementy</a>
         </section>
         <section class="section">
             <h2>Kawa</h2>
-            <input type="date" id="editCoffeeDate" name="date-picker">
-            <input aria-label="Liczba wypitych kaw" id="editCoffeeCount" placeholder="Liczba wypitych kaw"
-                   type="number"/>
-            <button onclick="updateCoffeeCount()">Aktualizuj liczbę kaw</button>
-            <a class="reset-link" href="#" onclick="resetCoffeeCounter()">Resetuj licznik kawy</a>
+            <input type="date" id="editCoffeeDate" name="date-picker" aria-label="Data kawy">
+            <input aria-label="Liczba wypitych kaw" id="editCoffeeCount" placeholder="Liczba wypitych kaw" type="number"/>
+            <button onclick="updateCoffeeCount()" aria-label="Aktualizuj liczbę kaw">Aktualizuj liczbę kaw</button>
+            <a class="reset-link" href="#" onclick="resetCoffeeCounter()" aria-label="Resetuj licznik kawy">Resetuj licznik kawy</a>
         </section>
         <section class="section">
             <h2>Woda</h2>
-            <input type="date" id="editWaterDate" name="date-picker">
-
-            <input aria-label="Liczba litrów wody" id="editWaterCount" placeholder="Liczba litrów wody" step="0.01"
-                   type="number"/>
-            <button onclick="updateWaterCount()">Aktualizuj liczbę wody</button>
-            <a class="reset-link" href="#" onclick="resetWaterCounter()">Resetuj licznik wody</a>
+            <input type="date" id="editWaterDate" name="date-picker" aria-label="Data wody">
+            <input aria-label="Liczba litrów wody" id="editWaterCount" placeholder="Liczba litrów wody" step="0.01" type="number"/>
+            <button onclick="updateWaterCount()" aria-label="Aktualizuj liczbę wody">Aktualizuj liczbę wody</button>
+            <a class="reset-link" href="#" onclick="resetWaterCounter()" aria-label="Resetuj licznik wody">Resetuj licznik wody</a>
         </section>
     </div>
 

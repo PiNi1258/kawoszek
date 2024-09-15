@@ -1,39 +1,44 @@
+/* General Styles */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f0f4f8;
     margin: 0;
     padding: 0;
     text-align: center;
+    box-sizing: border-box;
 }
 
-/* Styl kontenera głównego */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Main Container */
 .container {
     max-width: 900px;
-    margin: 10px ;
-    padding: 10px;
+    margin: 10px auto;
+    padding: 20px;
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    position: relative;
-    overflow: hidden;
 }
 
-/* Styl dla nagłówków */
+/* Header */
 h1 {
     color: #333;
     margin-bottom: 20px;
 }
 
-/* Styl dla kontenera nawigacji */
+/* Navigation */
 .nav {
     display: flex;
-    justify-content: space-around; /* Rozciąga linki na całą szerokość */
-    margin: 1px;
-    padding: 1px;
+    justify-content: space-around;
+    margin: 0;
+    padding: 0;
     list-style: none;
 }
 
-/* Styl dla linków nawigacyjnych */
 .nav-link {
     display: inline-block;
     padding: 10px 20px;
@@ -41,30 +46,29 @@ h1 {
     color: #007bff;
     font-weight: normal;
     font-size: 18px;
-    background: #f8f9fa; /* Tło zakładki */
-    border: 1px solid #ddd; /* Obramowanie zakładki */
-    border-radius: 5px; /* Zaokrąglenie górnych rogów */
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 5px;
     position: relative;
-    transition: background 0.3s, color 0.3s;
-    flex: 1; /* Sprawia, że linki rozciągają się równomiernie */
-    text-align: center; /* Wyśrodkowanie tekstu */
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+    flex: 1;
+    text-align: center;
 }
 
-/* Styl dla aktywnej zakładki */
 .nav-link.active {
     font-weight: bold;
     color: #fff;
-    background: #007bff; /* Kolor tła aktywnej zakładki */
-    border-bottom: 1px solid #007bff; /* Dolna granica aktywnej zakładki */
+    background: #007bff;
+    border-bottom: 1px solid #007bff;
 }
 
-/* Efekt podświetlenia dla nawigacyjnych zakładek */
 .nav-link:hover {
-    background: #e9ecef; /* Tło najechania */
-    color: #0056b3; /* Kolor tekstu najechania */
+    background: #e9ecef;
+    color: #0056b3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Styl dla przycisków */
+/* Buttons */
 button {
     padding: 12px 24px;
     font-size: 16px;
@@ -73,33 +77,37 @@ button {
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 button:hover {
     background-color: #0056b3;
     transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Styl dla sekcji z wynikami */
+/* Results */
 .results {
     margin-top: 20px;
     font-size: 20px;
     color: #333;
 }
 
-/* Styl dla tabeli */
+/* Tables */
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
 }
 
-table, th, td {
+table,
+th,
+td {
     border: 1px solid #ddd;
 }
 
-th, td {
+th,
+td {
     padding: 12px;
     text-align: center;
 }
@@ -108,7 +116,7 @@ th {
     background-color: #f8f9fa;
 }
 
-/* Styl dla linków resetowania */
+/* Reset Links */
 .reset-link {
     display: block;
     margin-top: 20px;
@@ -121,42 +129,34 @@ th {
     text-decoration: underline;
 }
 
-/* Styl dla sekcji */
+/* Sections */
 .section {
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 12px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px; /* Zmniejszenie marginesu dolnego dla lepszej spójności */
-    max-width: 100%; /* Ustawienie maksymalnej szerokości sekcji */
-    box-sizing: border-box; /* Zapewnia, że padding i border są uwzględnione w szerokości */
-    position: relative; /* Umożliwia ewentualne pozycjonowanie względne elementów wewnętrznych */
+    margin-bottom: 20px;
+    box-sizing: border-box;
 }
 
-/* Styl dla nagłówków w sekcji */
+/* Section Headings */
 .section h2 {
     color: #333;
-    margin-top: 0;
-    margin-bottom: 20px; /* Większa przestrzeń poniżej nagłówka */
+    margin: 0 0 20px;
     font-size: 24px;
 }
 
-/* Styl dla paragrafów w sekcji */
+/* Section Paragraphs */
 .section p {
     color: #555;
-    line-height: 1.6; /* Zwiększenie interlinii dla lepszej czytelności */
-    margin-bottom: 15px; /* Odstęp między paragrafami */
+    line-height: 1.6;
+    margin-bottom: 15px;
 }
 
-/* Styl dla formularzy w sekcji */
-.section form {
-    margin-top: 20px; /* Przestrzeń nad formularzem */
-}
-
+/* Forms */
 .section input {
-    margin-bottom: 15px; /* Przestrzeń między polami formularza */
+    margin-bottom: 15px;
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ced4da;
@@ -169,7 +169,6 @@ th {
     color: #ffffff;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .section button:hover {
@@ -177,9 +176,9 @@ th {
     transform: scale(1.05);
 }
 
-/* Styl dla zakładki raportów */
+/* Reports Page */
 #reportsPage {
-    display: none; /* Początkowo ukryte */
+    display: none;
 }
 
 .section h3 {
@@ -187,8 +186,16 @@ th {
     font-size: 20px;
 }
 
-/* Styl dla wykresów */
+/* Charts */
 canvas {
     max-width: 100%;
     height: auto;
+}
+
+/* Focus States */
+a:focus,
+button:focus,
+input:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
 }
