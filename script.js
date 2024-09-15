@@ -33,6 +33,10 @@ let waterCount = parseFloat(getCookie('waterCount') || 0);
 let waterHistory = JSON.parse(getCookie('waterHistory')) || {};
 let supplementStatus = JSON.parse(getCookie('supplementStatus')) || {};
 const today = new Date().toISOString().split('T')[0]; // Data w formacie YYYY-MM-DD
+let coffeeChart = null;
+let waterChart = null;
+let supplementChart = null;
+
 
 // Funkcja do dodawania kawy
 function addCoffee() {
@@ -234,12 +238,6 @@ function showReports() {
     updateCharts(); // Rysowanie wykresów po przejściu na stronę raportów
 }
 
-let coffeeChart = null;
-let waterChart = null;
-let supplementChart = null;
-
-
-
 // Funkcja do rysowania wykresów
 function updateCharts() {
     const coffeeHistory = JSON.parse(getCookie('coffeeHistory') || '{}');
@@ -332,6 +330,12 @@ function setActiveLink(activeLinkId) {
     ['homeLink', 'editLink', 'reportsLink'].forEach(linkId => {
         document.getElementById(linkId).classList.toggle('active', linkId === activeLinkId);
     });
+}
+
+function setDefaultDate() {
+        const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+        document.getElementById('editWaterDate').value = today;
+        document.getElementById('editCoffeeDate').value = today;
 }
 
 // Funkcja inicjalizacyjna
