@@ -132,12 +132,12 @@ function updateWaterCount() {
 
 // Funkcja do aktualizacji wyświetlanej liczby kawy
 function updateCoffeeResult() {
-    document.getElementById('coffeeResult').textContent = `Liczba wypitych kaw: <b>${coffeeCount}</b>`;
+    document.getElementById('coffeeResult').innerHTML = `Liczba wypitych kaw: <b>${coffeeCount}</b>`;
 }
 
 // Funkcja do aktualizacji wyświetlanej liczby wody
 function updateWaterResult() {
-    document.getElementById('waterResult').textContent = `Liczba wypitych litrów wody: <b>${parseFloat(waterCount).toFixed(2)}</b>`;
+    document.getElementById('waterResult').innerHTML = `Liczba wypitych litrów wody: <b>${parseFloat(waterCount).toFixed(2)}</b>`;
 }
 
 // Funkcja do aktualizacji tabeli historycznej kaw
