@@ -379,6 +379,7 @@ function init() {
     waterCount = parseFloat(getCookie('waterCount') || 0);
     waterHistory = JSON.parse(getCookie('waterHistory')) || {};
     supplementStatus = JSON.parse(getCookie('supplementStatus')) || {};
+    oilStatus = JSON.parse(getCookie('oilStatus')) || {};
 
     console.log('Retrieved coffeeCount:', coffeeCount);
     console.log('Retrieved coffeeHistory:', coffeeHistory);
@@ -392,6 +393,8 @@ function init() {
     updateCoffeeHistory();
     updateWaterHistory();
     updateSupplementHistory();
+    updateOilResult();
+    updateOilHistory();
 
     setDefaultDate()
 }
