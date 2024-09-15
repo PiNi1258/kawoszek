@@ -234,75 +234,98 @@ function showReports() {
     updateCharts(); // Rysowanie wykresów po przejściu na stronę raportów
 }
 
+let coffeeChart = null;
+let waterChart = null;
+let supplementChart = null;
+
+
+
 // Funkcja do rysowania wykresów
 function updateCharts() {
-
     const coffeeHistory = JSON.parse(getCookie('coffeeHistory') || '{}');
     const waterHistory = JSON.parse(getCookie('waterHistory') || '{}');
-    const supplementStatus = JSON.parse(getCookie('supplementStatus') || '{}');
+    const supplementHistory = JSON.parse(getCookie('supplementStatus') || '{}');
 
-    // Sprawdzanie, czy kontekst jest dostępny
-    const ctxCoffee = document.getElementById('coffeeChart')?.getContext('2d');
-    const ctxWater = document.getElementById('waterChart')?.getContext('2d');
-    const ctxSupplement = document.getElementById('supplementChart')?.getContext('2d');
+    const ctxCoffee = document.getElementById('coffeeChart').getContext('2d');
+    const ctxWater = document.getElementById('waterChart').getContext('2d');
+    const ctxSupplement = document.getElementById('supplementChart').getContext('2d');
 
-    if (ctxCoffee) {
-        new Chart(ctxCoffee, {
-            type: 'bar',
-            data: {
-                labels: Object.keys(coffeeHistory),
-                datasets: [{
-                    label: 'Liczba wypitych kaw',
-                    data: Object.values(coffeeHistory),
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: { y: { beginAtZero: true } }
-            }
-        });
+    // Sprawdzenie i zniszczenie poprzednich wykresów
+    if (coffeeChart) {
+        coffeeChart.destroy();
+    }
+    if (waterChart) {
+        waterChart.destroy();
+    }
+    if (supplementChart) {
+        supplementChart.destroy();
     }
 
-    if (ctxWater) {
-        new Chart(ctxWater, {
-            type: 'bar',
-            data: {
-                labels: Object.keys(waterHistory),
-                datasets: [{
-                    label: 'Liczba wypitych litrów wody',
-                    data: Object.values(waterHistory),
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: { y: { beginAtZero: true } }
+    // Tworzenie nowych wykresów
+    coffeeChart = new Chart(ctxCoffee, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(coffeeHistory),
+            datasets: [{
+                label: 'Liczba wypitych kaw',
+                data: Object.values(coffeeHistory),
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             }
-        });
-    }
+        }
+    });
 
-    if (ctxSupplement) {
-        new Chart(ctxSupplement, {
-            type: 'bar',
-            data: {
-                labels: Object.keys(supplementStatus),
-                datasets: [{
-                    label: 'Zażyte suplementy',
-                    data: Object.values(supplementStatus).map(status => status === 'TAK' ? 1 : 0),
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: { y: { beginAtZero: true } }
+    waterChart = new Chart(ctxWater, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(waterHistory),
+            datasets: [{
+                label: 'Liczba wypitych litrów wody',
+                data: Object.values(waterHistory),
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             }
-        });
-    }
+        }
+    });
+
+    supplementChart = new Chart(ctxSupplement, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(supplementHistory),
+            datasets: [{
+                label: 'Zażyte suplementy',
+                data: Object.keys(supplementHistory).map(date => supplementHistory[date] === 'TAK' ? 1 : 0),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 }
+
 
 // Funkcja pomocnicza do ustawiania aktywnego linku
 function setActiveLink(activeLinkId) {
