@@ -250,10 +250,10 @@ function updateCharts() {
         new Chart(ctxCoffee, {
             type: 'bar',
             data: {
-                labels: Object.keys(JSON.parse(getCookie('coffeeHistory')),
+                labels: Object.keys(coffeeHistory),
                 datasets: [{
                     label: 'Liczba wypitych kaw',
-                    data: Object.values(JSON.parse(getCookie('coffeeHistory')),
+                    data: Object.values(coffeeHistory),
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1
@@ -338,5 +338,4 @@ function init() {
 // Wywołanie funkcji inicjalizującej przy załadowaniu strony
 window.onload = function() {
     init();
-    // Wykonaj dodatkowe operacje inicjalizacyjne, jeśli potrzebne
 };
