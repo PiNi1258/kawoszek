@@ -91,11 +91,16 @@ function resetWaterCounter() {
 // Funkcja do aktualizacji liczby kawy
 function updateCoffeeCount() {
     const newCount = parseInt(document.getElementById('editCoffeeCount').value) || 0;
+    const editDate = document.getElementById('editDate').value
+
     coffeeCount = newCount;
     setCookie('coffeeCount', coffeeCount, 7);
 
-    coffeeHistory[today] = coffeeCount;
+    coffeeHistory[editDate] = coffeeCount;
     setCookie('coffeeHistory', JSON.stringify(coffeeHistory), 7);
+
+
+
     updateCoffeeResult();
     updateCoffeeHistory();
 }
@@ -150,7 +155,7 @@ function updateWaterHistory() {
         const cellCount = row.insertCell(1);
 
         cellDate.textContent = date;
-        cellCount.textContent = parseFloat(waterCount).toFixed(2);
+        cellCount.textContent = parseFloat(waterCount).toFixed(2); //tu ma byc count z pemtli
     }
 }
 
