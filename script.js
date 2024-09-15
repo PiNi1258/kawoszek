@@ -99,7 +99,7 @@ function updateCoffeeCount() {
     const newCount = parseInt(document.getElementById('editCoffeeCount').value) || 0;
     const editDate = document.getElementById('editCoffeeDate').value;
 
-    coffeeHistory[editDate] = coffeeCount;
+    coffeeHistory[editDate] = newCount;
     setCookie('coffeeHistory', JSON.stringify(coffeeHistory), 7);
 
     updateCoffeeResult();
@@ -114,7 +114,7 @@ function updateWaterCount() {
     const newCount = parseFloat(document.getElementById('editWaterCount').value) || 0;
     const editDate = document.getElementById('editWaterDate').value;
 
-    waterHistory[editDate] = waterCount;
+    waterHistory[editDate] = newCount;
     setCookie('waterHistory', JSON.stringify(waterHistory), 7);
 
     updateWaterResult();
