@@ -1,51 +1,38 @@
-// Funkcja do ustawiania ciasteczek
-function setCookie(name, value, days) {
-    let expires = "";
-    if (days) {
-        const date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        expires = `; expires=${date.toUTCString()}`;
-    }
-    document.cookie = `${name}=${(value || "")}${expires}; path=/`;
+// Funkcja do ustawiania localStorage
+function setLocalStorage(name, value) {
+    localStorage.setItem(name, JSON.stringify(value));
 }
 
-// Funkcja do pobierania ciasteczek
-function getCookie(name) {
-    const nameEQ = `${name}=`;
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
+// Funkcja do pobierania z localStorage
+function getLocalStorage(name) {
+    const item = localStorage.getItem(name);
+    return item ? JSON.parse(item) : null;
 }
 
-// Funkcja do usuwania ciasteczek
-function eraseCookie(name) {
-    document.cookie = `${name}=; Max-Age=-99999999;`;
+// Funkcja do usuwania z localStorage
+function eraseLocalStorage(name) {
+    localStorage.removeItem(name);
 }
 
-// Pobranie zapisanej liczby kaw i wody, historii oraz statusu suplementów z ciasteczek
-let coffeeCount = parseInt(getCookie('coffeeCount') || 0);
-let coffeeHistory = JSON.parse(getCookie('coffeeHistory')) || {};
-let waterCount = parseFloat(getCookie('waterCount') || 0);
-let waterHistory = JSON.parse(getCookie('waterHistory')) || {};
-let supplementStatus = JSON.parse(getCookie('supplementStatus')) || {};
+// Pobranie zapisanej liczby kaw i wody, historii oraz statusu suplementów z localStorage
+let coffeeCount = parseInt(getLocalStorage('coffeeCount') || 0);
+let coffeeHistory = getLocalStorage('coffeeHistory') || {};
+let waterCount = parseFloat(getLocalStorage('waterCount') || 0);
+let waterHistory = getLocalStorage('waterHistory') || {};
+let supplementStatus = getLocalStorage('supplementStatus') || {};
 const today = new Date().toISOString().split('T')[0]; // Data w formacie YYYY-MM-DD
 let coffeeChart = null;
 let waterChart = null;
 let supplementChart = null;
 
-
 // Funkcja do dodawania kawy
 function addCoffee() {
     coffeeCount = (parseInt(coffeeCount) || 0) + 1;
-    setCookie('coffeeCount', coffeeCount, 7);
+    setLocalStorage('coffeeCount', coffeeCount);
 
     // Aktualizacja historii kaw
     coffeeHistory[today] = (coffeeHistory[today] || 0) + 1;
-    setCookie('coffeeHistory', JSON.stringify(coffeeHistory), 7);
+    setLocalStorage('coffeeHistory', coffeeHistory);
 
     updateCoffeeResult();
     updateCoffeeHistory();
@@ -55,11 +42,11 @@ function addCoffee() {
 // Funkcja do dodawania wody
 function addWater() {
     waterCount = (parseFloat(waterCount) || 0) + 0.25; // Załóżmy, że każdorazowo dodajemy 0.25 litra wody
-    setCookie('waterCount', waterCount, 7);
+    setLocalStorage('waterCount', waterCount);
 
     // Aktualizacja historii wody
     waterHistory[today] = (waterHistory[today] || 0) + 0.25;
-    setCookie('waterHistory', JSON.stringify(waterHistory), 7);
+    setLocalStorage('waterHistory', waterHistory);
 
     updateWaterResult();
     updateWaterHistory();
@@ -69,11 +56,11 @@ function addWater() {
 // Funkcja do resetowania licznika kawy
 function resetCoffeeCounter() {
     coffeeCount = 0;
-    setCookie('coffeeCount', coffeeCount, 7);
+    setLocalStorage('coffeeCount', coffeeCount);
 
     // Wyczyszczenie historii kawy
     coffeeHistory = {};
-    setCookie('coffeeHistory', JSON.stringify(coffeeHistory), 7);
+    setLocalStorage('coffeeHistory', coffeeHistory);
 
     updateCoffeeResult();
     updateCoffeeHistory();
@@ -83,11 +70,11 @@ function resetCoffeeCounter() {
 // Funkcja do resetowania licznika wody
 function resetWaterCounter() {
     waterCount = 0;
-    setCookie('waterCount', waterCount, 7);
+    setLocalStorage('waterCount', waterCount);
 
     // Wyczyszczenie historii wody
     waterHistory = {};
-    setCookie('waterHistory', JSON.stringify(waterHistory), 7);
+    setLocalStorage('waterHistory', waterHistory);
 
     updateWaterResult();
     updateWaterHistory();
@@ -100,12 +87,10 @@ function updateCoffeeCount() {
     const editDate = document.getElementById('editCoffeeDate').value;
 
     coffeeHistory[editDate] = newCount;
-    setCookie('coffeeHistory', JSON.stringify(coffeeHistory), 7);
+    setLocalStorage('coffeeHistory', coffeeHistory);
 
     updateCoffeeHistory();
-
     updateCharts();
-
 }
 
 // Funkcja do aktualizacji liczby wody
@@ -114,12 +99,10 @@ function updateWaterCount() {
     const editDate = document.getElementById('editWaterDate').value;
 
     waterHistory[editDate] = newCount;
-    setCookie('waterHistory', JSON.stringify(waterHistory), 7);
+    setLocalStorage('waterHistory', waterHistory);
 
     updateWaterHistory();
-
     updateCharts();
-
 }
 
 // Funkcja do aktualizacji wyświetlanej liczby kawy
@@ -165,7 +148,7 @@ function updateWaterHistory() {
 // Funkcja do zaznaczenia, czy zażyłeś suplementy
 function takeSupplement(status) {
     supplementStatus[today] = status;
-    setCookie('supplementStatus', JSON.stringify(supplementStatus), 7);
+    setLocalStorage('supplementStatus', supplementStatus);
 
     updateSupplementResult();
     updateSupplementHistory();
@@ -195,7 +178,7 @@ function updateSupplementHistory() {
 // Funkcja do resetowania historii suplementów
 function resetSupplementHistory() {
     supplementStatus = {}; // Wyczyszczenie historii suplementów
-    setCookie('supplementStatus', JSON.stringify(supplementStatus), 7); // Zapisz w ciasteczkach
+    setLocalStorage('supplementStatus', supplementStatus); // Zapisz w localStorage
 
     updateSupplementHistory();
     updateSupplementResult();
@@ -232,9 +215,9 @@ function showReports() {
 
 // Funkcja do rysowania wykresów
 function updateCharts() {
-    const coffeeHistory = JSON.parse(getCookie('coffeeHistory') || '{}');
-    const waterHistory = JSON.parse(getCookie('waterHistory') || '{}');
-    const supplementHistory = JSON.parse(getCookie('supplementStatus') || '{}');
+    const coffeeHistory = getLocalStorage('coffeeHistory') || {};
+    const waterHistory = getLocalStorage('waterHistory') || {};
+    const supplementHistory = getLocalStorage('supplementStatus') || {};
 
     const ctxCoffee = document.getElementById('coffeeChart').getContext('2d');
     const ctxWater = document.getElementById('waterChart').getContext('2d');
@@ -316,7 +299,6 @@ function updateCharts() {
     });
 }
 
-
 // Funkcja pomocnicza do ustawiania aktywnego linku
 function setActiveLink(activeLinkId) {
     ['homeLink', 'editLink', 'reportsLink'].forEach(linkId => {
@@ -325,20 +307,20 @@ function setActiveLink(activeLinkId) {
 }
 
 function setDefaultDate() {
-        const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
-        document.getElementById('editWaterDate').value = today;
-        document.getElementById('editCoffeeDate').value = today;
+    const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+    document.getElementById('editWaterDate').value = today;
+    document.getElementById('editCoffeeDate').value = today;
 }
 
 // Funkcja inicjalizacyjna
 function init() {
-    console.log('Initializing from cookies...');
+    console.log('Initializing from localStorage...');
 
-    coffeeCount = parseInt(getCookie('coffeeCount') || 0);
-    coffeeHistory = JSON.parse(getCookie('coffeeHistory')) || {};
-    waterCount = parseFloat(getCookie('waterCount') || 0);
-    waterHistory = JSON.parse(getCookie('waterHistory')) || {};
-    supplementStatus = JSON.parse(getCookie('supplementStatus')) || {};
+    coffeeCount = parseInt(getLocalStorage('coffeeCount') || 0);
+    coffeeHistory = getLocalStorage('coffeeHistory') || {};
+    waterCount = parseFloat(getLocalStorage('waterCount') || 0);
+    waterHistory = getLocalStorage('waterHistory') || {};
+    supplementStatus = getLocalStorage('supplementStatus') || {};
 
     console.log('Retrieved coffeeCount:', coffeeCount);
     console.log('Retrieved coffeeHistory:', coffeeHistory);
@@ -353,10 +335,10 @@ function init() {
     updateWaterHistory();
     updateSupplementHistory();
 
-    setDefaultDate()
+    setDefaultDate();
 }
 
 // Wywołanie funkcji inicjalizującej przy załadowaniu strony
-window.onload = function() {
+window.onload = function () {
     init();
 };
