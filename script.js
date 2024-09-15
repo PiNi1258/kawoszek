@@ -263,7 +263,7 @@ function updateCharts() {
     coffeeChart = new Chart(ctxCoffee, {
         type: 'bar',
         data: {
-            labels: Object.keys(coffeeHistory),
+            labels: parseInt(Object.keys(coffeeHistory)),
             datasets: [{
                 label: 'Liczba wypitych kaw',
                 data: Object.values(coffeeHistory),
