@@ -241,3 +241,47 @@ input:focus {
         padding: 8px;
     }
 }
+
+/* Footer Styles */
+.footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #282c34; /* Dark background color */
+    margin-top: 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Subtle top border */
+    font-size: 16px;
+    color: #f8f9fa; /* Light text color */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Slight shadow above the footer */
+}
+
+.footer a {
+    color: #61dafb; /* Light blue color for the link */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s; /* Smooth transition for color change */
+}
+
+.footer a:hover {
+    color: #21a1f1; /* Darker blue on hover */
+    text-decoration: underline;
+}
+
+.footer .heart {
+    display: inline-block;
+    color: #e25555; /* Red color for the heart */
+    animation: heartbeat 1.2s infinite; /* Heartbeat animation */
+}
+
+.footer p {
+    margin: 0;
+}
+
+/* Heartbeat animation */
+@keyframes heartbeat {
+    0%, 20%, 40%, 60%, 80%, 100% {
+        transform: scale(1);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: scale(1.3);
+    }
+}

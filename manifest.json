@@ -1,6 +1,6 @@
 {
   "name": "Śledź Suplementy, Kawę i Wodę",
-  "short_name": "Kawoszek 1",
+  "short_name": "Kawoszek",
   "description": "Aplikacja do śledzenia suplementów, liczby wypitych kaw czy litrów wody.",
   "start_url": "/kawoszek/#",
   "display": "fullscreen",
