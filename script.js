@@ -102,7 +102,6 @@ function updateCoffeeCount() {
     coffeeHistory[editDate] = newCount;
     setCookie('coffeeHistory', JSON.stringify(coffeeHistory), 7);
 
-    updateCoffeeResult();
     updateCoffeeHistory();
 
     updateCharts();
@@ -117,7 +116,6 @@ function updateWaterCount() {
     waterHistory[editDate] = newCount;
     setCookie('waterHistory', JSON.stringify(waterHistory), 7);
 
-    updateWaterResult();
     updateWaterHistory();
 
     updateCharts();
