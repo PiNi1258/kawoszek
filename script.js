@@ -230,7 +230,6 @@ function showReports() {
     document.getElementById('reportsPage').style.display = 'block';
 
     setActiveLink('reportsLink');
-
     updateCharts(); // Rysowanie wykresów po przejściu na stronę raportów
 }
 
