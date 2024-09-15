@@ -39,6 +39,8 @@ const today = new Date().toISOString().split('T')[0]; // Data w formacie YYYY-MM
 let coffeeChart = null;
 let waterChart = null;
 let supplementChart = null;
+let oilChart = null;
+let spanishChart = null;
 
 
 // Funkcja do dodawania kawy
