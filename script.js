@@ -91,7 +91,7 @@ function resetWaterCounter() {
 // Funkcja do aktualizacji liczby kawy
 function updateCoffeeCount() {
     const newCount = parseInt(document.getElementById('editCoffeeCount').value) || 0;
-    const editDate = document.getElementById('editDate').value
+    const editDate = document.getElementById('editCoffeeDate').value
 
     coffeeCount = newCount;
     setCookie('coffeeCount', coffeeCount, 7);
@@ -109,10 +109,12 @@ function updateCoffeeCount() {
 // Funkcja do aktualizacji liczby wody
 function updateWaterCount() {
     const newCount = parseFloat(document.getElementById('editWaterCount').value) || 0;
+    const editDate = document.getElementById('editWaterDate').value
+
     waterCount = newCount;
     setCookie('waterCount', waterCount, 7);
 
-    waterHistory[today] = waterCount;
+    waterHistory[editDate] = waterCount;
     setCookie('waterHistory', JSON.stringify(waterHistory), 7);
 
     updateWaterResult();
