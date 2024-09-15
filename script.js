@@ -241,6 +241,45 @@ function resetOilHistory() {
     updateOilResult();
 }
 
+// Funkcja do zaznaczenia, czy zażyłeś suplementy
+function didSpanish(status) {
+    spanishStatus[today] = status;
+    setCookie('spanishStatus', JSON.stringify(spanishStatus), 7);
+
+    updateSpanishResult();
+    updateSpanishHistory();
+}
+
+// Funkcja do aktualizacji wyświetlanej informacji o suplementach
+function updateSpanishResult() {
+    const status = spanishStatus[today] || 'Brak danych';
+    document.getElementById('spanishStatusResult').innerHTML = `Czy hiszpański był? <b>${status}</b>`;
+}
+
+// Funkcja do aktualizacji tabeli historycznej suplementów
+function updateSpanishHistory() {
+    const tbody = document.getElementById('spanishHistoryTable').getElementsByTagName('tbody')[0];
+    tbody.innerHTML = ''; // Wyczyść tabelę przed dodaniem nowych danych
+
+    for (const [date, status] of Object.entries(spanishStatus)) {
+        const row = tbody.insertRow();
+        const cellDate = row.insertCell(0);
+        const cellStatus = row.insertCell(1);
+
+        cellDate.textContent = date;
+        cellStatus.textContent = status;
+    }
+}
+
+// Funkcja do resetowania historii suplementów
+function resetSpanishHistory() {
+    spanishStatus = {}; // Wyczyszczenie historii suplementów
+    setCookie('spanishStatus', JSON.stringify(spanishStatus), 7); // Zapisz w ciasteczkach
+
+    updateSpanishHistory();
+    updateSpanishResult();
+}
+
 // Funkcja do pokazania strony głównej
 function showHome() {
     document.getElementById('homePage').style.display = 'block';
