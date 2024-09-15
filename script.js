@@ -386,7 +386,7 @@ function init() {
     console.log('Retrieved waterCount:', waterCount);
     console.log('Retrieved waterHistory:', waterHistory);
     console.log('Retrieved supplementStatus:', supplementStatus);
-
+    console.log('Retrieved oilStatus:', oilStatus);
     updateCoffeeResult();
     updateWaterResult();
     updateSupplementResult();
