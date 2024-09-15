@@ -250,10 +250,10 @@ function updateCharts() {
         new Chart(ctxCoffee, {
             type: 'bar',
             data: {
-                labels: Object.keys(coffeeHistory),
+                labels: Object.keys(JSON.parse(getCookie('coffeeHistory')),
                 datasets: [{
                     label: 'Liczba wypitych kaw',
-                    data: Object.values(coffeeHistory),
+                    data: Object.values(JSON.parse(getCookie('coffeeHistory')),
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1
