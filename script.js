@@ -526,6 +526,12 @@ function toggleSection(sectionId) {
 
     section.style.display = isVisible ? 'none' : 'block';
     localStorage.setItem(sectionId, isVisible ? 'hidden' : 'visible');
+
+    const div = document.getElementById(sectionId + '_chart');
+    if (div) {
+        console.log(`Updating visibility for ${sectionId}_chart to ${visibility}`);
+        div.style.display = visibility === 'visible' ? 'block' : 'none';
+    }
 }
 
 
@@ -548,6 +554,12 @@ function initializeSectionVisibility() {
         const checkbox = document.getElementById(sectionId + '_checkbox');
         if (checkbox) {
             checkbox.checked = visibility === 'visible';
+        }
+
+        const div = document.getElementById(sectionId + '_chart');
+        if (div) {
+            console.log(`Updating visibility for ${sectionId}_chart to ${visibility}`);
+            div.style.display = visibility === 'visible' ? 'block' : 'none';
         }
     });
 }
