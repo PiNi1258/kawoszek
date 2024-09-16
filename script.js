@@ -486,6 +486,8 @@ function toggleSection(sectionId) {
     localStorage.setItem(sectionId, isVisible ? 'hidden' : 'visible');
 }
 
+
+
 // Wywołanie funkcji inicjalizującej przy załadowaniu strony
 window.onload = function() {
     init();
