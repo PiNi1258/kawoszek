@@ -495,15 +495,12 @@ function initializeSectionVisibility() {
         const sectionId = section.id;
         let visibility = localStorage.getItem(sectionId);
 
-        console.log(`Section ID: ${sectionId}, Visibility: ${visibility}`);
-
         if (visibility === null) {
             visibility = 'visible';
             localStorage.setItem(sectionId, visibility);
         }
 
         section.style.display = visibility === 'visible' ? 'block' : 'none';
-        console.log(`Section ${sectionId} set to ${visibility}`);
 
         // Ustawienie checkboxa
         const checkbox = document.getElementById(sectionId + '_checkbox');
