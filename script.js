@@ -166,6 +166,24 @@ function updateCoffeeHistory() {
     }
 }
 
+// Funkcja do resetowania historii suplementów
+function resetOilHistory() {
+    oilStatus = {}; // Wyczyszczenie historii suplementów
+    getStorageItem('oilStatus', JSON.stringify(oilStatus), 7); // Zapisz w ciasteczkach
+
+    updateOilHistory();
+    updateOilResult();
+}
+
+// Funkcja do resetowania historii suplementów
+function resetSpanishHistory() {
+    spanishStatus = {}; // Wyczyszczenie historii suplementów
+    getStorageItem('spanishStatus', JSON.stringify(spanishStatus), 7); // Zapisz w ciasteczkach
+
+    updateSpanishHistory();
+    updateSpanishResult();
+}
+
 
 // Funkcja do rysowania wykresów
 function updateCharts() {
