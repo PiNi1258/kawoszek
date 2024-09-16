@@ -125,24 +125,36 @@
 
     <div id="editPage" style="display: none;">
         <section class="section">
-            <h2>Suplementy<input type="checkbox" id="Supplements_checkbox" checked onclick="toggleSection('Supplements')"/> </h2>
+            <h2>Suplementy<input type="checkbox" id="Supplements_checkbox" checked
+                                 onclick="toggleSection('Supplements')"/></h2>
+            <input type="date" id="editSupplementsDate" name="date-picker" aria-label="Data suplementów">
+            <button id="historicSupplementYes" onclick="historicSupplement('TAK')"
+                    aria-label="Zaznacz, że zażyłeś suplementy dzisiaj">TAK
+            </button>
+            <button id="historicSupplementNo" onclick="historicSupplement('NIE')"
+                    aria-label="Zaznacz, że nie zażyłeś suplementów dzisiaj">NIE
+            </button>
             <a class="reset-link" href="#" onclick="resetSupplementHistory()" aria-label="Resetuj historię suplementów">Resetuj
                 suplementy</a>
         </section>
 
         <section class="section">
-           <h2>Olejowanie <input id="Oil_checkbox" type="checkbox" checked onclick="toggleSection('Oil')"/></h2>
+            <h2>Olejowanie <input id="Oil_checkbox" type="checkbox" checked onclick="toggleSection('Oil')"/></h2>
+            <input type="date" id="editOilDate" name="date-picker" aria-label="Data olejowania">
+            <button id="historicOilYes" onclick="historicOil('TAK')" aria-label="TAK">TAK</button>
+            <button id="historicOilNo" onclick="historicOil('NIE')" aria-label="NIE">NIE</button>
             <a class="reset-link" href="#" onclick="resetOilHistory()" aria-label="Resetuj historię olejowania">Resetuj
                 olejowanie</a>
         </section>
 
         <section class="section">
-            <h2>Hiszpański<input type="checkbox" id="Spanish_checkbox"  checked onclick="toggleSection('Spanish')"/> </h2>
+            <h2>Hiszpański<input type="checkbox" id="Spanish_checkbox" checked onclick="toggleSection('Spanish')"/></h2>
+            <input type="date" id="editSpanishDate" name="date-picker" aria-label="Data hiszpańskiego">
+            <button id="historicSpanishYes" onclick="historicSpanish('TAK')" aria-label="TAK">TAK</button>
+            <button id="historicSpanishNo" onclick="historicSpanish('NIE')" aria-label="NIE">NIE</button>
             <a class="reset-link" href="#" onclick="resetSpanishHistory()" aria-label="Resetuj historię hiszpańskiego">Resetuj
                 hiszpański</a>
-        </section>
-
-        <section class="section">
+        </section><section class="section">
             <h2>Kawa<input type="checkbox" id="Coffee_checkbox"  checked onclick="toggleSection('Coffee')"/></h2>
             <input type="date" id="editCoffeeDate" name="date-picker" aria-label="Data kawy">
             <input aria-label="Liczba wypitych kaw" id="editCoffeeCount" placeholder="Liczba wypitych kaw"

@@ -109,6 +109,38 @@ function updateWaterCount() {
     updateCharts();
 }
 
+// Funkcja do aktualizacji liczby kawy
+function historicSupplement(status) {
+    const editDate = document.getElementById('editSupplementsDate').value;
+
+    supplementStatus[editDate] = status;
+    setStorageItem('supplementStatus', JSON.stringify(supplementStatus));
+
+    updateSupplementHistory();
+    updateCharts();
+}
+
+
+function historicOil(status) {
+    const editDate = document.getElementById('editOilDate').value;
+
+    oilStatus[editDate] = status;
+    setStorageItem('oilStatus', JSON.stringify(oilStatus));
+
+    updateOilHistory();
+    updateCharts();
+}
+
+function historicSpanish(status) {
+    const editDate = document.getElementById('editSpanishDate').value;
+
+    spanishStatus[editDate] = status;
+    setStorageItem('spanishStatus', JSON.stringify(oilStatus));
+
+    updateSpanishHistory();
+    updateCharts();
+}
+
 // Funkcja do aktualizacji wyświetlanej liczby kawy
 function updateCoffeeResult() {
     document.getElementById('coffeeResult').innerHTML = `Liczba wypitych kaw: <b>${coffeeCount}</b>`;
@@ -405,6 +437,9 @@ function setDefaultDate() {
     const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
     document.getElementById('editWaterDate').value = today;
     document.getElementById('editCoffeeDate').value = today;
+    document.getElementById('editSupplementsDate').value = today;
+    document.getElementById('editOilDate').value = today;
+    document.getElementById('editSpanishDate').value = today;
 }
 
 
