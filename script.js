@@ -460,6 +460,14 @@ function init() {
     setDefaultDate();
 }
 
+function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    const isVisible = section.style.display !== 'none';
+
+    section.style.display = isVisible ? 'none' : 'block';
+    localStorage.setItem(sectionId, isVisible ? 'hidden' : 'visible');
+}
+
 // Wywołanie funkcji inicjalizującej przy załadowaniu strony
 window.onload = function() {
     init();
