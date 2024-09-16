@@ -367,10 +367,12 @@ function updateOilResult() {
 }
 
 function updateOilHistory() {
+    const sortedEntries = Object.entries(oilStatus).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
+
     const tbody = document.getElementById('oilHistoryTable').getElementsByTagName('tbody')[0];
     tbody.innerHTML = ''; // Clear the table before adding new data
 
-    for (const [date, status] of Object.entries(oilStatus)) {
+    for (const [date, status] of sortedEntries) {
         const row = tbody.insertRow();
         const cellDate = row.insertCell(0);
         const cellStatus = row.insertCell(1);
@@ -386,10 +388,12 @@ function updateSpanishResult() {
 }
 
 function updateSpanishHistory() {
+    const sortedEntries = Object.entries(spanishStatus).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
+
     const tbody = document.getElementById('spanishHistoryTable').getElementsByTagName('tbody')[0];
     tbody.innerHTML = ''; // Clear the table before adding new data
 
-    for (const [date, status] of Object.entries(spanishStatus)) {
+    for (const [date, status] of sortedEntries) {
         const row = tbody.insertRow();
         const cellDate = row.insertCell(0);
         const cellStatus = row.insertCell(1);
@@ -485,7 +489,7 @@ function setActiveLink(activeLinkId) {
 // Funkcja inicjalizacyjna
 function init() {
     console.log('Initializing from localStorage...');
-
+    initializeSectionVisibility();
     coffeeCount = parseInt(getStorageItem('coffeeCount') || 0);
     coffeeHistory = JSON.parse(getStorageItem('coffeeHistory')) || {};
     waterCount = parseFloat(getStorageItem('waterCount') || 0);
@@ -552,5 +556,4 @@ function initializeSectionVisibility() {
 // Wywołanie funkcji inicjalizującej przy załadowaniu strony
 window.onload = function() {
     init();
-    initializeSectionVisibility();
 };
