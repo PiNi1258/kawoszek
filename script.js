@@ -167,18 +167,145 @@ function updateCoffeeHistory() {
 }
 
 
+// Funkcja do rysowania wykresów
 function updateCharts() {
-    // Assuming you have a global Chart.js instance for water consumption
-    const waterData = Object.values(waterHistory);
-    const waterLabels = Object.keys(waterHistory);
+    const coffeeHistory = JSON.parse(getStorageItem('coffeeHistory') || '{}');
+    const waterHistory = JSON.parse(getStorageItem('waterHistory') || '{}');
+    const supplementHistory = JSON.parse(getStorageItem('supplementStatus') || '{}');
+    const oilHistory = JSON.parse(getStorageItem('oilStatus') || '{}');
+    const spanishHistory = JSON.parse(getStorageItem('spanishStatus') || '{}');
 
-    // Update water chart (assuming it's already initialized)
-    waterChart.data.labels = waterLabels; // Update labels (dates)
-    waterChart.data.datasets[0].data = waterData; // Update data (water counts)
-    waterChart.update(); // Refresh the chart
+    const ctxCoffee = document.getElementById('coffeeChart').getContext('2d');
+    const ctxWater = document.getElementById('waterChart').getContext('2d');
+    const ctxSupplement = document.getElementById('supplementChart').getContext('2d');
+    const ctxOil = document.getElementById('oilChart').getContext('2d');
+    const ctxSpanish = document.getElementById('spanishChart').getContext('2d');
 
-    // Similar logic can be used for other charts (coffee, etc.)
+    // Sprawdzenie i zniszczenie poprzednich wykresów
+    if (coffeeChart) {
+        coffeeChart.destroy();
+    }
+    if (waterChart) {
+        waterChart.destroy();
+    }
+    if (supplementChart) {
+        supplementChart.destroy();
+    }
+    if (oilChart) {
+        oilChart.destroy();
+    }
+    if (spanishChart) {
+        spanishChart.destroy();
+    }
+
+    // Tworzenie nowych wykresów
+    coffeeChart = new Chart(ctxCoffee, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(coffeeHistory),
+            datasets: [{
+                label: 'Liczba wypitych kaw',
+                data: Object.values(coffeeHistory),
+                backgroundColor: 'rgba(255, 99, 132, 0.5)', // Nice pink color
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    waterChart = new Chart(ctxWater, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(waterHistory),
+            datasets: [{
+                label: 'Liczba wypitych litrów wody',
+                data: Object.values(waterHistory),
+                backgroundColor: 'rgba(54, 162, 235, 0.5)', // Cool blue color
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    supplementChart = new Chart(ctxSupplement, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(supplementHistory),
+            datasets: [{
+                label: 'Zażyte suplementy',
+                data: Object.keys(supplementHistory).map(date => supplementHistory[date] === 'TAK' ? 1 : -1),
+                backgroundColor: 'rgba(75, 192, 192, 0.5)', // Soft teal color
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    oilChart = new Chart(ctxOil, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(oilHistory),
+            datasets: [{
+                label: 'Olejowanie',
+                data: Object.keys(oilHistory).map(date => oilHistory[date] === 'TAK' ? 1 : -1),
+                backgroundColor: 'rgba(255, 159, 64, 0.5)', // Warm orange color
+                borderColor: 'rgba(255, 159, 64, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    spanishChart = new Chart(ctxSpanish, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(spanishHistory),
+            datasets: [{
+                label: 'Hiszpański',
+                data: Object.keys(spanishHistory).map(date => spanishHistory[date] === 'TAK' ? 1 : -1),
+                backgroundColor: 'rgba(153, 102, 255, 0.5)', // Light purple color
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 }
+
+
 
 
 function updateOilResult() {
@@ -260,6 +387,42 @@ function setDefaultDate() {
     const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
     document.getElementById('editWaterDate').value = today;
     document.getElementById('editCoffeeDate').value = today;
+}
+
+
+// Funkcja do pokazania strony głównej
+function showHome() {
+    document.getElementById('homePage').style.display = 'block';
+    document.getElementById('editPage').style.display = 'none';
+    document.getElementById('reportsPage').style.display = 'none';
+
+    setActiveLink('homeLink');
+}
+
+// Funkcja do pokazania strony edycji
+function showEdit() {
+    document.getElementById('homePage').style.display = 'none';
+    document.getElementById('reportsPage').style.display = 'none';
+    document.getElementById('editPage').style.display = 'block';
+
+    setActiveLink('editLink');
+}
+
+// Funkcja do wyświetlania zakładki Raporty
+function showReports() {
+    document.getElementById('homePage').style.display = 'none';
+    document.getElementById('editPage').style.display = 'none';
+    document.getElementById('reportsPage').style.display = 'block';
+
+    setActiveLink('reportsLink');
+
+    updateCharts(); // Rysowanie wykresów po przejściu na stronę raportów
+}
+
+function setActiveLink(activeLinkId) {
+    ['homeLink', 'editLink', 'reportsLink'].forEach(linkId => {
+        document.getElementById(linkId).classList.toggle('active', linkId === activeLinkId);
+    });
 }
 
 
