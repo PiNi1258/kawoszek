@@ -316,7 +316,7 @@ function updateCharts() {
                             } else if (value === -1) {
                                 return 'NIE';
                             } else if (value === 0) {
-                                return '';
+                                return '?';
                             }
                             return null;
                         },
@@ -352,7 +352,7 @@ function updateCharts() {
                             } else if (value === -1) {
                                 return 'NIE';
                             } else if (value === 0) {
-                                return '';
+                                return '?';
                             }
                             return null;
                         },
@@ -388,7 +388,7 @@ function updateCharts() {
                             } else if (value === -1) {
                                 return 'NIE';
                             } else if (value === 0) {
-                                return '';
+                                return '?';
                             }
                             return null;
                         },
