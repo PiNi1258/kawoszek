@@ -17,6 +17,7 @@ function getCookie(name) {
         let c = ca[i];
         while (c.charAt(0) === ' ') c = c.substring(1, c.length);
         if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
     }
     return null;
 }
@@ -458,6 +459,46 @@ function setActiveLink(activeLinkId) {
     });
 }
 
+
+/**
+ * Ukrywa lub pokazuje sekcję na podstawie jej ID.
+ *
+ * @param {string} sectionId - ID sekcji w HTML.
+ */
+function hideSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        const isHidden = section.style.display === 'none';
+        section.style.display = isHidden ? 'block' : 'none';
+        localStorage.setItem(`section_${sectionId}_hidden`, !isHidden);
+    } else {
+        console.error(`Element with ID ${sectionId} not found.`);
+    }
+}
+
+
+/**
+ * Wyszukuje wszystkie elementy <section> na stronie i zapisuje ich ID do tablicy.
+ * Następnie wyświetla tablicę w konsoli.
+ * Dla znalezionych ID poszukuje odpowiadających wartości w localStorage
+ * dla itemów złożonych z nazwy 'section_'+id+'_hidden'
+ * i ustawia odpowiednią widoczność na odpowiadających mu section.
+ */
+function initSectionIds() {
+    const sections = document.querySelectorAll('section');
+    const sectionIds = [];
+
+    sections.forEach(section => {
+        if (section.id) {
+            sectionIds.push(section.id);
+            const isHidden = localStorage.getItem(`section_${section.id}_hidden`) === 'true';
+            section.style.display = isHidden ? 'none' : 'block';
+        }
+    });
+
+    console.log('Found section IDs:', sectionIds);
+}
+
 function setDefaultDate() {
         const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
         document.getElementById('editWaterDate').value = today;
@@ -466,6 +507,8 @@ function setDefaultDate() {
 
 // Funkcja inicjalizacyjna
 function init() {
+    initSectionIds();
+
     console.log('Initializing from cookies...');
 
     coffeeCount = parseInt(getCookie('coffeeCount') || 0);
