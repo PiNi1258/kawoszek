@@ -251,7 +251,6 @@ function updateCharts() {
         spanishChart.destroy();
     }
 
-    // Tworzenie nowych wykresów
     coffeeChart = new Chart(ctxCoffee, {
         type: 'bar',
         data: {
