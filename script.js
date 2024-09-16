@@ -487,8 +487,35 @@ function toggleSection(sectionId) {
 }
 
 
+// Funkcja inicjalizująca widoczność sekcji
+function initializeSectionVisibility() {
+    const sections = document.querySelectorAll('section');
+
+    sections.forEach(section => {
+        const sectionId = section.id;
+        let visibility = localStorage.getItem(sectionId);
+
+        console.log(`Section ID: ${sectionId}, Visibility: ${visibility}`);
+
+        if (visibility === null) {
+            visibility = 'visible';
+            localStorage.setItem(sectionId, visibility);
+        }
+
+        section.style.display = visibility === 'visible' ? 'block' : 'none';
+        console.log(`Section ${sectionId} set to ${visibility}`);
+
+        // Ustawienie checkboxa
+        const checkbox = document.getElementById(sectionId + '_checkbox');
+        if (checkbox) {
+            checkbox.checked = visibility === 'visible';
+        }
+    });
+}
+
 
 // Wywołanie funkcji inicjalizującej przy załadowaniu strony
 window.onload = function() {
     init();
+    initializeSectionVisibility();
 };
