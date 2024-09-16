@@ -308,7 +308,22 @@ function updateCharts() {
         options: {
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            if (value === 1) {
+                                return 'TAK';
+                            } else if (value === -1) {
+                                return 'NIE';
+                            } else if (value === 0) {
+                                return '';
+                            }
+                            return null;
+                        },
+                        stepSize: 1, // Krok co 1, aby pokazać -1, 0 i 1
+                    },
+                    min: -1,  // Ustaw minimalną wartość na -1
+                    max: 1    // Ustaw maksymalną wartość na 1
                 }
             }
         }
@@ -329,7 +344,22 @@ function updateCharts() {
         options: {
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            if (value === 1) {
+                                return 'TAK';
+                            } else if (value === -1) {
+                                return 'NIE';
+                            } else if (value === 0) {
+                                return '';
+                            }
+                            return null;
+                        },
+                        stepSize: 1, // Krok co 1, aby pokazać -1, 0 i 1
+                    },
+                    min: -1,  // Ustaw minimalną wartość na -1
+                    max: 1    // Ustaw maksymalną wartość na 1
                 }
             }
         }
@@ -350,7 +380,22 @@ function updateCharts() {
         options: {
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            if (value === 1) {
+                                return 'TAK';
+                            } else if (value === -1) {
+                                return 'NIE';
+                            } else if (value === 0) {
+                                return '';
+                            }
+                            return null;
+                        },
+                        stepSize: 1, // Krok co 1, aby pokazać -1, 0 i 1
+                    },
+                    min: -1,  // Ustaw minimalną wartość na -1
+                    max: 1    // Ustaw maksymalną wartość na 1
                 }
             }
         }
