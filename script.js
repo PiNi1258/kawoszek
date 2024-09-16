@@ -558,8 +558,9 @@ function initializeSectionVisibility() {
         }
 
         const div = document.getElementById(sectionId + '_chart');
+        console.log(`Updating visibility for ${div}`);
+
         if (div) {
-            console.log(`Updating visibility for ${sectionId}_chart to ${visibility}`);
             div.style.display = visibility === 'visible' ? 'block' : 'none';
         }
     });
