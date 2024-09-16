@@ -157,10 +157,11 @@ function updateSupplementResult() {
 }
 
 function updateSupplementHistory() {
+    const sortedEntries = Object.entries(supplementStatus).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
     const tbody = document.getElementById('supplementHistoryTable').getElementsByTagName('tbody')[0];
     tbody.innerHTML = ''; // Clear the table before adding new data
 
-    for (const [date, status] of Object.entries(supplementStatus)) {
+    for (const [date, status] of sortedEntries) {
         const row = tbody.insertRow();
         const cellDate = row.insertCell(0);
         const cellStatus = row.insertCell(1);
@@ -171,10 +172,11 @@ function updateSupplementHistory() {
 }
 
 function updateWaterHistory() {
+    const sortedEntries = Object.entries(waterHistory).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
     const tbody = document.getElementById('waterHistoryTable').getElementsByTagName('tbody')[0];
     tbody.innerHTML = ''; // Clear the table before adding new data
 
-    for (const [date, count] of Object.entries(waterHistory)) {
+    for (const [date, count] of sortedEntries) {
         const row = tbody.insertRow();
         const cellDate = row.insertCell(0);
         const cellCount = row.insertCell(1);
@@ -185,10 +187,11 @@ function updateWaterHistory() {
 }
 
 function updateCoffeeHistory() {
+    const sortedEntries = Object.entries(coffeeHistory).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
     const tbody = document.getElementById('coffeeHistoryTable').getElementsByTagName('tbody')[0];
     tbody.innerHTML = ''; // Clear the table before adding new data
 
-    for (const [date, count] of Object.entries(coffeeHistory)) {
+    for (const [date, count] of sortedEntries) {
         const row = tbody.insertRow();
         const cellDate = row.insertCell(0);
         const cellCount = row.insertCell(1);
