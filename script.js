@@ -252,7 +252,7 @@ function updateCharts() {
     }
 
     coffeeChart = new Chart(ctxCoffee, {
-        type: 'bar',
+        type: 'line',
         data: {
             labels: Object.keys(coffeeHistory),
             datasets: [{
@@ -273,7 +273,7 @@ function updateCharts() {
     });
 
     waterChart = new Chart(ctxWater, {
-        type: 'bar',
+        type: 'line',
         data: {
             labels: Object.keys(waterHistory),
             datasets: [{
