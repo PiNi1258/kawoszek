@@ -527,6 +527,7 @@ function toggleSection(sectionId) {
     section.style.display = isVisible ? 'none' : 'block';
     localStorage.setItem(sectionId, isVisible ? 'hidden' : 'visible');
 
+    let visibility = isVisible ? 'hidden' : 'visible';
     const div = document.getElementById(sectionId + '_chart');
     if (div) {
         console.log(`Updating visibility for ${sectionId}_chart to ${visibility}`);
