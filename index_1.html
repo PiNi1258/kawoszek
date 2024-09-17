@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><!DOCTYPE html>
+    <html lang="pl">
+    <head>
+    <title>Śledź Suplementy, Kawę i Wodę</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="description"
+        content="Aplikacja do śledzenia spożycia suplementów, kawy i wody. Monitoruj swoje spożycie i osiągaj swoje cele zdrowotne z naszą prostą aplikacją.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Śledź Suplementy, Kawę i Wodę">
+  <link rel="icon" href="icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <script>
+    // Existing functions (unchanged)
+
+    // New code for adding custom sections
+    function addCustomSection() {
+      const sectionName = prompt("Podaj nazwę sekcji:");
+      const question = prompt("Podaj pytanie:");
+      const answerType = prompt("Podaj typ odpowiedzi (TAK lub NIE/Dodające):");
+
+      if (!sectionName || !question || !answerType) {
+        alert("Wszystkie pola muszą być wypełnione!");
+        return;
+      }
+
+      const sectionId = sectionName.replace(/\s+/g, '');
+
+      const sectionHTML = `
+        <section class="section" id="${sectionId}">
+            <h2>${sectionName} <input type="checkbox" id="${sectionId}_checkbox" checked onclick="toggleSection('${sectionId}')"/></h2>
+            <div>
+                <p>${question}</p>
+                ${answerType === 'TAK lub NIE' ? `
+                <button onclick="customAnswer('${sectionId}', 'TAK')" aria-label="TAK">TAK</button>
+                <button onclick="customAnswer('${sectionId}', 'NIE')" aria-label="NIE">NIE</button>
+                ` : `
+                <input type="number" id="input_${sectionId}" placeholder="Dodaj wartość">
+                <button onclick="addCustomValue('${sectionId}')" aria-label="Dodaj">Dodaj</button>
+                `}
+                <button onclick="resetCustomHistory('${sectionId}')">Resetuj</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Wartość</th>
+                    </tr>
+                </thead>
+                <tbody id="${sectionId}HistoryTable"></tbody>
+            </table>
+        </section>`;
+
+      document.getElementById('customSections').innerHTML += sectionHTML;
+      initializeSectionVisibility();
+    }
+
+    function customAnswer(sectionId, answer) {
+      const sectionHistory = JSON.parse(getStorageItem(sectionId) || '{}');
+      const today = new Date().toISOString().split('T')[0];
+
+      sectionHistory[today] = answer;
+      setStorageItem(sectionId, JSON.stringify(sectionHistory));
+
+      updateCustomHistory(sectionId);
+    }
+
+    function addCustomValue(sectionId) {
+      const value = parseFloat(document.getElementById(`input_${sectionId}`).value) || 0;
+      const sectionHistory = JSON.parse(getStorageItem(sectionId) || '{}');
+      const today = new Date().toISOString().split('T')[0];
+
+      sectionHistory[today] = (sectionHistory[today] || 0) + value;
+      setStorageItem(sectionId, JSON.stringify(sectionHistory));
+
+      updateCustomHistory(sectionId);
+    }
+
+    function resetCustomHistory(sectionId) {
+      setStorageItem(sectionId, JSON.stringify({}));
+      updateCustomHistory(sectionId);
+    }
+
+    function updateCustomHistory(sectionId) {
+      const sectionHistory = JSON.parse(getStorageItem(sectionId) || '{}');
+      const sortedEntries = Object.entries(sectionHistory).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
+      const tbody = document.getElementById(`${sectionId}HistoryTable`);
+      tbody.innerHTML = ''; // Clear the table before adding new data
+
+      for (const [date, value] of sortedEntries) {
+        const row = tbody.insertRow();
+        const cellDate = row.insertCell(0);
+        const cellValue = row.insertCell(1);
+
+        cellDate.textContent = date;
+        cellValue.textContent = value;
+      }
+    }
+
+    // Extend init function
+    function init() {
+      console.log('Initializing from localStorage...');
+      initializeSectionVisibility();
+      coffeeCount = parseInt(getStorageItem('coffeeCount') || 0);
+      coffeeHistory = JSON.parse(getStorageItem('coffeeHistory')) || {};
+      waterCount = parseFloat(getStorageItem('waterCount') || 0);
+      waterHistory = JSON.parse(getStorageItem('waterHistory')) || {};
+      supplementStatus = JSON.parse(getStorageItem('supplementStatus')) || {};
+      oilStatus = JSON.parse(getStorageItem('oilStatus')) || {};
+      spanishStatus = JSON.parse(getStorageItem('spanishStatus')) || {};
+
+      console.log('Retrieved coffeeCount:', coffeeCount);
+      console.log('Retrieved coffeeHistory:', coffeeHistory);
+      console.log('Retrieved waterCount:', waterCount);
+      console.log('Retrieved waterHistory:', waterHistory);
+      console.log('Retrieved supplementStatus:', supplementStatus);
+      console.log('Retrieved oilStatus:', oilStatus);
+      console.log('Retrieved spanishStatus:', spanishStatus);
+
+      updateCoffeeResult();
+      updateWaterResult();
+      updateSupplementResult();
+      updateCoffeeHistory();
+      updateWaterHistory();
+      updateSupplementHistory();
+      updateOilResult();
+      updateOilHistory();
+      updateSpanishResult();
+      updateSpanishHistory();
+
+      setDefaultDate();
+      initializeCustomSections(); // Call to initialize custom sections
+    }
+
+    function initializeCustomSections() {
+      const customSections = JSON.parse(getStorageItem('customSections') || '[]');
+      customSections.forEach(section => {
+        const sectionId = section.replace(/\s+/g, '');
+        updateCustomHistory(sectionId);
+      });
+    }
+
+  </script>
+</head>
+<body>
+<header>
+  <div class="container">
+    <nav class="nav">
+      <a class="nav-link active" href="#" id="homeLink" onclick="showHome()">Strona główna</a>
+      <a class="nav-link" href="#" id="reportsLink" onclick="showReports()">Raporty</a>
+      <a class="nav-link" href="#" id="editLink" onclick="showEdit()">Edycja danych</a>
+    </nav>
+  </div>
+</header>
+<main class="container">
+  <div id="homePage">
+    <!-- Existing sections (unchanged) -->
+    <div id="customSections"></div> <!-- Placeholder for custom sections -->
+  </div>
+  <div id="reportsPage" style="display: none;">
+    <!-- Existing report sections (unchanged) -->
+  </div>
+  <div id="editPage" style="display: none;">
+    <!-- Existing edit sections (unchanged) -->
+    <section class="section">
+      <h2>Dodaj własną sekcję</h2>
+      <button onclick="addCustomSection()">Dodaj Sekcję</button>
+    </section>
+  </div>
+</main>
+<footer class="footer">
+  <p>Made with ❤️ by <a href="https://pini1258.github.io/kawoszek/#" target="_blank">PiZi</a> inspired by <a
+          href="https://pini1258.github.io/kawoszek/#" target="_blank">NiiX</a> 🥰</p>
+</footer>
+<script src="script.js"></script>
+</body>
+</html></title>
+</head>
+<body>
+
+</body>
+</html>
