@@ -1,190 +1,219 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title><!DOCTYPE html>
-    <html lang="pl">
-    <head>
-    <title>Śledź Suplementy, Kawę i Wodę</title>
+  <title>Śledź Stany Różnych Kategorii</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <meta name="description"
-        content="Aplikacja do śledzenia spożycia suplementów, kawy i wody. Monitoruj swoje spożycie i osiągaj swoje cele zdrowotne z naszą prostą aplikacją.">
+  <meta name="description" content="Aplikacja do śledzenia różnych kategorii. Monitoruj swoje działania z naszą prostą aplikacją.">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Śledź Suplementy, Kawę i Wodę">
+  <meta name="apple-mobile-web-app-title" content="Śledź Kategorii">
   <link rel="icon" href="icon.png" type="image/png">
   <link rel="apple-touch-icon" href="icon.png">
   <link rel="stylesheet" href="styles.css">
   <link rel="manifest" href="manifest.json">
-  <script>
-    // Existing functions (unchanged)
-
-    // New code for adding custom sections
-    function addCustomSection() {
-      const sectionName = prompt("Podaj nazwę sekcji:");
-      const question = prompt("Podaj pytanie:");
-      const answerType = prompt("Podaj typ odpowiedzi (TAK lub NIE/Dodające):");
-
-      if (!sectionName || !question || !answerType) {
-        alert("Wszystkie pola muszą być wypełnione!");
-        return;
-      }
-
-      const sectionId = sectionName.replace(/\s+/g, '');
-
-      const sectionHTML = `
-        <section class="section" id="${sectionId}">
-            <h2>${sectionName} <input type="checkbox" id="${sectionId}_checkbox" checked onclick="toggleSection('${sectionId}')"/></h2>
-            <div>
-                <p>${question}</p>
-                ${answerType === 'TAK lub NIE' ? `
-                <button onclick="customAnswer('${sectionId}', 'TAK')" aria-label="TAK">TAK</button>
-                <button onclick="customAnswer('${sectionId}', 'NIE')" aria-label="NIE">NIE</button>
-                ` : `
-                <input type="number" id="input_${sectionId}" placeholder="Dodaj wartość">
-                <button onclick="addCustomValue('${sectionId}')" aria-label="Dodaj">Dodaj</button>
-                `}
-                <button onclick="resetCustomHistory('${sectionId}')">Resetuj</button>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Wartość</th>
-                    </tr>
-                </thead>
-                <tbody id="${sectionId}HistoryTable"></tbody>
-            </table>
-        </section>`;
-
-      document.getElementById('customSections').innerHTML += sectionHTML;
-      initializeSectionVisibility();
-    }
-
-    function customAnswer(sectionId, answer) {
-      const sectionHistory = JSON.parse(getStorageItem(sectionId) || '{}');
-      const today = new Date().toISOString().split('T')[0];
-
-      sectionHistory[today] = answer;
-      setStorageItem(sectionId, JSON.stringify(sectionHistory));
-
-      updateCustomHistory(sectionId);
-    }
-
-    function addCustomValue(sectionId) {
-      const value = parseFloat(document.getElementById(`input_${sectionId}`).value) || 0;
-      const sectionHistory = JSON.parse(getStorageItem(sectionId) || '{}');
-      const today = new Date().toISOString().split('T')[0];
-
-      sectionHistory[today] = (sectionHistory[today] || 0) + value;
-      setStorageItem(sectionId, JSON.stringify(sectionHistory));
-
-      updateCustomHistory(sectionId);
-    }
-
-    function resetCustomHistory(sectionId) {
-      setStorageItem(sectionId, JSON.stringify({}));
-      updateCustomHistory(sectionId);
-    }
-
-    function updateCustomHistory(sectionId) {
-      const sectionHistory = JSON.parse(getStorageItem(sectionId) || '{}');
-      const sortedEntries = Object.entries(sectionHistory).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
-      const tbody = document.getElementById(`${sectionId}HistoryTable`);
-      tbody.innerHTML = ''; // Clear the table before adding new data
-
-      for (const [date, value] of sortedEntries) {
-        const row = tbody.insertRow();
-        const cellDate = row.insertCell(0);
-        const cellValue = row.insertCell(1);
-
-        cellDate.textContent = date;
-        cellValue.textContent = value;
-      }
-    }
-
-    // Extend init function
-    function init() {
-      console.log('Initializing from localStorage...');
-      initializeSectionVisibility();
-      coffeeCount = parseInt(getStorageItem('coffeeCount') || 0);
-      coffeeHistory = JSON.parse(getStorageItem('coffeeHistory')) || {};
-      waterCount = parseFloat(getStorageItem('waterCount') || 0);
-      waterHistory = JSON.parse(getStorageItem('waterHistory')) || {};
-      supplementStatus = JSON.parse(getStorageItem('supplementStatus')) || {};
-      oilStatus = JSON.parse(getStorageItem('oilStatus')) || {};
-      spanishStatus = JSON.parse(getStorageItem('spanishStatus')) || {};
-
-      console.log('Retrieved coffeeCount:', coffeeCount);
-      console.log('Retrieved coffeeHistory:', coffeeHistory);
-      console.log('Retrieved waterCount:', waterCount);
-      console.log('Retrieved waterHistory:', waterHistory);
-      console.log('Retrieved supplementStatus:', supplementStatus);
-      console.log('Retrieved oilStatus:', oilStatus);
-      console.log('Retrieved spanishStatus:', spanishStatus);
-
-      updateCoffeeResult();
-      updateWaterResult();
-      updateSupplementResult();
-      updateCoffeeHistory();
-      updateWaterHistory();
-      updateSupplementHistory();
-      updateOilResult();
-      updateOilHistory();
-      updateSpanishResult();
-      updateSpanishHistory();
-
-      setDefaultDate();
-      initializeCustomSections(); // Call to initialize custom sections
-    }
-
-    function initializeCustomSections() {
-      const customSections = JSON.parse(getStorageItem('customSections') || '[]');
-      customSections.forEach(section => {
-        const sectionId = section.replace(/\s+/g, '');
-        updateCustomHistory(sectionId);
-      });
-    }
-
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <header>
   <div class="container">
     <nav class="nav">
-      <a class="nav-link active" href="#" id="homeLink" onclick="showHome()">Strona główna</a>
-      <a class="nav-link" href="#" id="reportsLink" onclick="showReports()">Raporty</a>
-      <a class="nav-link" href="#" id="editLink" onclick="showEdit()">Edycja danych</a>
+      <a class="nav-link active" href="#" id="homeLink" onclick="displaySection('homePage')">Strona główna</a>
+      <a class="nav-link" href="#" id="reportsLink" onclick="displaySection('reportsPage')">Raporty</a>
+      <a class="nav-link" href="#" id="editLink" onclick="displaySection('editPage')">Edycja danych</a>
     </nav>
   </div>
 </header>
 <main class="container">
   <div id="homePage">
-    <!-- Existing sections (unchanged) -->
-    <div id="customSections"></div> <!-- Placeholder for custom sections -->
+    <h2>Dodaj nową sekcję</h2>
+    <input type="text" id="newSectionName" placeholder="Nazwa sekcji">
+    <button onclick="addNewSection()">Dodaj</button>
+    <div id="sectionsContainer"></div>
   </div>
   <div id="reportsPage" style="display: none;">
-    <!-- Existing report sections (unchanged) -->
+    <h2>Raporty</h2>
+    <div id="chartsContainer"></div>
   </div>
   <div id="editPage" style="display: none;">
-    <!-- Existing edit sections (unchanged) -->
-    <section class="section">
-      <h2>Dodaj własną sekcję</h2>
-      <button onclick="addCustomSection()">Dodaj Sekcję</button>
-    </section>
+    <h2>Edycja danych</h2>
+    <div id="editSectionsContainer"></div>
   </div>
 </main>
 <footer class="footer">
-  <p>Made with ❤️ by <a href="https://pini1258.github.io/kawoszek/#" target="_blank">PiZi</a> inspired by <a
-          href="https://pini1258.github.io/kawoszek/#" target="_blank">NiiX</a> 🥰</p>
+  <p>Made with ❤️ by PiZi inspired by NiiX 🥰</p>
 </footer>
-<script src="script.js"></script>
-</body>
-</html></title>
-</head>
-<body>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const sectionsDataKey = 'sectionsData';
+    const today = new Date().toISOString().split('T')[0];
+    let charts = {};
 
+    const loadSectionsData = () => JSON.parse(localStorage.getItem(sectionsDataKey)) || {};
+
+    const saveSectionsData = (data) => localStorage.setItem(sectionsDataKey, JSON.stringify(data));
+
+    const updateSectionCounts = (sectionName, countUpdate) => {
+      const sectionsData = loadSectionsData();
+      const history = sectionsData[sectionName].history || {};
+      const count = sectionsData[sectionName].count || 0;
+
+      sectionsData[sectionName].count = count + countUpdate;
+      history[today] = (history[today] || 0) + countUpdate;
+      sectionsData[sectionName].history = history;
+
+      saveSectionsData(sectionsData);
+      renderSections();
+      renderCharts();
+    }
+
+    const renderSections = () => {
+      const sectionsData = loadSectionsData();
+      const sectionsContainer = document.getElementById('sectionsContainer');
+      const editSectionsContainer = document.getElementById('editSectionsContainer');
+
+      sectionsContainer.innerHTML = '';
+      editSectionsContainer.innerHTML = '';
+
+      for (const sectionName in sectionsData) {
+        const sectionCount = sectionsData[sectionName].count || 0;
+        sectionsContainer.innerHTML += `
+                <section>
+                    <h2>${sectionName}</h2>
+                    <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj</button>
+                    <div>Liczba: ${sectionCount}</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Ilość</th>
+                            </tr>
+                        </thead>
+                        <tbody>${renderSectionHistory(sectionsData[sectionName].history)}</tbody>
+                    </table>
+                </section>
+            `;
+
+        editSectionsContainer.innerHTML += `
+                <section>
+                    <h2>${sectionName}</h2>
+                    <input type="date" id="${sectionName}_date" value="${today}">
+                    <input type="number" id="${sectionName}_count" placeholder="Liczba">
+                    <button onclick="editSectionHistory('${sectionName}')">Aktualizuj</button>
+                    <button onclick="resetSectionHistory('${sectionName}')">Resetuj</button>
+                </section>
+            `;
+      }
+    }
+
+    const renderSectionHistory = (history) => {
+      return Object.entries(history || {}).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA))
+              .map(([date, count]) => `<tr><td>${date}</td><td>${count}</td></tr>`).join('');
+    }
+
+    const renderCharts = () => {
+      const sectionsData = loadSectionsData();
+      const chartsContainer = document.getElementById('chartsContainer');
+
+      chartsContainer.innerHTML = '';
+
+      for (const sectionName in sectionsData) {
+        const history = sectionsData[sectionName].history || {};
+        const canvasId = `chart_${sectionName}`;
+
+        chartsContainer.innerHTML += `
+                <div>
+                    <h3>${sectionName}</h3>
+                    <canvas id="${canvasId}" width="400" height="200"></canvas>
+                </div>
+            `;
+
+        if (charts[canvasId]) {
+          charts[canvasId].destroy();
+        }
+
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        charts[canvasId] = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: Object.keys(history),
+            datasets: [{
+              label: sectionName,
+              data: Object.values(history),
+              backgroundColor: 'rgba(75, 192, 192, 0.5)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+      }
+    }
+
+    window.updateSectionCounts = updateSectionCounts;
+    window.renderSections = renderSections;
+    window.renderCharts = renderCharts;
+
+    window.addNewSection = () => {
+      const newSectionName = document.getElementById('newSectionName').value;
+
+      if (newSectionName) {
+        const sectionsData = loadSectionsData();
+        if (!sectionsData[newSectionName]) {
+          sectionsData[newSectionName] = { count: 0, history: {} };
+          saveSectionsData(sectionsData);
+          renderSections();
+        }
+      }
+    }
+
+    window.editSectionHistory = (sectionName) => {
+      const date = document.getElementById(`${sectionName}_date`).value;
+      const newCount = parseInt(document.getElementById(`${sectionName}_count`).value);
+
+      if (date && !isNaN(newCount)) {
+        const sectionsData = loadSectionsData();
+        const history = sectionsData[sectionName].history || {};
+        history[date] = newCount;
+        sectionsData[sectionName].history = history;
+        saveSectionsData(sectionsData);
+        renderSections();
+        renderCharts();
+      }
+    }
+
+    window.resetSectionHistory = (sectionName) => {
+      const sectionsData = loadSectionsData();
+      sectionsData[sectionName].count = 0;
+      sectionsData[sectionName].history = {};
+      saveSectionsData(sectionsData);
+      renderSections();
+      renderCharts();
+    }
+
+    window.displaySection = (sectionId) => {
+      const sections = ['homePage', 'reportsPage', 'editPage'];
+
+      sections.forEach(id => {
+        document.getElementById(id).style.display = id === sectionId ? 'block' : 'none';
+      });
+
+      ['homeLink', 'reportsLink', 'editLink'].forEach(linkId => {
+        document.getElementById(linkId).classList.toggle('active', linkId === `${sectionId}Link`);
+      });
+
+      if (sectionId === 'reportsPage') {
+        renderCharts();
+      }
+    }
+
+    renderSections();
+    renderCharts();
+  });
+</script>
 </body>
 </html>
