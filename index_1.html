@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -21,14 +22,12 @@
       <a class="nav-link active" href="#" id="homeLink" onclick="displaySection('homePage')">Strona główna</a>
       <a class="nav-link" href="#" id="reportsLink" onclick="displaySection('reportsPage')">Raporty</a>
       <a class="nav-link" href="#" id="editLink" onclick="displaySection('editPage')">Edycja danych</a>
+      <a class="nav-link" href="#" id="manageLink" onclick="displaySection('managePage')">Zarządzaj sekcjami</a>
     </nav>
   </div>
 </header>
 <main class="container">
   <div id="homePage">
-    <h2>Dodaj nową sekcję</h2>
-    <input type="text" id="newSectionName" placeholder="Nazwa sekcji">
-    <button onclick="addNewSection()">Dodaj</button>
     <div id="sectionsContainer"></div>
   </div>
   <div id="reportsPage" style="display: none;">
@@ -38,6 +37,17 @@
   <div id="editPage" style="display: none;">
     <h2>Edycja danych</h2>
     <div id="editSectionsContainer"></div>
+  </div>
+  <div id="managePage" style="display: none;">
+    <h2>Dodaj nową sekcję</h2>
+    <input type="text" id="newSectionName" placeholder="Nazwa sekcji">
+    <select id="newSectionType">
+      <option value="numerical">Numeryczny</option>
+      <option value="binary">Binarne (TAK/NIE)</option>
+    </select>
+    <button onclick="addNewSection()">Dodaj</button>
+    <h2>Istniejące sekcje</h2>
+    <div id="manageSectionsContainer"></div>
   </div>
 </main>
 <footer class="footer">
@@ -53,13 +63,17 @@
 
     const saveSectionsData = (data) => localStorage.setItem(sectionsDataKey, JSON.stringify(data));
 
-    const updateSectionCounts = (sectionName, countUpdate) => {
+    const updateSectionCounts = (sectionName, countUpdate, binaryValue = null) => {
       const sectionsData = loadSectionsData();
       const history = sectionsData[sectionName].history || {};
       const count = sectionsData[sectionName].count || 0;
 
-      sectionsData[sectionName].count = count + countUpdate;
-      history[today] = (history[today] || 0) + countUpdate;
+      if (binaryValue !== null) {
+        history[today] = binaryValue;
+      } else {
+        sectionsData[sectionName].count = count + countUpdate;
+        history[today] = (history[today] || 0) + countUpdate;
+      }
       sectionsData[sectionName].history = history;
 
       saveSectionsData(sectionsData);
@@ -76,32 +90,91 @@
       editSectionsContainer.innerHTML = '';
 
       for (const sectionName in sectionsData) {
+        const sectionType = sectionsData[sectionName].type;
         const sectionCount = sectionsData[sectionName].count || 0;
-        sectionsContainer.innerHTML += `
-                <section>
-                    <h2>${sectionName}</h2>
-                    <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj</button>
-                    <div>Liczba: ${sectionCount}</div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Ilość</th>
-                            </tr>
-                        </thead>
-                        <tbody>${renderSectionHistory(sectionsData[sectionName].history)}</tbody>
-                    </table>
-                </section>
-            `;
+        const isVisible = sectionsData[sectionName].visible;
 
-        editSectionsContainer.innerHTML += `
-                <section>
-                    <h2>${sectionName}</h2>
-                    <input type="date" id="${sectionName}_date" value="${today}">
-                    <input type="number" id="${sectionName}_count" placeholder="Liczba">
-                    <button onclick="editSectionHistory('${sectionName}')">Aktualizuj</button>
-                    <button onclick="resetSectionHistory('${sectionName}')">Resetuj</button>
-                </section>
+        // Render sections only if they are visible
+        if (isVisible) {
+          if (sectionType === 'numerical') {
+            sectionsContainer.innerHTML += `
+                        <section>
+                            <h2>${sectionName}</h2>
+                            <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj</button>
+                            <div>Liczba: ${sectionCount}</div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Ilość</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${renderSectionHistory(sectionsData[sectionName].history)}</tbody>
+                            </table>
+                        </section>
+                    `;
+
+            editSectionsContainer.innerHTML += `
+                        <section>
+                            <h2>${sectionName}</h2>
+                            <input type="date" id="${sectionName}_date" value="${today}">
+                            <input type="number" id="${sectionName}_count" placeholder="Liczba">
+                            <button onclick="editSectionHistory('${sectionName}')">Aktualizuj</button>
+                            <button onclick="resetSectionHistory('${sectionName}')">Resetuj</button>
+                        </section>
+                    `;
+          } else if (sectionType === 'binary') {
+            sectionsContainer.innerHTML += `
+                        <section>
+                            <h2>${sectionName}</h2>
+                            <button onclick="updateSectionCounts('${sectionName}', 0, 'TAK')">TAK</button>
+                            <button onclick="updateSectionCounts('${sectionName}', 0, 'NIE')">NIE</button>
+                            <div>Status: ${sectionsData[sectionName].history[today] || 'Brak danych'}</div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${renderSectionHistory(sectionsData[sectionName].history)}</tbody>
+                            </table>
+                        </section>
+                    `;
+
+            editSectionsContainer.innerHTML += `
+                        <section>
+                            <h2>${sectionName}</h2>
+                            <input type="date" id="${sectionName}_date" value="${today}">
+                            <button onclick="editSectionHistory('${sectionName}', 'TAK')">TAK</button>
+                            <button onclick="editSectionHistory('${sectionName}', 'NIE')">NIE</button>
+                            <button onclick="resetSectionHistory('${sectionName}')">Resetuj</button>
+                        </section>
+                    `;
+          }
+        }
+      }
+
+      renderManageSections();
+    }
+
+    const renderManageSections = () => {
+      const sectionsData = loadSectionsData();
+      const manageSectionsContainer = document.getElementById('manageSectionsContainer');
+      manageSectionsContainer.innerHTML = '';
+
+      for (const sectionName in sectionsData) {
+        const isVisible = sectionsData[sectionName].visible;
+
+        manageSectionsContainer.innerHTML += `
+                <div>
+                    <h3>${sectionName}</h3>
+                    <label>
+                        <input type="checkbox" id="${sectionName}_visible" ${isVisible ? 'checked' : ''} onchange="toggleSectionVisibility('${sectionName}')">
+                        Widoczny
+                    </label>
+                    <button onclick="deleteSection('${sectionName}')">Usuń sekcję</button>
+                </div>
             `;
       }
     }
@@ -121,36 +194,55 @@
         const history = sectionsData[sectionName].history || {};
         const canvasId = `chart_${sectionName}`;
 
-        chartsContainer.innerHTML += `
-                <div>
-                    <h3>${sectionName}</h3>
-                    <canvas id="${canvasId}" width="400" height="200"></canvas>
-                </div>
-            `;
+        if (sectionsData[sectionName].visible) {
+          chartsContainer.innerHTML += `
+                    <div>
+                        <h3>${sectionName}</h3>
+                        <canvas id="${canvasId}" width="400" height="200"></canvas>
+                    </div>
+                `;
 
-        if (charts[canvasId]) {
-          charts[canvasId].destroy();
-        }
-
-        const ctx = document.getElementById(canvasId).getContext('2d');
-        charts[canvasId] = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: Object.keys(history),
-            datasets: [{
-              label: sectionName,
-              data: Object.values(history),
-              backgroundColor: 'rgba(75, 192, 192, 0.5)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1
-            }]
-          },
-          options: {
-            scales: {
-              y: { beginAtZero: true }
-            }
+          if (charts[canvasId]) {
+            charts[canvasId].destroy();
           }
-        });
+
+          const ctx = document.getElementById(canvasId).getContext('2d');
+          const isBinary = sectionsData[sectionName].type === 'binary';
+          const data = isBinary ? Object.keys(history).map(date => history[date] === 'TAK' ? 1 : -1) : Object.values(history);
+          const backgroundColor = isBinary ? 'rgba(153, 102, 255, 0.5)' : 'rgba(75, 192, 192, 0.5)';
+          const borderColor = isBinary ? 'rgba(153, 102, 255, 1)' : 'rgba(75, 192, 192, 1)';
+
+          charts[canvasId] = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: Object.keys(history),
+              datasets: [{
+                label: sectionName,
+                data: data,
+                backgroundColor: backgroundColor,
+                borderColor: borderColor,
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: isBinary ? {
+                    callback(value) {
+                      if (value === 1) { return 'TAK'; }
+                      if (value === -1) { return 'NIE'; }
+                      return null;
+                    },
+                    stepSize: 1,
+                  } : undefined,
+                  min: isBinary ? -1 : undefined,
+                  max: isBinary ? 1 : undefined
+                }
+              }
+            }
+          });
+        }
       }
     }
 
@@ -160,25 +252,26 @@
 
     window.addNewSection = () => {
       const newSectionName = document.getElementById('newSectionName').value;
+      const newSectionType = document.getElementById('newSectionType').value;
 
       if (newSectionName) {
         const sectionsData = loadSectionsData();
         if (!sectionsData[newSectionName]) {
-          sectionsData[newSectionName] = { count: 0, history: {} };
+          sectionsData[newSectionName] = { type: newSectionType, count: 0, history: {}, visible: true };
           saveSectionsData(sectionsData);
           renderSections();
         }
       }
     }
 
-    window.editSectionHistory = (sectionName) => {
+    window.editSectionHistory = (sectionName, binaryValue = null) => {
       const date = document.getElementById(`${sectionName}_date`).value;
-      const newCount = parseInt(document.getElementById(`${sectionName}_count`).value);
+      const newCount = parseInt(document.getElementById(`${sectionName}_count`)?.value) || 0;
 
-      if (date && !isNaN(newCount)) {
+      if (date) {
         const sectionsData = loadSectionsData();
         const history = sectionsData[sectionName].history || {};
-        history[date] = newCount;
+        history[date] = binaryValue !== null ? binaryValue : newCount;
         sectionsData[sectionName].history = history;
         saveSectionsData(sectionsData);
         renderSections();
@@ -196,19 +289,34 @@
     }
 
     window.displaySection = (sectionId) => {
-      const sections = ['homePage', 'reportsPage', 'editPage'];
+      const sections = ['homePage', 'reportsPage', 'editPage', 'managePage'];
 
       sections.forEach(id => {
         document.getElementById(id).style.display = id === sectionId ? 'block' : 'none';
       });
 
-      ['homeLink', 'reportsLink', 'editLink'].forEach(linkId => {
-        document.getElementById(linkId).classList.toggle('active', linkId === `${sectionId}Link`);
+      ['homeLink', 'reportsLink', 'editLink', 'manageLink'].forEach(linkId => {
+        document.getElementById(linkId).classList.toggle('active', `${sectionId}Link` === linkId);
       });
 
       if (sectionId === 'reportsPage') {
         renderCharts();
       }
+    }
+
+    window.toggleSectionVisibility = (sectionName) => {
+      const sectionsData = loadSectionsData();
+      sectionsData[sectionName].visible = !sectionsData[sectionName].visible;
+      saveSectionsData(sectionsData);
+      renderSections();
+    }
+
+    window.deleteSection = (sectionName) => {
+      const sectionsData = loadSectionsData();
+      delete sectionsData[sectionName];
+      saveSectionsData(sectionsData);
+      renderSections();
+      renderCharts();
     }
 
     renderSections();
