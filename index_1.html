@@ -1,105 +1,96 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <title>Śledź Stany Różnych Kategorii</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description"
-          content="Aplikacja do śledzenia różnych kategorii. Monitoruj swoje działania z naszą prostą aplikacją.">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Śledź Kategorii">
-    <link rel="icon" href="icon.png" type="image/png">
-    <link rel="apple-touch-icon" href="icon.png">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="manifest.json">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Śledź Stany Różnych Kategorii</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="description"
+        content="Aplikacja do śledzenia różnych kategorii. Monitoruj swoje działania z naszą prostą aplikacją.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Śledź Kategorii">
+  <link rel="icon" href="icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <header>
-    <div class="container">
-        <nav class="nav">
-            <a class="nav-link active" href="#" id="homeLink" onclick="displaySection('homePage')">Strona główna</a>
-            <a class="nav-link" href="#" id="reportsLink" onclick="displaySection('reportsPage')">Raporty</a>
-            <a class="nav-link" href="#" id="editLink" onclick="displaySection('editPage')">Edycja danych</a>
-            <a class="nav-link" href="#" id="manageLink" onclick="displaySection('managePage')">Zarządzaj sekcjami</a>
-        </nav>
-    </div>
+  <div class="container">
+    <nav class="nav">
+      <a class="nav-link active" href="#" id="homeLink" onclick="displaySection('homePage')">Strona główna</a>
+      <a class="nav-link" href="#" id="reportsLink" onclick="displaySection('reportsPage')">Raporty</a>
+      <a class="nav-link" href="#" id="editLink" onclick="displaySection('editPage')">Edycja danych</a>
+      <a class="nav-link" href="#" id="manageLink" onclick="displaySection('managePage')">Zarządzaj sekcjami</a>
+    </nav>
+  </div>
 </header>
 <main class="container">
-    <div id="homePage">
-        <div id="sectionsContainer"></div>
-    </div>
-    <div id="reportsPage" style="display: none;">
-        <h2>Raporty</h2>
-        <div id="chartsContainer"></div>
-    </div>
-    <div id="editPage" style="display: none;">
-        <h2>Edycja danych</h2>
-        <div id="editSectionsContainer"></div>
-    </div>
-    <div id="managePage" style="display: none;">
-        <h2>Dodaj nową sekcję</h2>
-        <input type="text" id="newSectionName" placeholder="Nazwa sekcji">
-        <select id="newSectionType">
-            <option value="numerical">Numeryczny</option>
-            <option value="binary">Binarne (TAK/NIE)</option>
-        </select>
-        <textarea id="newSectionQuestion" placeholder="Pytanie do sekcji"></textarea>
-        <button onclick="addNewSection()">Dodaj</button>
-        <h2>Istniejące sekcje</h2>
-        <div id="manageSectionsContainer"></div>
-    </div>
+  <div id="homePage">
+    <div id="sectionsContainer"></div>
+  </div>
+  <div id="reportsPage" style="display: none;">
+    <h2>Raporty</h2>
+    <div id="chartsContainer"></div>
+  </div>
+  <div id="editPage" style="display: none;">
+    <h2>Edycja danych</h2>
+    <div id="editSectionsContainer"></div>
+  </div>
+  <div id="managePage" style="display: none;">
+    <h2>Dodaj nową sekcję</h2>
+    <input type="text" id="newSectionName" placeholder="Nazwa sekcji">
+    <select id="newSectionType">
+      <option value="numerical">Numeryczny</option>
+      <option value="binary">Binarne (TAK/NIE)</option>
+    </select>
+    <textarea id="newSectionQuestion" placeholder="Pytanie do sekcji"></textarea>
+    <button onclick="addNewSection()">Dodaj</button>
+    <h2>Istniejące sekcje</h2>
+    <div id="manageSectionsContainer"></div>
+  </div>
 </main>
 <footer class="footer">
-    <p>Made with ❤️ by PiZi inspired by NiiX 🥰</p>
+  <p>Made with ❤️ by PiZi inspired by NiiX 🥰</p>
 </footer>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const sectionsDataKey = 'sectionsData';
-        const today = new Date().toISOString().split('T')[0];
-        let charts = {};
-
-        const loadSectionsData = () => JSON.parse(localStorage.getItem(sectionsDataKey)) || {};
-
-        const saveSectionsData = (data) => localStorage.setItem(sectionsDataKey, JSON.stringify(data));
-
-        const updateSectionCounts = (sectionName, countUpdate, binaryValue = null) => {
-            const sectionsData = loadSectionsData();
-            const history = sectionsData[sectionName].history || {};
-            const count = sectionsData[sectionName].count || 0;
-
-            if (binaryValue !== null) {
-                history[today] = binaryValue;
-                sectionsData[sectionName].count = binaryValue === 'TAK' ? 1 : 0;
-            } else {
-                sectionsData[sectionName].count = count + countUpdate;
-                history[today] = (history[today] || 0) + countUpdate;
-            }
-            sectionsData[sectionName].history = history;
-
-            saveSectionsData(sectionsData);
-            renderSections();
-            renderCharts();
-        }
-
-        const renderSections = () => {
-            const sectionsData = loadSectionsData();
-            const sectionsContainer = document.getElementById('sectionsContainer');
-            const editSectionsContainer = document.getElementById('editSectionsContainer');
-
-            sectionsContainer.innerHTML = '';
-            editSectionsContainer.innerHTML = '';
-
-            for (const sectionName in sectionsData) {
-                const section = sectionsData[sectionName];
-                const sectionType = section.type;
-                const sectionCount = section.count || 0;
-                const isVisible = section.visible;
-
-                // Render sections only if they are visible
-                if (isVisible) {
-                    sectionsContainer.innerHTML += `
+  document.addEventListener('DOMContentLoaded', function () {
+    const sectionsDataKey = 'sectionsData';
+    const today = new Date().toISOString().split('T')[0];
+    let charts = {};
+    const loadSectionsData = () => JSON.parse(localStorage.getItem(sectionsDataKey)) || {};
+    const saveSectionsData = (data) => localStorage.setItem(sectionsDataKey, JSON.stringify(data));
+    const updateSectionCounts = (sectionName, countUpdate, binaryValue = null) => {
+      const sectionsData = loadSectionsData();
+      const history = sectionsData[sectionName].history || {};
+      const count = sectionsData[sectionName].count || 0;
+      if (binaryValue !== null) {
+        history[today] = binaryValue;
+        sectionsData[sectionName].count = binaryValue === 'TAK' ? 1 : 0;
+      } else {
+        sectionsData[sectionName].count = count + countUpdate;
+        history[today] = (history[today] || 0) + countUpdate;
+      }
+      sectionsData[sectionName].history = history;
+      saveSectionsData(sectionsData);
+      renderSections();
+      renderCharts();
+    }
+    const renderSections = () => {
+      const sectionsData = loadSectionsData();
+      const sectionsContainer = document.getElementById('sectionsContainer');
+      const editSectionsContainer = document.getElementById('editSectionsContainer');
+      sectionsContainer.innerHTML = '';
+      editSectionsContainer.innerHTML = '';
+      for (const sectionName in sectionsData) {
+        const section = sectionsData[sectionName];
+        const sectionType = section.type;
+        const sectionCount = section.count || 0;
+        const isVisible = section.visible;
+        // Render sections only if they are visible
+        if (isVisible) {
+          sectionsContainer.innerHTML += `
                     <div class="section-container">
                         <section>
                             <h2>${sectionName}</h2>
@@ -124,8 +115,7 @@
                         </section>
                     </div>
                 `;
-
-                    editSectionsContainer.innerHTML += `
+          editSectionsContainer.innerHTML += `
                     <div class="section-container">
                         <section>
                             <h2>${sectionName}</h2>
@@ -141,21 +131,17 @@
                         </section>
                     </div>
                 `;
-                }
-            }
-
-            renderManageSections();
         }
-
-        const renderManageSections = () => {
-            const sectionsData = loadSectionsData();
-            const manageSectionsContainer = document.getElementById('manageSectionsContainer');
-            manageSectionsContainer.innerHTML = '';
-
-            for (const sectionName in sectionsData) {
-                const isVisible = sectionsData[sectionName].visible;
-
-                manageSectionsContainer.innerHTML += `
+      }
+      renderManageSections();
+    }
+    const renderManageSections = () => {
+      const sectionsData = loadSectionsData();
+      const manageSectionsContainer = document.getElementById('manageSectionsContainer');
+      manageSectionsContainer.innerHTML = '';
+      for (const sectionName in sectionsData) {
+        const isVisible = sectionsData[sectionName].visible;
+        manageSectionsContainer.innerHTML += `
                 <div class="section-container">
                     <section>
                         <h2>${sectionName}</h2>
@@ -167,164 +153,145 @@
                     </section>
                 </div>
             `;
-            }
+      }
+    }
+    const renderSectionHistory = (history) => {
+      return Object.entries(history || {}).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA))
+              .map(([date, count]) => `<tr><td>${date}</td><td>${count}</td></tr>`).join('');
+    }
+    const renderCharts = () => {
+      const sectionsData = loadSectionsData();
+      const chartsContainer = document.getElementById('chartsContainer');
+      chartsContainer.innerHTML = '';  // Clear existing charts
+      charts = {}; // Clear existing chart instances
+      for (const sectionName in sectionsData) {
+        const history = sectionsData[sectionName].history || {};
+        const canvasId = `chart_${sectionName}`;
+        chartsContainer.innerHTML += `
+                <div class="section-container">
+                    <section>
+                        <h2>${sectionName}</h2>
+                        <canvas id="${canvasId}" width="400" height="200"></canvas>
+                    </section>
+                </div>
+                `;
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        const isBinary = sectionsData[sectionName].type === 'binary';
+        const data = Object.entries(history).sort(([dateA], [dateB]) => new Date(dateA) - new Date(dateB)).map(([date, value]) => value);
+        const backgroundColor = isBinary ? 'rgba(163, 102, 255, 0.5)' : 'rgba(75, 192, 192, 0.5)';
+        const borderColor = isBinary ? 'rgba(163, 102, 255, 1)' : 'rgba(75, 192, 192, 1)';
+        if (charts[canvasId]) {
+          charts[canvasId].destroy();
         }
-
-        const renderSectionHistory = (history) => {
-            return Object.entries(history || {}).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA))
-                .map(([date, count]) => `<tr><td>${date}</td><td>${count}</td></tr>`).join('');
-        }
-
-        const renderCharts = () => {
-            const sectionsData = loadSectionsData();
-            const chartsContainer = document.getElementById('chartsContainer');
-            chartsContainer.innerHTML = '';  // Clear existing charts
-            charts = {}; // Clear existing chart instances
-            for (const sectionName in sectionsData) {
-                const history = sectionsData[sectionName].history || {};
-                const canvasId = `chart_${sectionName}`;
-
-                chartsContainer.innerHTML += `
-          <div class="section-container">
-            <section>
-              <h2>${sectionName}</h2>
-              <canvas id="${canvasId}" width="400" height="200"></canvas>
-            </section>
-          </div>
-        `;
-
-                if (charts[canvasId]) {
-                    charts[canvasId].destroy();
-                }
-
-                const ctx = document.getElementById(canvasId).getContext('2d');
-                let isBinary = sectionsData[sectionName].type === 'binary';
-                let data = Object.entries(history).sort(([dateA], [dateB]) => new Date(dateA) - new Date(dateB)).map(([date, value]) => value);
-                let backgroundColor = isBinary ? 'rgba(163, 102, 255, 0.5)' : 'rgba(75, 192, 192, 0.5)';
-                let borderColor = isBinary ? 'rgba(163, 102, 255, 1)' : 'rgba(75, 192, 192, 1)';
-
-                charts[canvasId] = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: Object.keys(history).sort((a, b) => new Date(a) - new Date(b)),
-                        datasets: [{
-                            label: sectionName,
-                            data: data,
-                            backgroundColor: backgroundColor,
-                            borderColor: borderColor,
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: isBinary ? {
-                                    callback(value) {
-                                        if (value === 1) {
-                                            return 'TAK';
-                                        }
-                                        if (value === -1) {
-                                            return 'NIE';
-                                        }
-                                        return 0;
-                                    },
-                                    stepSize: 1,
-                                } : undefined,
-                                min: isBinary ? -1 : undefined,
-                                max: isBinary ? 1 : undefined
-                            }
-                        }
+        charts[canvasId] = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: Object.keys(history).sort((a, b) => new Date(a) - new Date(b)),
+            datasets: [{
+              label: sectionName,
+              data: data,
+              backgroundColor: backgroundColor,
+              borderColor: borderColor,
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: isBinary ? {
+                  callback(value) {
+                    if (value === 1) {
+                      return 'TAK';
                     }
-                });
+                    if (value === -1) {
+                      return 'NIE';
+                    }
+                    return 0;
+                  },
+                  stepSize: 1,
+                } : undefined,
+                min: isBinary ? -1 : undefined,
+                max: isBinary ? 1 : undefined
+              }
             }
+          }
+        });
+      }
+    }
+    window.updateSectionCounts = updateSectionCounts;
+    window.renderSections = renderSections;
+    window.renderCharts = renderCharts;
+    window.addNewSection = () => {
+      const newSectionName = document.getElementById('newSectionName').value;
+      const newSectionType = document.getElementById('newSectionType').value;
+      const newSectionQuestion = document.getElementById('newSectionQuestion').value;
+      if (newSectionName && newSectionQuestion) {
+        const sectionsData = loadSectionsData();
+        if (!sectionsData[newSectionName]) {
+          sectionsData[newSectionName] = {
+            type: newSectionType,
+            count: 0,
+            history: {},
+            visible: true,
+            question: newSectionQuestion
+          };
+          saveSectionsData(sectionsData);
+          renderSections();
+          renderCharts();
         }
-
-        window.updateSectionCounts = updateSectionCounts;
-        window.renderSections = renderSections;
-        window.renderCharts = renderCharts;
-
-        window.addNewSection = () => {
-            const newSectionName = document.getElementById('newSectionName').value;
-            const newSectionType = document.getElementById('newSectionType').value;
-            const newSectionQuestion = document.getElementById('newSectionQuestion').value;
-
-            if (newSectionName && newSectionQuestion) {
-                const sectionsData = loadSectionsData();
-                if (!sectionsData[newSectionName]) {
-                    sectionsData[newSectionName] = {
-                        type: newSectionType,
-                        count: 0,
-                        history: {},
-                        visible: true,
-                        question: newSectionQuestion
-                    };
-                    saveSectionsData(sectionsData);
-                    renderSections();
-                    renderCharts();
-                }
-            }
-        }
-
-        window.editSectionHistory = (sectionName, binaryValue = null) => {
-            const date = document.getElementById(`${sectionName}_date`).value;
-            const newCount = parseInt(document.getElementById(`${sectionName}_count`)?.value) || 0;
-
-            if (date) {
-                const sectionsData = loadSectionsData();
-                const history = sectionsData[sectionName].history || {};
-                history[date] = binaryValue !== null ? binaryValue : newCount;
-                sectionsData[sectionName].history = history;
-                saveSectionsData(sectionsData);
-                renderSections();
-                renderCharts();
-            }
-        }
-
-        window.resetSectionHistory = (sectionName) => {
-            const sectionsData = loadSectionsData();
-            sectionsData[sectionName].count = 0;
-            sectionsData[sectionName].history = {};
-            saveSectionsData(sectionsData);
-            renderSections();
-            renderCharts();
-        }
-
-        window.displaySection = (sectionId) => {
-            const sections = ['homePage', 'reportsPage', 'editPage', 'managePage'];
-
-            sections.forEach(id => {
-                document.getElementById(id).style.display = id === sectionId ? 'block' : 'none';
-            });
-
-            ['homeLink', 'reportsLink', 'editLink', 'manageLink'].forEach(linkId => {
-                document.getElementById(linkId).classList.toggle('active', `${sectionId}Link` === linkId);
-            });
-
-            if (sectionId === 'reportsPage') {
-                renderCharts();
-            }
-        }
-
-        window.toggleSectionVisibility = (sectionName) => {
-            const sectionsData = loadSectionsData();
-            sectionsData[sectionName].visible = !sectionsData[sectionName].visible;
-            saveSectionsData(sectionsData);
-            renderSections();
-            renderCharts();
-        }
-
-        window.deleteSection = (sectionName) => {
-            const sectionsData = loadSectionsData();
-            delete sectionsData[sectionName];
-            saveSectionsData(sectionsData);
-            renderSections();
-            renderCharts();
-        }
-
+      }
+    }
+    window.editSectionHistory = (sectionName, binaryValue = null) => {
+      const date = document.getElementById(`${sectionName}_date`).value;
+      const newCount = parseInt(document.getElementById(`${sectionName}_count`)?.value) || 0;
+      if (date) {
+        const sectionsData = loadSectionsData();
+        const history = sectionsData[sectionName].history || {};
+        history[date] = binaryValue !== null ? binaryValue : newCount;
+        sectionsData[sectionName].history = history;
+        saveSectionsData(sectionsData);
         renderSections();
         renderCharts();
-    });
+      }
+    }
+    window.resetSectionHistory = (sectionName) => {
+      const sectionsData = loadSectionsData();
+      sectionsData[sectionName].count = 0;
+      sectionsData[sectionName].history = {};
+      saveSectionsData(sectionsData);
+      renderSections();
+      renderCharts();
+    }
+    window.displaySection = (sectionId) => {
+      const sections = ['homePage', 'reportsPage', 'editPage', 'managePage'];
+      sections.forEach(id => {
+        document.getElementById(id).style.display = id === sectionId ? 'block' : 'none';
+      });
+      ['homeLink', 'reportsLink', 'editLink', 'manageLink'].forEach(linkId => {
+        document.getElementById(linkId).classList.toggle('active', `${sectionId}Link` === linkId);
+      });
+      if (sectionId === 'reportsPage') {
+        renderCharts();
+      }
+    }
+    window.toggleSectionVisibility = (sectionName) => {
+      const sectionsData = loadSectionsData();
+      sectionsData[sectionName].visible = !sectionsData[sectionName].visible;
+      saveSectionsData(sectionsData);
+      renderSections();
+      renderCharts();
+    }
+    window.deleteSection = (sectionName) => {
+      const sectionsData = loadSectionsData();
+      delete sectionsData[sectionName];
+      saveSectionsData(sectionsData);
+      renderSections();
+      renderCharts();
+    }
+    renderSections();
+    renderCharts();
+  });
 </script>
 </body>
 </html>
