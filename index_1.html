@@ -177,38 +177,31 @@
     const renderCharts = () => {
       const sectionsData = loadSectionsData();
       const chartsContainer = document.getElementById('chartsContainer');
-
-      chartsContainer.innerHTML = '';
-      console.log(chartsContainer)
-
       for (const sectionName in sectionsData) {
-
         const history = sectionsData[sectionName].history || {};
         const canvasId = `chart_${sectionName}`;
 
-        chartsContainer.innerHTML += `
-                <div class="section-container">
-                    <section>
-                        <h2>${sectionName}</h2>
-                        <canvas id="${canvasId}" width="400" height="200"></canvas>
-                    </section>
-                </div>
-            `;
+        // Check if the canvas element for this chart already exists
+        if (!document.getElementById(canvasId)) {
+          chartsContainer.innerHTML += `
+        <div class="section-container">
+          <section>
+            <h2>${sectionName}</h2>
+            <canvas id="${canvasId}" width="400" height="200"></canvas>
+          </section>
+        </div>
+      `;
+        }
 
         if (charts[canvasId]) {
           charts[canvasId].destroy();
         }
 
-        console.log(canvasId)
-
         let ctx = document.getElementById(canvasId).getContext('2d');
         let isBinary = sectionsData[sectionName].type === 'binary';
         let data = isBinary ? Object.keys(history).map(date => history[date] === 'TAK' ? 1 : -1) : Object.values(history);
-        let backgroundColor = isBinary ? 'rgba(153, 102, 255, 0.5)' : 'rgba(75, 192, 192, 0.5)';
-        let borderColor = isBinary ? 'rgba(153, 102, 255, 1)' : 'rgba(75, 192, 192, 1)';
-
-        console.log("A")
-
+        let backgroundColor = isBinary ? 'rgba(163, 102, 255, 0.5)' : 'rgba(75, 192, 192, 0.5)';
+        let borderColor = isBinary ? 'rgba(163, 102, 255, 1)' : 'rgba(75, 192, 192, 1)';
 
         charts[canvasId] = new Chart(ctx, {
           type: 'bar',
