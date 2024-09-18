@@ -179,6 +179,7 @@
             const sectionsData = loadSectionsData();
             const chartsContainer = document.getElementById('chartsContainer');
             chartsContainer.innerHTML = '';  // Clear existing charts
+            charts = {}; // Clear existing chart instances
             for (const sectionName in sectionsData) {
                 const history = sectionsData[sectionName].history || {};
                 const canvasId = `chart_${sectionName}`;
