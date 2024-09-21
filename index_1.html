@@ -21,7 +21,7 @@
     <div class="container">
         <nav class="nav">
             <a class="nav-link active" href="#" id="homeLink" onclick="displaySection('homePage')">Strona główna</a>
-            <a class="nav-link" href="#" id="reportsLink" onclick="displaySection('reportsPage')">Raporty</a>
+            <!-- <a class="nav-link" href="#" id="reportsLink" onclick="displaySection('reportsPage')">Raporty</a> -->
             <a class="nav-link" href="#" id="editLink" onclick="displaySection('editPage')">Edycja danych</a>
             <a class="nav-link" href="#" id="manageLink" onclick="displaySection('managePage')">Zarządzaj sekcjami</a>
         </nav>
@@ -30,11 +30,11 @@
 <main class="container">
     <div id="homePage">
         <div id="sectionsContainer"></div>
-        <div id="chartsContainer" style="display: none;"></div>
-        <button onclick="toggleChartsVisibility()">Pokaż/Ukryj wykresy</button>
-    </div>
+   </div>
     <div id="reportsPage" style="display: none;">
         <h2>Raporty</h2>
+        <div id="chartsContainer" style="display: none;"></div>
+        <button onclick="toggleChartsVisibility()">Pokaż/Ukryj wykresy</button>
         <div id="chartsContainerReports"></div>
     </div>
     <div id="editPage" style="display: none;">
@@ -238,8 +238,8 @@
                     }
                 }
             });
-            chart.update();
-            chart.render();
+            //chart.update();
+            //chart.render();
         }
 
         window.updateSectionCounts = updateSectionCounts;
