@@ -1,10 +1,212 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring Stanów</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        header, footer {
+            background-color: #f8f8f8;
+            padding: 10px;
+            text-align: center;
+        }
+        nav {
+            margin-bottom: 20px;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #333;
+        }
+        main {
+            padding: 20px;
+        }
+        .section-list {
+            list-style-type: none;
+        }
+        .section-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+        }
+        .chart-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+    </style>
 </head>
 <body>
+<!-- Nagłówek -->
+<header>
+    <nav>
+        <a href="#" onclick="showPage('homePage')">Strona główna</a>
+        <a href="#" onclick="showPage('reportsPage')">Raporty</a>
+        <a href="#" onclick="showPage('editPage')">Edycja danych</a>
+        <a href="#" onclick="showPage('managePage')">Zarządzaj sekcjami</a>
+    </nav>
+</header>
 
+<!-- Główna zawartość -->
+<main>
+    <!-- Strona główna -->
+    <section id="homePage" style="display: none;">
+        <h1>Strona Główna</h1>
+        <ul class="section-list" id="sectionsList">
+            <!-- Sekcje do śledzenia zostaną tutaj wyświetlone -->
+        </ul>
+    </section>
+
+    <!-- Raporty -->
+    <section id="reportsPage" style="display: none;">
+        <h1>Raporty</h1>
+        <div class="chart-container">
+            <canvas id="reportChart"></canvas>
+        </div>
+    </section>
+
+    <!-- Edycja danych -->
+    <section id="editPage" style="display: none;">
+        <h1>Edycja danych</h1>
+        <ul class="section-list" id="editSectionsList">
+            <!-- Sekcje do edycji danych -->
+        </ul>
+    </section>
+
+    <!-- Zarządzaj sekcjami -->
+    <section id="managePage" style="display: none;">
+        <h1>Zarządzaj sekcjami</h1>
+        <label for="sectionName">Nazwa sekcji: </label>
+        <input type="text" id="sectionName" placeholder="Podaj nazwę nowej sekcji">
+        <label for="sectionType">Typ sekcji: </label>
+        <select id="sectionType">
+            <option value="numeryczna">Numeryczna</option>
+            <option value="binarna">Binarna</option>
+        </select>
+        <button onclick="addSection()">Dodaj sekcję</button>
+
+        <h2>Istniejące sekcje:</h2>
+        <ul class="section-list" id="manageSectionsList">
+            <!-- Lista istniejących sekcji do zarządzania -->
+        </ul>
+    </section>
+</main>
+
+<!-- Stopka -->
+<footer>
+    <p>Autor: Twoje Imię</p>
+</footer>
+
+<!-- Skrypt JavaScript -->
+<script>
+    let sections = JSON.parse(localStorage.getItem('sections')) || [];
+
+    function showPage(pageId) {
+        // Ukryj wszystkie sekcje
+        document.querySelectorAll('section').forEach(section => {
+            section.style.display = 'none';
+        });
+        // Pokaż wybraną sekcję
+        document.getElementById(pageId).style.display = 'block';
+        if (pageId === 'homePage') renderHomePage();
+        if (pageId === 'reportsPage') renderReportsPage();
+        if (pageId === 'editPage') renderEditPage();
+        if (pageId === 'managePage') renderManagePage();
+    }
+
+    function addSection() {
+        const name = document.getElementById('sectionName').value;
+        const type = document.getElementById('sectionType').value;
+        if (name && type) {
+            sections.push({ name, type, data: [] });
+            localStorage.setItem('sections', JSON.stringify(sections));
+            renderManagePage();
+        }
+    }
+
+    function deleteSection(index) {
+        sections.splice(index, 1);
+        localStorage.setItem('sections', JSON.stringify(sections));
+        renderManagePage();
+    }
+
+    function renderHomePage() {
+        const list = document.getElementById('sectionsList');
+        list.innerHTML = '';
+        sections.forEach((section, index) => {
+            const li = document.createElement('li');
+            li.classList.add('section-item');
+            li.innerHTML = `
+                    <strong>${section.name}</strong> (${section.type})
+                    <button onclick="updateSection(${index})">Zaktualizuj</button>
+                `;
+            list.appendChild(li);
+        });
+    }
+
+    function renderReportsPage() {
+        const ctx = document.getElementById('reportChart').getContext('2d');
+        const labels = sections.map(s => s.name);
+        const data = sections.map(s => s.data.length ? s.data[s.data.length - 1] : 0);
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Wartości sekcji',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            }
+        });
+    }
+
+    function renderEditPage() {
+        const list = document.getElementById('editSectionsList');
+        list.innerHTML = '';
+        sections.forEach((section, index) => {
+            const li = document.createElement('li');
+            li.classList.add('section-item');
+            li.innerHTML = `
+                    <strong>${section.name}</strong> (${section.type})
+                    <input type="text" id="newValue${index}" placeholder="Nowa wartość">
+                    <button onclick="editSection(${index})">Zapisz</button>
+                `;
+            list.appendChild(li);
+        });
+    }
+
+    function editSection(index) {
+        const newValue = document.getElementById(`newValue${index}`).value;
+        if (newValue) {
+            sections[index].data.push(parseFloat(newValue));
+            localStorage.setItem('sections', JSON.stringify(sections));
+            renderEditPage();
+        }
+    }
+
+    function renderManagePage() {
+        const list = document.getElementById('manageSectionsList');
+        list.innerHTML = '';
+        sections.forEach((section, index) => {
+            const li = document.createElement('li');
+            li.classList.add('section-item');
+            li.innerHTML = `
+                    <strong>${section.name}</strong> (${section.type})
+                    <button onclick="deleteSection(${index})">Usuń</button>
+                `;
+            list.appendChild(li);
+        });
+    }
+
+    // Załaduj stronę główną po starcie
+    showPage('homePage');
+</script>
 </body>
 </html>

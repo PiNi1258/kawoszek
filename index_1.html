@@ -3,17 +3,18 @@
 <head>
     <title>Śledź Stany Różnych Kategorii</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description"
-          content="Aplikacja do śledzenia różnych kategorii. Monitoruj swoje działania z naszą prostą aplikacją.">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Śledź Kategorii">
-    <link rel="icon" href="icon.png" type="image/png">
-    <link rel="apple-touch-icon" href="icon.png">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="manifest.json">
+    <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
+    <meta content="Aplikacja do śledzenia różnych kategorii. Monitoruj swoje działania z naszą prostą aplikacją."
+          name="description">
+    <meta content="yes" name="mobile-web-app-capable">
+    <meta content="black-translucent" name="mobile-web-app-status-bar-style">
+    <meta content="Śledź Kategorii" name="apple-mobile-web-app-title">
+    <link href="icon.png" rel="icon" type="image/png">
+    <link href="icon.png" rel="apple-touch-icon">
+    <link href="styles.css" rel="stylesheet">
+    <link href="manifest.json" rel="manifest">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
 <header>
@@ -29,10 +30,12 @@
 <main class="container">
     <div id="homePage">
         <div id="sectionsContainer"></div>
+        <div id="chartsContainer" style="display: none;"></div>
+        <button onclick="toggleChartsVisibility()">Pokaż/Ukryj wykresy</button>
     </div>
     <div id="reportsPage" style="display: none;">
         <h2>Raporty</h2>
-        <div id="chartsContainer"></div>
+        <div id="chartsContainerReports"></div>
     </div>
     <div id="editPage" style="display: none;">
         <h2>Edycja danych</h2>
@@ -40,7 +43,7 @@
     </div>
     <div id="managePage" style="display: none;">
         <h2>Dodaj nową sekcję</h2>
-        <input type="text" id="newSectionName" placeholder="Nazwa sekcji">
+        <input id="newSectionName" placeholder="Nazwa sekcji" type="text">
         <select id="newSectionType">
             <option value="numerical">Numeryczny</option>
             <option value="binary">Binarne (TAK/NIE)</option>
@@ -55,7 +58,7 @@
     <p>Made with ❤️ by PiZi inspired by NiiX 🥰</p>
 </footer>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    window.onload = function () {
         const sectionsDataKey = 'sectionsData';
         const today = new Date().toISOString().split('T')[0];
         let charts = {};
@@ -112,6 +115,7 @@
                                 </thead>
                                 <tbody>${renderSectionHistory(section.history)}</tbody>
                             </table>
+                            <canvas id="${sectionName}_chart" class="section-chart"></canvas>
                         </section>
                     </div>
                 `;
@@ -159,51 +163,83 @@
             return Object.entries(history || {}).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA))
                 .map(([date, count]) => `<tr><td>${date}</td><td>${count}</td></tr>`).join('');
         }
-        let renderCharts = () => {
+
+        const renderCharts = () => {
             const sectionsData = loadSectionsData();
-            const chartsContainer = document.getElementById('chartsContainer');
-            chartsContainer.innerHTML = '';  // Clear existing charts
-            charts = {}; // Clear existing chart instances
+            const chartsContainerHome = document.getElementById('chartsContainer');
+            const chartsContainerReports = document.getElementById('chartsContainerReports');
+
+            // Clear existing charts
+            chartsContainerHome.innerHTML = '';
+            chartsContainerReports.innerHTML = '';
+
             for (const sectionName in sectionsData) {
                 const history = sectionsData[sectionName].history || {};
-                const canvasId = `chart_${sectionName}`;
-                chartsContainer.innerHTML += `
-                <div class="section-container">
-                    <section>
-                        <h2>${sectionName}</h2>
-                        <canvas id="${canvasId}" width="400" height="200"></canvas>
-                    </section>
-                </div>
+
+                // Skip sections with no data
+                if (!Object.keys(history).length) continue;
+
+                // Sanitize the section name for valid HTML IDs
+                const sanitizedSectionName = sectionName.replace(/[^a-zA-Z0-9_-]/g, '_');
+                const canvasIdHome = `${sanitizedSectionName}_home`;
+                const canvasIdReports = `${sanitizedSectionName}_reports`;
+
+                // Create a single section container for all charts
+                chartsContainerHome.innerHTML += `
+                    <div class="section-container">
+                        <section>
+                            <h2>${sanitizedSectionName}</h2>
+                            <div id="chartsSectionHome" class="charts-wrapper">
+                                <canvas id="${canvasIdHome}"></canvas>
+                            </div>
+                        </section>
+                    </div>
                 `;
-                const ctx = document.getElementById(canvasId).getContext('2d');
-                const isBinary = sectionsData[sectionName].type === 'binary';
-                const data = Object.entries(history).sort(([dateA], [dateB]) => new Date(dateA) - new Date(dateB)).map(([date, value]) => value);
-                const backgroundColor = isBinary ? 'rgba(163, 102, 255, 0.5)' : 'rgba(75, 192, 192, 0.5)';
-                const borderColor = isBinary ? 'rgba(163, 102, 255, 1)' : 'rgba(75, 192, 192, 1)';
-                if (charts[canvasId]) {
-                    charts[canvasId].destroy();
-                }
-                charts[canvasId] = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: Object.keys(history).sort((a, b) => new Date(a) - new Date(b)),
-                        datasets: [{
-                            label: sectionName,
-                            data: data,
-                            backgroundColor: backgroundColor,
-                            borderColor: borderColor,
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
+
+                chartsContainerReports.innerHTML += `
+                    <div class="section-container">
+                        <section>
+                            <h2>${sanitizedSectionName}</h2>
+                            <div id="chartsSectionReports" class="charts-wrapper">
+                                <canvas id="${canvasIdReports}"></canvas>
+                            </div>
+                        </section>
+                    </div>
+                `;
+
+                createChart(canvasIdHome, history, sanitizedSectionName);
+                createChart(canvasIdReports, history, sanitizedSectionName);
+                createChart(`${sectionName}_chart`, history, sectionName);
+            }
+        }
+
+        const createChart = (canvasId, history, sanitizedSectionName) => {
+            // Create and render the chart for the current section
+            const chart = new Chart(document.getElementById(canvasId), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(history),
+                    datasets: [{
+                        label: sanitizedSectionName,
+                        data: Object.values(history),
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
                             }
                         }
                     }
-                });
-            }
+                }
+            });
+            chart.update();
+            chart.render();
         }
 
         window.updateSectionCounts = updateSectionCounts;
@@ -277,9 +313,20 @@
             renderSections();
             renderCharts();
         }
+
+        window.toggleChartsVisibility = () => {
+            const chartsContainer = document.getElementById('chartsContainer');
+            if (chartsContainer.style.display === 'none') {
+                chartsContainer.style.display = 'block';
+                renderCharts();
+            } else {
+                chartsContainer.style.display = 'none';
+            }
+        }
+
         renderSections();
         renderCharts();
-    });
+    }
 </script>
 </body>
 </html>
