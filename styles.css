@@ -282,3 +282,129 @@ th {
         padding: 8px;
     }
 }
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+/* General select styling */
+select {
+    appearance: none; /* Remove default styling */
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #333;
+    width: 100%; /* Full width */
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+/* Style the select element on focus */
+select:focus {
+    border-color: #2196F3; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+}
+
+/* Custom arrow */
+select::after {
+    content: '▼'; /* Unicode character for down arrow */
+    position: absolute;
+    right: 10px;
+    top: calc(50% - 5px); /* Center the arrow vertically */
+    pointer-events: none; /* Prevent interaction */
+}
+
+/* Wrapper to position select */
+.select-wrapper {
+    position: relative; /* Positioning context for the arrow */
+    display: inline-block; /* Adjust width */
+    width: 100%; /* Full width */
+}
+/* Action Container */
+.action-container {
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center items vertically */
+    gap: 10px; /* Space between elements */
+    margin-top: 20px; /* Space above the container */
+}
+
+/* Input Field */
+.liczba {
+    width: auto; /* Adjust width as necessary */
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+}
+
+/* Aktualizuj Button */
+.button-aktualizuj {
+    padding: 12px 24px;
+    font-size: 16px;
+    background-color: #007bff; /* Button color */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button-aktualizuj:hover {
+    background-color: #0056b3; /* Darker button color on hover */
+}
+/* Input Field for Calendar */
+.input-calendar {
+    padding: 12px; /* Match button padding */
+    font-size: 16px; /* Match button font size */
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    width: 100%; /* Full width for responsiveness */
+    box-sizing: border-box; /* Include padding and border in width */
+    transition: border-color 0.3s; /* Transition for focus effect */
+}
+
+.input-calendar:focus {
+    border-color: #007bff; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+}

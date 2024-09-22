@@ -139,9 +139,11 @@
             addSectionContainer.innerHTML = `<h2>Dodaj nową sekcję</h2>
              <div class ="section">
              <input id="newSectionName" placeholder="Nazwa sekcji" type="text">
-            <select id="newSectionType">
-            <option value="numerical">Licznik +1</option>
-            <option value="binary">"Tak" lub "Nie"</option>
+             <div class="select-wrapper">
+                <select id="newSectionType">
+                <option value="numerical">Licznik +1</option>
+             <option value="binary">"Tak" lub "Nie"</option>
+            </div>
         </select>
         <textarea id="newSectionQuestion" placeholder="Pytanie do sekcji"></textarea>
         <button onclick="addNewSection()">Dodaj</button></div>`;
@@ -187,7 +189,8 @@
                     <div class="section">
                         <section>
                             <h2>${sectionName}</h2>
-                            <input type="date" id="${sectionName}_date" value="${today}">
+                            <div class="action-container">
+                            <input type="date"  class="input-calendar"  id="${sectionName}_date" value="${today}">
                             ${sectionType === 'numerical' ? `
                                 <input type="number" id="${sectionName}_count" placeholder="Liczba">
                                 <button onclick="editSectionHistory('${sectionName}')">Aktualizuj</button>
@@ -195,7 +198,9 @@
                                 <button class="button-yes" onclick="editSectionHistory('${sectionName}', 'TAK')">TAK</button>
                                 <button class="button-no" onclick="editSectionHistory('${sectionName}', 'NIE')">NIE</button>
                             `}
+
                             <button class = "button-reset" onclick="resetSectionHistory('${sectionName}')">Resetuj</button>
+                            </div>
                         </section>
                     </div>
                 `;
@@ -214,17 +219,18 @@
             for (const sectionName in sectionsData) {
                 const isVisible = sectionsData[sectionName].visible;
                 manageSectionsContainer.innerHTML += `
-                <div class="section">
-                    <section>
-                        <h2>${sectionName}</h2>
-                        <label>
-                            <input type="checkbox" id="${sectionName}_visible" ${isVisible ? 'checked' : ''} onchange="toggleSectionVisibility('${sectionName}')">
-                            Widoczny
-                        </label>
-                        <button class="button-no" onclick="deleteSection('${sectionName}')">Usuń sekcję</button>
-                    </section>
-                </div>
-            `;
+    <div class="section">
+        <section>
+            <h2>${sectionName}
+            <label class="switch">
+                <input type="checkbox" id="${sectionName}_visible" ${isVisible ? 'checked' : ''} onchange="toggleSectionVisibility('${sectionName}')">
+                <span class="slider"></span>
+            </label>
+            </h2>
+            <button class="button-no" onclick="deleteSection('${sectionName}')">Usuń sekcję</button>
+        </section>
+    </div>
+`;
             }
             manageSectionsContainer.innerHTML += '';
 
