@@ -212,10 +212,10 @@ th {
 
 /* Footer Styles */
 .footer {
+
     text-align: center;
     padding: 20px;
     background-color: #282c34;
-    color: rgba(255, 255, 255, 0.1);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px 12px 0 0;
     margin-top: 40px;
@@ -242,6 +242,8 @@ th {
 
 .footer p {
     margin: 0;
+    color: #ffffff; /* Changed to white */
+
 }
 
 /* Heartbeat Animation */
