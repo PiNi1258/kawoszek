@@ -16,6 +16,7 @@ body {
     padding: 0;
 }
 
+
 /* Main Container */
 .container .section-container {
     max-width: 900px;
@@ -25,6 +26,8 @@ body {
     border-radius: 12px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
+
+
 
 /* Typography */
 h1, h2, h3, p {
@@ -67,8 +70,6 @@ h1 {
     justify-content: space-around;
     list-style: none;
     margin-bottom: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0 0 12px 12px;
 }
 
 .nav-link {
