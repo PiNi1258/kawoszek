@@ -102,30 +102,74 @@ button,
     transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
 }
 
+/* Primary Button */
 .button-primary {
-    background-color: #007bff;
+    background-color: #007bff; /* Blue */
     color: #fff;
 }
 
+.button-primary:hover {
+    background-color: #0056b3; /* Darker blue */
+}
+
+/* Success Button */
 .button-success {
-    background-color: #28a745;
+    background-color: #28a745; /* Green */
     color: #fff;
 }
 
+.button-success:hover {
+    background-color: #218838; /* Darker green */
+}
+
+/* Danger Button */
 .button-danger {
-    background-color: #dc3545;
+    background-color: #dc3545; /* Red */
     color: #fff;
 }
 
+.button-danger:hover {
+    background-color: #c82333; /* Darker red */
+}
+
+/* Warning Button */
 .button-warning {
-    background-color: #ffc107;
+    background-color: #ffc107; /* Yellow */
     color: #fff;
 }
 
-button:hover,
-.button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.button-warning:hover {
+    background-color: #e0a800; /* Darker yellow */
+}
+
+/* Info Button */
+.button-info {
+    background-color: #17a2b8; /* Teal */
+    color: #fff;
+}
+
+.button-info:hover {
+    background-color: #117a8b; /* Darker teal */
+}
+
+/* Light Button */
+.button-light {
+    background-color: #f8f9fa; /* Light gray */
+    color: #333;
+}
+
+.button-light:hover {
+    background-color: #e2e6ea; /* Darker light gray */
+}
+
+/* Dark Button */
+.button-dark {
+    background-color: #343a40; /* Dark gray */
+    color: #fff;
+}
+
+.button-dark:hover {
+    background-color: #23272b; /* Darker gray */
 }
 
 /* Input Fields */
