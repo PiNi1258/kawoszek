@@ -176,11 +176,10 @@ textarea:focus {
 }
 
 
-/* Centering the table */
 table {
-    width: auto; /* Set to auto to avoid full width */
-    margin: 20px auto; /* Center the table */
-    border-collapse: collapse;
+    width: auto; /* Allow table to take up only the needed width */
+    margin: 20px auto; /* Center the table horizontally */
+    border-collapse: collapse; /* Avoid double borders */
 }
 
 /* Adjusting table cells */
