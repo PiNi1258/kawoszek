@@ -421,30 +421,38 @@
             renderSections();
             renderCharts();
         }
+
         window.displaySection = (sectionId) => {
             const sections = ['homePage', 'reportsPage', 'editPage', 'managePage'];
+
+            // Show the selected section, hide others
             sections.forEach(id => {
                 document.getElementById(id).style.display = id === sectionId ? 'block' : 'none';
             });
 
-
-
-            // Remove the active class from all nav links
+            // Remove the 'active' class from all nav links
             const links = document.querySelectorAll('.nav-link');
             links.forEach(link => link.classList.remove('active'));
 
-            for(const l in links) {
-                if (l.replace("Link",'') === sectionId.replace("Page",'')) {
-                    console.log(l)
-                    l.classList.add('active');
+            // Calculate the section name without "Page"
+            const section_tmp = sectionId.replace("Page", '');
+
+            // Find the matching link and add the 'active' class
+            links.forEach(link => {
+                const lnk = link.id.replace("Link", '');  // Assuming link IDs are like 'homeLink', 'reportsLink', etc.
+
+                if (lnk === section_tmp) {
+                    link.classList.add('active');
                 }
-            }
+            });
 
-
+            // Render charts if reportsPage is active
             if (sectionId === 'reportsPage') {
                 renderCharts();
             }
         }
+
+
         window.toggleSectionVisibility = (sectionName) => {
             const sectionsData = loadSectionsData();
             sectionsData[sectionName].visible = !sectionsData[sectionName].visible;
