@@ -138,7 +138,7 @@
                 for (const sectionName in sectionsData) {
                     const history = document.getElementById(`${sectionName}_history_table`);
                     if (history) {
-                        history.style.display = isVisible ? 'table-row-group' : 'none';
+                        history.style.display = isVisible ? 'block' : 'none';
                     }
                 }
             };
@@ -246,17 +246,17 @@
                     <div class="section">
                         <section>
                             <h2>${sectionName}</h2>
-                            <p>${section.question}</p>
+                            <p>${section.question}
                             ${sectionType === 'numerical' ? `
                                 <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj +1</button>
                                 <h3>   <div>Dziś: ${section.history[today] || 'Brak danych'}</div></h3>
 
                                 <!-- <div>Liczba: ${sectionCount}</div> -->
-                            ` : `
+                           </p>` : `
                                 <button class="button-yes" onclick="updateSectionCounts('${sectionName}', 0, 'TAK')">TAK</button>
                                 <button class="button-no" onclick="updateSectionCounts('${sectionName}', 0, 'NIE')">NIE</button>
                                 <h3> <div>Dziś: ${section.history[today] || 'Brak danych'}</div></h3>
-                            `}
+                            </p>`}
                             <table class = "section" id="${sectionName}_history_table">
                                 <thead>
                                     <tr>
