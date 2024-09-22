@@ -60,10 +60,11 @@
 
         <div class="section-container">
             <div class="section">
-            <h2>Globalne ustawienia:</h2>
+            <h2>Ustawienia</h2>
             <div class="toggle-container">
                 <div class="section">
-                <span>Wykresy: </span>
+                <span>Wykresy</span>
+                    </br></br>
                 <label class="switch">
                     <input type="checkbox" id="globalChartToggle" onchange="toggleGlobalChartsVisibility()">
                     <span class="slider"></span>
@@ -73,7 +74,8 @@
             <p></p>
             <div class="toggle-container">
                 <div class="section">
-                <span>Historia: </span>
+                <span>Historia</span>
+                    </br></br>
                 <label class="switch">
                     <input type="checkbox" id="globalHistoryToggle" onchange="toggleGlobalHistoryVisibility()">
                     <span class="slider"></span>
@@ -253,8 +255,9 @@
                             ${sectionType === 'numerical' ? `
                                 <h2>${sectionName}
                                 <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj +1</button></h2>
-                                <h3>${section.question}
-                                <div>Dziś: ${section.history[today] || 'Brak danych'}</div></h3>
+                                <h5>${section.question}
+                                </br></br>
+                                <div><h3>Dziś: ${section.history[today] || 'Brak danych'}</h3></div></h5>
 
                                 <!-- <div>Liczba: ${sectionCount}</div> -->
                            </p>` : `
@@ -328,7 +331,8 @@
 
              <div class="toggle-container">
              <div class="section">
-              <span>Wyświetlaj: </span>
+              <span>Wyświetlaj </span>
+              </br></br>
 
                 <label class="switch">
                     <input type="checkbox" id="${sectionName}_visible" ${isVisible ? 'checked' : ''} onchange="toggleSectionVisibility('${sectionName}')">
