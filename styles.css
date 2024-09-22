@@ -321,6 +321,12 @@ th {
     height: 34px;
 }
 
+.toggle-container {
+    display: flex;
+    justify-content: center; /* Wyśrodkowanie w poziomie */
+    align-items: center; /* Wyśrodkowanie w pionie */
+}
+
 .switch input {
     opacity: 0;
     width: 0;
