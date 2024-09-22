@@ -258,7 +258,7 @@
                                 <h3> <div>Dziś: ${section.history[today] || 'Brak danych'}</div></h3>
                             </p>`}
                             <div class = "section">
-                            <table class="section-history" id="${sectionName}_history_table">
+                            <table id="${sectionName}_history_table">
                                 <thead>
                                     <tr>
                                         <th>Data</th>
@@ -269,7 +269,7 @@
                             </table>
                             </div>
                             <div class = "section" id="${sectionName}_section_chart">
-                                <canvas id="${sectionName}_chart" class="section-chart"></canvas>
+                                <canvas id="${sectionName}_chart"></canvas>
                             </div>
                         </section>
                     </div>
@@ -290,7 +290,7 @@
                                 <button class="button-no" onclick="editSectionHistory('${sectionName}', 'NIE')">NIE</button>
                                 </div>
                             `}
-<p></p>
+<p></p><p></p>
                             <button class = "button-reset" onclick="resetSectionHistory('${sectionName}')">Resetuj</button>
 
                         </section>
@@ -325,7 +325,7 @@
                 </label>
 
             </div>
-
+<p></p><p></p>
             <button class="button-no" onclick="deleteSection('${sectionName}')">Usuń sekcję</button>
         </section>
     </div>
