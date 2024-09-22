@@ -45,13 +45,16 @@
         <h2>Dodaj nową sekcję</h2>
         <input id="newSectionName" placeholder="Nazwa sekcji" type="text">
         <select id="newSectionType">
-            <option value="numerical">Numeryczny</option>
-            <option value="binary">Binarne (TAK/NIE)</option>
+            <option value="numerical">Licznik +1</option>
+            <option value="binary">"Tak" lub "Nie"</option>
         </select>
         <textarea id="newSectionQuestion" placeholder="Pytanie do sekcji"></textarea>
         <button onclick="addNewSection()">Dodaj</button>
         <h2>Istniejące sekcje</h2>
         <div id="manageSectionsContainer"></div>
+        <button onclick="exportData()">Eksportuj dane</button>
+        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+        <label for="importFile" class="button">Importuj dane</label>
     </div>
 </main>
 <footer class="footer">
@@ -82,6 +85,39 @@
             renderSections();
             renderCharts();
         }
+
+        const exportData = () => {
+            const sectionsData = loadSectionsData();
+            const dataStr = JSON.stringify(sectionsData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'sections_data.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+
+        const importData = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const sectionsData = JSON.parse(e.target.result);
+                    saveSectionsData(sectionsData);
+                    renderSections();
+                    renderCharts();
+                } catch (error) {
+                    alert('Błąd podczas importowania danych: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        };
+
+
+
         const renderSections = () => {
             const sectionsData = loadSectionsData();
             const sectionsContainer = document.getElementById('sectionsContainer');
@@ -303,6 +339,9 @@
         window.renderSections = renderSections;
         window.renderCharts = renderCharts;
 
+        window.importData = importData;
+        window.exportData = exportData;
+
         window.addNewSection = () => {
             const newSectionName = document.getElementById('newSectionName').value;
             const newSectionType = document.getElementById('newSectionType').value;
@@ -349,9 +388,7 @@
             sections.forEach(id => {
                 document.getElementById(id).style.display = id === sectionId ? 'block' : 'none';
             });
-            ['homeLink', 'reportsLink', 'editLink', 'manageLink'].forEach(linkId => {
-                document.getElementById(linkId).classList.toggle('active', `${sectionId}Link` === linkId);
-            });
+
             if (sectionId === 'reportsPage') {
                 renderCharts();
             }
