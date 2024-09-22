@@ -491,15 +491,4 @@ label {
     outline: none; /* Remove default outline */
 }
 
-.section-header {
-    display: flex;
-    justify-content: space-between; /* Space between text and button */
-    align-items: center; /* Align items vertically in the center */
-    width: 100%; /* Make the header take the full width */
-    max-width: 800px; /* Optional: set a max width for the header */
-}
-
-button {
-    margin-left: auto; /* Push the button to the far right */
-}
 

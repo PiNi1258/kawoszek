@@ -256,7 +256,7 @@
                                 <h2 class="section-header">${sectionName}
                                 <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj +1</button></h2>
                                 <h5>${section.question}
-                                </br></br>
+                                </br>
                                 <div><h3>Dziś: ${section.history[today] || 'Brak danych'}</h3></div></h5>
 
                                 <!-- <div>Liczba: ${sectionCount}</div> -->
@@ -265,8 +265,9 @@
                                 <button class="button-yes" onclick="updateSectionCounts('${sectionName}', 0, 'TAK')">TAK</button>
                                 <button class="button-no" onclick="updateSectionCounts('${sectionName}', 0, 'NIE')">NIE</button>
                                 </h2>
-                                <h3>${section.question}
-                                <div>Dziś: ${section.history[today] || 'Brak danych'}</div></h3>
+                                <h5>${section.question}
+                                </br>
+                                <div><h3>Dziś: ${section.history[today] || 'Brak danych'}</h3></div></h5>
                             </p>`}
                             <div>
                                 <table  class = "section id="${sectionName}_history_table">
