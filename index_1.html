@@ -29,30 +29,39 @@
 </header>
 <main class="container">
     <div id="homePage">
-        <div id="sectionsContainer"></div>
-   </div>
+        <div class="section-container" id="sectionsContainer"></div>
+    </div>
     <div id="reportsPage" style="display: none;">
         <h2>Raporty</h2>
         <div id="chartsContainer" style="display: none;"></div>
         <button id="toggleButton" onclick="toggleChartsVisibility()">Pokaż/Ukryj wykresy</button>
         <div id="chartsContainerReports"></div>
     </div>
-    <div id="editPage" style="display: none;">
+    <div class="section-container" id="editPage" style="display: none;">
+        <div class="section">
         <h2>Edycja danych</h2>
         <div id="editSectionsContainer"></div>
-        <button onclick="exportData()">Eksportuj dane</button>
-        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
-        <label for="importFile" class="button">Importuj dane</label>
+        </div>
+        <div class="section">
+            <h2>Eksportuj/Importuj</h2>
+            <button onclick="exportData()">Eksportuj</button>
+            <button>
+                <input accept=".json" id="importFile" onchange="importData(event)" style="display: none;" type="file">
+                <label class="button" for="importFile">Importuj</label>
+            </button>
+        </div>
     </div>
     <div id="managePage" style="display: none;">
         <div class="section-container" id="addSectionsContainer"></div>
 
-        <div class="section-container"id="manageSectionsContainer"></div>
+        <div class="section-container" id="manageSectionsContainer"></div>
 
         <div class="section-container">
-            <h2>Globalne ustawienia:</h2>
-            <button onclick="toggleHistoryVisibility()">Pokaż/Ukryj historię</button>
-            <button onclick="toggleChartsVisibility()">Pokaż/Ukryj wykresy</button>
+            <div class="section">
+                <h2>Globalne ustawienia:</h2>
+                <button onclick="toggleHistoryVisibility()">Pokaż/Ukryj historię</button>
+                <button onclick="toggleChartsVisibility()">Pokaż/Ukryj wykresy</button>
+            </div>
         </div>
     </div>
 </main>
@@ -88,7 +97,7 @@
         const exportData = () => {
             const sectionsData = loadSectionsData();
             const dataStr = JSON.stringify(sectionsData, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
+            const blob = new Blob([dataStr], {type: 'application/json'});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -116,17 +125,17 @@
         };
 
 
-
         const renderSections = () => {
             const sectionsData = loadSectionsData();
             const sectionsContainer = document.getElementById('sectionsContainer');
             const editSectionsContainer = document.getElementById('editSectionsContainer');
             const addSectionContainer = document.getElementById('addSectionsContainer')
 
-            sectionsContainer.innerHTML = '<div class ="section">';
-            editSectionsContainer.innerHTML = '<div class ="section">';
+            sectionsContainer.innerHTML = '';
+            editSectionsContainer.innerHTML = '';
+
             addSectionContainer.innerHTML = `<h2>Dodaj nową sekcję</h2>
-        <div class ="section">
+             <div class ="section">
              <input id="newSectionName" placeholder="Nazwa sekcji" type="text">
             <select id="newSectionType">
             <option value="numerical">Licznik +1</option>
@@ -143,19 +152,19 @@
                 // Render sections only if they are visible
                 if (isVisible) {
                     sectionsContainer.innerHTML += `
-                    <div class="section-container">
+                    <div class="section">
                         <section>
                             <h2>${sectionName}</h2>
                             <p>${section.question}</p>
                             ${sectionType === 'numerical' ? `
-                                <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj</button>
+                                <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj +1</button>
                                 <div>Liczba: ${sectionCount}</div>
                             ` : `
-                                <button onclick="updateSectionCounts('${sectionName}', 0, 'TAK')">TAK</button>
-                                <button onclick="updateSectionCounts('${sectionName}', 0, 'NIE')">NIE</button>
+                                <button class="button-yes" onclick="updateSectionCounts('${sectionName}', 0, 'TAK')">TAK</button>
+                                <button class="button-no" onclick="updateSectionCounts('${sectionName}', 0, 'NIE')">NIE</button>
                                 <div>Status: ${section.history[today] || 'Brak danych'}</div>
                             `}
-                            <table id="${sectionName}_history_table">
+                            <table class = "section" id="${sectionName}_history_table">
                                 <thead>
                                     <tr>
                                         <th>Data</th>
@@ -164,12 +173,14 @@
                                 </thead>
                                 <tbody>${renderSectionHistory(section.history)}</tbody>
                             </table>
+                            <div class = "section">
                             <canvas id="${sectionName}_chart" class="section-chart"></canvas>
+                            </div>
                         </section>
-                    </div></div>
+                    </div>
                 `;
                     editSectionsContainer.innerHTML += `
-                    <div class="section-container">
+                    <div class="section">
                         <section>
                             <h2>${sectionName}</h2>
                             <input type="date" id="${sectionName}_date" value="${today}">
@@ -177,15 +188,19 @@
                                 <input type="number" id="${sectionName}_count" placeholder="Liczba">
                                 <button onclick="editSectionHistory('${sectionName}')">Aktualizuj</button>
                             ` : `
-                                <button onclick="editSectionHistory('${sectionName}', 'TAK')">TAK</button>
-                                <button onclick="editSectionHistory('${sectionName}', 'NIE')">NIE</button>
+                                <button class="button-yes" onclick="editSectionHistory('${sectionName}', 'TAK')">TAK</button>
+                                <button class="button-no" onclick="editSectionHistory('${sectionName}', 'NIE')">NIE</button>
                             `}
-                            <button onclick="resetSectionHistory('${sectionName}')">Resetuj</button>
+                            <button class = "button-reset" onclick="resetSectionHistory('${sectionName}')">Resetuj</button>
                         </section>
-                    </div></div>
+                    </div>
                 `;
                 }
             }
+
+            sectionsContainer.innerHTML += '</div>';
+            editSectionsContainer.innerHTML += '</div>';
+
             renderManageSections();
         }
         const renderManageSections = () => {
@@ -195,18 +210,20 @@
             for (const sectionName in sectionsData) {
                 const isVisible = sectionsData[sectionName].visible;
                 manageSectionsContainer.innerHTML += `
-                <div class="section-container">
+                <div class="section">
                     <section>
                         <h2>${sectionName}</h2>
                         <label>
                             <input type="checkbox" id="${sectionName}_visible" ${isVisible ? 'checked' : ''} onchange="toggleSectionVisibility('${sectionName}')">
                             Widoczny
                         </label>
-                        <button onclick="deleteSection('${sectionName}')">Usuń sekcję</button>
+                        <button class="button-no" onclick="deleteSection('${sectionName}')">Usuń sekcję</button>
                     </section>
                 </div>
             `;
             }
+            manageSectionsContainer.innerHTML += '';
+
         }
         const renderSectionHistory = (history) => {
             return Object.entries(history || {}).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA))
@@ -289,8 +306,9 @@
             let data;
 
             let sortedHistory = Object.entries(history).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
-            console.log(sortedHistory)
-            switch(type) {
+            sortedHistory = history
+
+            switch (type) {
                 case "numerical":
                     chart_type = "line";
                     data = Object.values(sortedHistory)

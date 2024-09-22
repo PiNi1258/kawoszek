@@ -298,3 +298,57 @@ input:focus {
         transform: scale(1.3);
     }
 }
+
+/* YES Button */
+.button-yes {
+    padding: 12px 24px;
+    font-size: 16px;
+    background-color: #28a745; /* Green background */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button-yes:hover {
+    background-color: #218838; /* Darker green on hover */
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* NO Button */
+.button-no {
+    padding: 12px 24px;
+    font-size: 16px;
+    background-color: #dc3545; /* Red background */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button-no:hover {
+    background-color: #c82333; /* Darker red on hover */
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Reset Button */
+.button-reset {
+    padding: 12px 24px;
+    font-size: 16px;
+    background-color: #ffc107; /* Yellow background */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button-reset:hover {
+    background-color: #e0a800; /* Darker yellow on hover */
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
