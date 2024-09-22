@@ -144,10 +144,10 @@
 
                 <option value="numerical">Licznik +1</option>
              <option value="binary">"Tak" lub "Nie"</option>
-            </div>
+
         </select>
         <textarea id="newSectionQuestion" placeholder="Pytanie do sekcji"></textarea>
-        <button onclick="addNewSection()">Dodaj</button></div>`;
+        <button onclick="addNewSection()">Dodaj</button></div></div>`;
 
             for (const sectionName in sectionsData) {
                 const section = sectionsData[sectionName];
@@ -194,14 +194,16 @@
                             <input type="date"  class="input-calendar"  id="${sectionName}_date" value="${today}">
                             ${sectionType === 'numerical' ? `
                                 <input type="number" id="${sectionName}_count" placeholder="Liczba">
+                                </div>
                                 <button onclick="editSectionHistory('${sectionName}')">Aktualizuj</button>
                             ` : `
                                 <button class="button-yes" onclick="editSectionHistory('${sectionName}', 'TAK')">TAK</button>
                                 <button class="button-no" onclick="editSectionHistory('${sectionName}', 'NIE')">NIE</button>
+                                </div>
                             `}
 
                             <button class = "button-reset" onclick="resetSectionHistory('${sectionName}')">Resetuj</button>
-                            </div>
+
                         </section>
                     </div>
                 `;
@@ -506,9 +508,9 @@
 
                 if (history) {
                     if (history.style.display === "none") {
-                        history.style.display = "block"; // Ustaw na widoczny
+                        history.style.display = "block";
                     } else {
-                        history.style.display = "none"; // Ustaw na niewidoczny
+                        history.style.display = "none";
                     }
                 }
             }
