@@ -360,10 +360,32 @@ select::after {
 }
 
 /* Wrapper to position select */
-.select-wrapper .input-wrapper {
-    position: relative; /* Positioning context for the arrow */width: 100%; /* Full width */
+.select-wrapper {
     display: flex;
-    align-items: center;
+    align-items: center; /* Aligns items vertically centered */
+    margin-bottom: 10px; /* Space between select wrappers */
+}
+
+.select-wrapper label {
+    margin-right: 10px; /* Space between label and select */
+}
+
+.select-wrapper select {
+    flex: 1; /* Allows the select element to grow and fill available space */
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center; /* Aligns items vertically centered */
+    margin-bottom: 10px; /* Space between input wrappers */
+}
+
+.input-wrapper label {
+    margin-right: 10px; /* Space between label and input */
+}
+
+.input-wrapper input {
+    flex: 1; /* Allows the input to grow and fill available space */
 }
 
 label {
