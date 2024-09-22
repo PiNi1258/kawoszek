@@ -40,21 +40,15 @@
     <div id="editPage" style="display: none;">
         <h2>Edycja danych</h2>
         <div id="editSectionsContainer"></div>
-    </div>
-    <div id="managePage" style="display: none;">
-        <h2>Dodaj nową sekcję</h2>
-        <input id="newSectionName" placeholder="Nazwa sekcji" type="text">
-        <select id="newSectionType">
-            <option value="numerical">Licznik +1</option>
-            <option value="binary">"Tak" lub "Nie"</option>
-        </select>
-        <textarea id="newSectionQuestion" placeholder="Pytanie do sekcji"></textarea>
-        <button onclick="addNewSection()">Dodaj</button>
-        <h2>Istniejące sekcje</h2>
-        <div id="manageSectionsContainer"></div>
         <button onclick="exportData()">Eksportuj dane</button>
         <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
         <label for="importFile" class="button">Importuj dane</label>
+    </div>
+    <div id="managePage" style="display: none;">
+        <h2>Dodaj nową sekcję</h2>
+        <div class="section-container" id="addSectionsContainer"></div>
+        <h2>Istniejące sekcje</h2>
+        <div id="manageSectionsContainer"></div>
     </div>
 </main>
 <footer class="footer">
@@ -122,8 +116,19 @@
             const sectionsData = loadSectionsData();
             const sectionsContainer = document.getElementById('sectionsContainer');
             const editSectionsContainer = document.getElementById('editSectionsContainer');
+            const addSectionContainer = document.getElementById('addSectionsContainer')
+
             sectionsContainer.innerHTML = '';
             editSectionsContainer.innerHTML = '';
+            addSectionContainer.innerHTML = `
+        <input id="newSectionName" placeholder="Nazwa sekcji" type="text">
+        <select id="newSectionType">
+            <option value="numerical">Licznik +1</option>
+            <option value="binary">"Tak" lub "Nie"</option>
+        </select>
+        <textarea id="newSectionQuestion" placeholder="Pytanie do sekcji"></textarea>
+        <button onclick="addNewSection()">Dodaj</button>`;
+
             for (const sectionName in sectionsData) {
                 const section = sectionsData[sectionName];
                 const sectionType = section.type;
@@ -275,16 +280,19 @@
             let chart_type;
             let isBinary = false;
             let data;
+
+            let sortedHistory = Object.entries(history).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
+            console.log(sortedHistory)
             switch(type) {
                 case "numerical":
                     chart_type = "line";
-                    data = Object.values(history)
+                    data = Object.values(sortedHistory)
                     break;
                 case "binary":
                     isBinary = true;
                     chart_type = "bar";
                     data = Object.fromEntries(
-                        Object.entries(history).map(([key, value]) => [
+                        Object.entries(sortedHistory).map(([key, value]) => [
                             key,
                             value === 'TAK' ? 1 : value === 'NIE' ? -1 : value
                         ])
@@ -292,14 +300,14 @@
                     break;
                 default:
                     chart_type = "bubble";
-                    data = Object.values(history)
+                    data = Object.values(sortedHistory)
             }
 
             // Create and render the chart for the current section
             const chart = new Chart(canvasElement.getContext('2d'), {
                 type: chart_type,
                 data: {
-                    labels: Object.keys(history),
+                    labels: Object.keys(sortedHistory),
                     datasets: [{
                         label: sanitizedSectionName,
                         data: data,
