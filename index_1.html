@@ -18,13 +18,15 @@
 </head>
 <body>
 <header>
-    <div class="container">
-        <nav class="nav">
+    <div class="section-container">
+        <div class="section">
+         <nav class="nav">
             <a class="nav-link active" href="#" id="homeLink" onclick="displaySection('homePage')">Strona główna</a>
             <!-- <a class="nav-link" href="#" id="reportsLink" onclick="displaySection('reportsPage')">Raporty</a> -->
             <a class="nav-link" href="#" id="editLink" onclick="displaySection('editPage')">Edycja danych</a>
             <a class="nav-link" href="#" id="manageLink" onclick="displaySection('managePage')">Zarządzaj sekcjami</a>
         </nav>
+        </div>
     </div>
 </header>
 <main class="container">
@@ -422,6 +424,10 @@
             const sections = ['homePage', 'reportsPage', 'editPage', 'managePage'];
             sections.forEach(id => {
                 document.getElementById(id).style.display = id === sectionId ? 'block' : 'none';
+            });
+
+            sections.forEach(sectionId => {
+                document.getElementById(id).classList.toggle('active', id === activeLinkId);
             });
 
             if (sectionId === 'reportsPage') {
