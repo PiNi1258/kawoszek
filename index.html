@@ -335,6 +335,7 @@
 
         }
         const renderSectionHistory = (history) => {
+
             return Object.entries(history || {}).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA))
                 .map(([date, count]) => `<tr><td>${date}</td><td>${count}</td></tr>`).join('');
         }
@@ -414,7 +415,8 @@
             let isBinary = false;
             let data;
 
-            let sortedHistory = Object.entries(history).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
+            let sortedHistory = Object.entries(history || {}).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
+
             sortedHistory = history
 
             switch (type) {
