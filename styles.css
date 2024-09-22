@@ -360,7 +360,7 @@ select::after {
 }
 
 /* Wrapper to position select */
-.select-wrapper {
+.select-wrapper .input-wrapper {
     position: relative; /* Positioning context for the arrow */width: 100%; /* Full width */
     display: flex;
     align-items: center;

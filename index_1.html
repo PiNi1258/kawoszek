@@ -138,20 +138,26 @@
 
             addSectionContainer.innerHTML = `<h2>Dodaj nową sekcję</h2>
              <div class ="section">
-             <input id="newSectionName" placeholder="Nazwa sekcji" type="text">
-
+             <div class="input-wrapper">
+               <label for="newSectionType">Nazwa:</label>
+             <input id="newSectionName"placeholder="Nazwa sekcji" type="text">
+               </div>
              <div class="select-wrapper">
-                 <label for="newSectionType">Typ:</label>
-
+                <label for="newSectionType">Typ:</label>
                 <select id="newSectionType">
 
                          <option value="numerical">Licznik +1</option>
                       <option value="binary">"Tak" lub "Nie"</option>
 
                       </select>
-                      </div>
-        <textarea id="newSectionQuestion" placeholder="Pytanie do sekcji"></textarea>
-        <button onclick="addNewSection()">Dodaj</button></div>`;
+             </div>
+                          <div class="input-wrapper">
+               <label for="newSectionType">Pytanie:</label>
+             <input id="newSectionQuestion" placeholder="Pytanie do sekcji" type="text">
+             </div>
+            <button onclick="addNewSection()">Dodaj</button>
+        </div>`;
+
 
             for (const sectionName in sectionsData) {
                 const section = sectionsData[sectionName];
