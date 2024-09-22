@@ -173,8 +173,8 @@
                                 </thead>
                                 <tbody>${renderSectionHistory(section.history)}</tbody>
                             </table>
-                            <div class = "section">
-                            <canvas id="${sectionName}_chart" class="section-chart"></canvas>
+                            <div class = "section" id="${sectionName}_section_chart">
+                                <canvas id="${sectionName}_chart" class="section-chart"></canvas>
                             </div>
                         </section>
                     </div>
@@ -446,7 +446,7 @@
 
             for (const sectionName in sectionsData) {
 
-                const canvas = document.getElementById(`${sectionName}_chart`);
+                const canvas = document.getElementById(`${sectionName}_section_chart`);
                 const button = document.getElementById('toggleButton');
 
                 if (canvas) {
