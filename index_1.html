@@ -45,12 +45,15 @@
         <label for="importFile" class="button">Importuj dane</label>
     </div>
     <div id="managePage" style="display: none;">
-        <h2>Dodaj nową sekcję</h2>
         <div class="section-container" id="addSectionsContainer"></div>
-        <h2>Istniejące sekcje</h2>
-        <div id="manageSectionsContainer"></div>
-        <button onclick="toggleChartsVisibility()">Pokaż/Ukryj wykresy</button>
 
+        <div class="section-container"id="manageSectionsContainer"></div>
+
+        <div class="section-container">
+            <h2>Globalne ustawienia:</h2>
+            <button onclick="toggleHistoryVisibility()">Pokaż/Ukryj historię</button>
+            <button onclick="toggleChartsVisibility()">Pokaż/Ukryj wykresy</button>
+        </div>
     </div>
 </main>
 <footer class="footer">
@@ -120,16 +123,17 @@
             const editSectionsContainer = document.getElementById('editSectionsContainer');
             const addSectionContainer = document.getElementById('addSectionsContainer')
 
-            sectionsContainer.innerHTML = '';
-            editSectionsContainer.innerHTML = '';
-            addSectionContainer.innerHTML = `
-        <input id="newSectionName" placeholder="Nazwa sekcji" type="text">
-        <select id="newSectionType">
+            sectionsContainer.innerHTML = '<div class ="section">';
+            editSectionsContainer.innerHTML = '<div class ="section">';
+            addSectionContainer.innerHTML = `<h2>Dodaj nową sekcję</h2>
+        <div class ="section">
+             <input id="newSectionName" placeholder="Nazwa sekcji" type="text">
+            <select id="newSectionType">
             <option value="numerical">Licznik +1</option>
             <option value="binary">"Tak" lub "Nie"</option>
         </select>
         <textarea id="newSectionQuestion" placeholder="Pytanie do sekcji"></textarea>
-        <button onclick="addNewSection()">Dodaj</button>`;
+        <button onclick="addNewSection()">Dodaj</button></div>`;
 
             for (const sectionName in sectionsData) {
                 const section = sectionsData[sectionName];
@@ -151,7 +155,7 @@
                                 <button onclick="updateSectionCounts('${sectionName}', 0, 'NIE')">NIE</button>
                                 <div>Status: ${section.history[today] || 'Brak danych'}</div>
                             `}
-                            <table>
+                            <table id="${sectionName}_history_table">
                                 <thead>
                                     <tr>
                                         <th>Data</th>
@@ -162,7 +166,7 @@
                             </table>
                             <canvas id="${sectionName}_chart" class="section-chart"></canvas>
                         </section>
-                    </div>
+                    </div></div>
                 `;
                     editSectionsContainer.innerHTML += `
                     <div class="section-container">
@@ -178,7 +182,7 @@
                             `}
                             <button onclick="resetSectionHistory('${sectionName}')">Resetuj</button>
                         </section>
-                    </div>
+                    </div></div>
                 `;
                 }
             }
@@ -187,7 +191,7 @@
         const renderManageSections = () => {
             const sectionsData = loadSectionsData();
             const manageSectionsContainer = document.getElementById('manageSectionsContainer');
-            manageSectionsContainer.innerHTML = '';
+            manageSectionsContainer.innerHTML = '<h2>Istniejące sekcje</h2>';
             for (const sectionName in sectionsData) {
                 const isVisible = sectionsData[sectionName].visible;
                 manageSectionsContainer.innerHTML += `
@@ -436,6 +440,23 @@
                         canvas.style.display = "none"; // Ustaw na niewidoczny
                         button.textContent = "Pokaż Canvas"; // Zmień tekst
                         button.style.backgroundColor = ""; // Zmień kolor
+                    }
+                }
+            }
+        }
+
+        window.toggleHistoryVisibility = () => {
+            const sectionsData = loadSectionsData();
+
+            for (const sectionName in sectionsData) {
+
+                const history = document.getElementById(`${sectionName}_history_table`);
+
+                if (history) {
+                    if (history.style.display === "none") {
+                        history.style.display = "block"; // Ustaw na widoczny
+                    } else {
+                        history.style.display = "none"; // Ustaw na niewidoczny
                     }
                 }
             }
