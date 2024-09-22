@@ -58,10 +58,17 @@
     <p>Made with ❤️ by PiZi inspired by NiiX 🥰</p>
 </footer>
 <script>
+    window.onkeyup = function () {
+        renderCharts();
+        console.log("A")
+    }
+
     window.onload = function () {
         const sectionsDataKey = 'sectionsData';
         const today = new Date().toISOString().split('T')[0];
+
         let charts = {};
+
         const loadSectionsData = () => JSON.parse(localStorage.getItem(sectionsDataKey)) || {};
         const saveSectionsData = (data) => localStorage.setItem(sectionsDataKey, JSON.stringify(data));
         const updateSectionCounts = (sectionName, countUpdate, binaryValue = null) => {
@@ -214,8 +221,15 @@
         }
 
         const createChart = (canvasId, history, sanitizedSectionName) => {
+            const canvasElement = document.getElementById(canvasId);
+
+            // Destroy the previous chart instance if it exists
+            if (charts[canvasId]) {
+                charts[canvasId].destroy();
+            }
+
             // Create and render the chart for the current section
-            const chart = new Chart(document.getElementById(canvasId), {
+            const chart = new Chart(canvasElement, {
                 type: 'bar',
                 data: {
                     labels: Object.keys(history),
@@ -238,8 +252,9 @@
                     }
                 }
             });
-            //chart.update();
-            //chart.render();
+
+            // Store the new chart instance in the charts object
+            charts[canvasId] = chart;
         }
 
         window.updateSectionCounts = updateSectionCounts;
