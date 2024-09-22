@@ -566,9 +566,9 @@
 
                 if (canvas) {
                     if (canvas.style.display === "none") {
-                        canvas.style.display = "block"; // Ustaw na widoczny
+                        canvas.style.display = "block";
                     } else {
-                        canvas.style.display = "none"; // Ustaw na niewidoczny
+                        canvas.style.display = "none";
                     }
                 }
             }
@@ -593,6 +593,9 @@
 
         renderSections();
         renderCharts();
+        toggleChartsVisibility(visibilityStates.chartsVisible);
+        toggleHistoryVisibility(visibilityStates.historyVisible);
+
     }
 
 </script>
