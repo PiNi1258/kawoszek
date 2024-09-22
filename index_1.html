@@ -220,10 +220,9 @@
         const createChart = (canvasId, history, sanitizedSectionName, type) => {
             const canvasElement = document.getElementById(canvasId);
 
-
             // Check if the canvas element exists before proceeding
             if (!canvasElement) {
-                console.error(`Canvas element with id "${canvasId}" not found.`);
+                console.log(`Canvas element with id "${canvasId}" not found or is hidden.`);
                 return;
             }
 
