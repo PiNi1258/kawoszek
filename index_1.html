@@ -237,6 +237,7 @@
             }
 
             let chart_type;
+            let isBinary = false;
             let data;
             switch(type) {
                 case "numerical":
@@ -244,11 +245,12 @@
                     data = Object.values(history)
                     break;
                 case "binary":
+                    isBinary = true;
                     chart_type = "bar";
                     data = Object.fromEntries(
                         Object.entries(history).map(([key, value]) => [
                             key,
-                            value === 'TAK' ? 1 : value === 'NO' ? -1 : value
+                            value === 'TAK' ? 1 : value === 'NIE' ? -1 : value
                         ])
                     );
                     break;
@@ -274,9 +276,20 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            }
+                            ticks: isBinary ? {
+                                callback(value) {
+                                    if (value === 1) {
+                                        return 'TAK';
+                                    }
+                                    if (value === -1) {
+                                        return 'NIE';
+                                    }
+                                    return '';
+                                },
+                                stepSize: 1,
+                            } : undefined,
+                            min: isBinary ? -1 : undefined,
+                            max: isBinary ? 1 : undefined
                         }
                     }
                 }
