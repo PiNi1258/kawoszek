@@ -572,6 +572,8 @@
             saveSectionsData(sectionsData);
             renderSections();
             renderCharts();
+            toggleChartsVisibility(visibilityStates.chartsVisible);
+            toggleHistoryVisibility(visibilityStates.historyVisible);
         }
         window.deleteSection = (sectionName) => {
             const sectionsData = loadSectionsData();
