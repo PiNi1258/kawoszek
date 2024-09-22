@@ -58,13 +58,25 @@
 
         <div class="section-container" id="manageSectionsContainer"></div>
 
-        <div class="section-container">
-            <div class="section">
-                <h2>Globalne ustawienia:</h2>
-                <button onclick="toggleHistoryVisibility()">Pokaż/Ukryj historię</button>
-                <button onclick="toggleChartsVisibility()">Pokaż/Ukryj wykresy</button>
+        <div class="section">
+            <h2>Globalne ustawienia:</h2>
+            <div class="toggle-container">
+                <label class="switch">
+                    <input type="checkbox" id="globalChartToggle" onchange="toggleGlobalChartsVisibility()">
+                    <span class="slider"></span>
+                </label>
+                <span>Pokazuj wykresy</span>
+            </div>
+            <div class="toggle-container">
+                <label class="switch">
+                    <input type="checkbox" id="globalHistoryToggle" onchange="toggleGlobalHistoryVisibility()">
+                    <span class="slider"></span>
+                </label>
+                <span>Pokazuj historię</span>
             </div>
         </div>
+
+
     </div>
 </main>
 <footer class="footer">
@@ -72,8 +84,62 @@
 </footer>
 <script>
     window.onload = function () {
-        const sectionsDataKey = 'sectionsData';
-        const today = new Date().toISOString().split('T')[0];
+            const sectionsDataKey = 'sectionsData';
+            const today = new Date().toISOString().split('T')[0];
+
+            // Load visibility states from local storage
+            const loadVisibilityStates = () => {
+                return {
+                    chartsVisible: JSON.parse(localStorage.getItem('chartsVisible')) ?? true,
+                    historyVisible: JSON.parse(localStorage.getItem('historyVisible')) ?? true,
+                };
+            };
+
+            const saveVisibilityStates = (chartsVisible, historyVisible) => {
+                localStorage.setItem('chartsVisible', JSON.stringify(chartsVisible));
+                localStorage.setItem('historyVisible', JSON.stringify(historyVisible));
+            };
+
+            const visibilityStates = loadVisibilityStates();
+
+            // Set toggle switch states on load
+            document.getElementById('globalChartToggle').checked = visibilityStates.chartsVisible;
+            document.getElementById('globalHistoryToggle').checked = visibilityStates.historyVisible;
+
+            // Toggle global charts visibility
+            window.toggleGlobalChartsVisibility = () => {
+                const isChecked = document.getElementById('globalChartToggle').checked;
+                saveVisibilityStates(isChecked, visibilityStates.historyVisible);
+                toggleChartsVisibility(isChecked);
+            };
+
+            // Toggle global history visibility
+            window.toggleGlobalHistoryVisibility = () => {
+                const isChecked = document.getElementById('globalHistoryToggle').checked;
+                saveVisibilityStates(visibilityStates.chartsVisible, isChecked);
+                toggleHistoryVisibility(isChecked);
+            };
+
+            const toggleChartsVisibility = (isVisible) => {
+                const sectionsData = loadSectionsData();
+                for (const sectionName in sectionsData) {
+                    const canvas = document.getElementById(`${sectionName}_section_chart`);
+                    if (canvas) {
+                        canvas.style.display = isVisible ? 'block' : 'none';
+                    }
+                }
+            };
+
+            const toggleHistoryVisibility = (isVisible) => {
+                const sectionsData = loadSectionsData();
+                for (const sectionName in sectionsData) {
+                    const history = document.getElementById(`${sectionName}_history_table`);
+                    if (history) {
+                        history.style.display = isVisible ? 'table-row-group' : 'none';
+                    }
+                }
+            };
+
 
         let charts = {};
 
@@ -501,12 +567,8 @@
                 if (canvas) {
                     if (canvas.style.display === "none") {
                         canvas.style.display = "block"; // Ustaw na widoczny
-                        button.textContent = "Ukryj Canvas"; // Zmień tekst
-                        button.style.backgroundColor = "gray"; // Zmień kolor
                     } else {
                         canvas.style.display = "none"; // Ustaw na niewidoczny
-                        button.textContent = "Pokaż Canvas"; // Zmień tekst
-                        button.style.backgroundColor = ""; // Zmień kolor
                     }
                 }
             }

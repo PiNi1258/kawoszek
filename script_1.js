@@ -1,195 +1,237 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const homeLink = document.getElementById('homeLink');
-    const reportsLink = document.getElementById('reportsLink');
-    const editLink = document.getElementById('editLink');
-    const manageLink = document.getElementById('manageLink');
-    const addSectionBtn = document.getElementById('addSectionBtn');
+const sectionsDataKey = 'sectionsData';
+const today = new Date().toISOString().split('T')[0];
+let charts = {};
 
-    homeLink.addEventListener('click', () => displaySection('homePage'));
-    reportsLink.addEventListener('click', () => displaySection('reportsPage'));
-    editLink.addEventListener('click', () => displaySection('editPage'));
-    manageLink.addEventListener('click', () => displaySection('managePage'));
-    addSectionBtn.addEventListener('click', addNewSection);
+// Storage Functions
+const loadSectionsData = () => JSON.parse(localStorage.getItem(sectionsDataKey)) || {};
+const saveSectionsData = (data) => localStorage.setItem(sectionsDataKey, JSON.stringify(data));
 
-    const sectionsDataKey = 'sectionsData';
-    const today = new Date().toISOString().split('T')[0];
-    let charts = {};
-
-    const loadSectionsData = () => JSON.parse(localStorage.getItem(sectionsDataKey)) || {};
-    const saveSectionsData = data => localStorage.setItem(sectionsDataKey, JSON.stringify(data));
-    const escapeHtml = unsafe => unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-
-    const updateSectionCounts = (sectionName, countUpdate, binaryValue = null) => {
-        const sectionsData = loadSectionsData();
-        const history = sectionsData[sectionName].history || {};
-        const count = sectionsData[sectionName].count || 0;
-        if (binaryValue !== null) {
-            history[today] = binaryValue;
-            sectionsData[sectionName].count = binaryValue === 'TAK' ? 1 : 0;
-        } else {
-            sectionsData[sectionName].count = count + countUpdate;
-            history[today] = (history[today] || 0) + countUpdate;
-        }
-        sectionsData[sectionName].history = history;
-        saveSectionsData(sectionsData);
-        renderSections();
-        renderCharts();
-    };
-
-    const renderSectionHistory = history => {
-        return Object.entries(history || {}).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA))
-            .map(([date, count]) => `<tr><td>${date}</td><td>${count}</td></tr>`).join('');
-    };
-
-    const renderSections = () => {
-        const sectionsData = loadSectionsData();
-        const sectionsContainer = document.getElementById('sectionsContainer');
-        const editSectionsContainer = document.getElementById('editSectionsContainer');
-        sectionsContainer.innerHTML = '';
-        editSectionsContainer.innerHTML = '';
-
-        for (const sectionName in sectionsData) {
-            const section = sectionsData[sectionName];
-            const sectionType = section.type;
-            const sectionCount = section.count || 0;
-            const isVisible = section.visible;
-            if (isVisible) {
-                sectionsContainer.innerHTML += `
-                    <div class="section-container">
-                        <section>
-                            <h2>${escapeHtml(sectionName)}</h2>
-                            <p>${escapeHtml(section.question)}</p>
-                            ${sectionType === 'numerical' ? `
-                                <button onclick="updateSectionCounts(${escapeHtml(sectionName)}, 1)">Dodaj</button>
-                                <div>Liczba: ${sectionCount}</div>
-                            ` : `
-                                <button onclick="updateSectionCounts(${escapeHtml(sectionName)}, 0, 'TAK')">TAK</button>
-                                <button onclick="updateSectionCounts(${escapeHtml(sectionName)}, 0, 'NIE')">NIE</button>
-                                <div>Status: ${escapeHtml(section.history[today] || 'Brak danych')}</div>
-                            `}
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Data</th>
-                                        <th>${sectionType === 'numerical' ? 'Ilość' : 'Status'}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>${renderSectionHistory(section.history)}</tbody>
-                            </table>
-                        </section>
-                    </div>
-                `;
-
-                editSectionsContainer.innerHTML += `
-                    <div class="section-container">
-                        <section>
-                            <h2>${escapeHtml(sectionName)}</h2>
-                            <input type="date" id="${escapeHtml(sectionName)}_date" value="${today}">
-                            ${sectionType === 'numerical' ? `
-                                <input type="number" id="${escapeHtml(sectionName)}_count" placeholder="Liczba">
-                                <button onclick="editSectionHistory('${escapeHtml(sectionName)}')">Aktualizuj</button>
-                            ` : `
-                                <button onclick="editSectionHistory('${escapeHtml(sectionName)}', 'TAK')">TAK</button>
-                                <button onclick="editSectionHistory('${escapeHtml(sectionName)}', 'NIE')">NIE</button>
-                            `}
-                            <button onclick="resetSectionHistory('${escapeHtml(sectionName)}')">Resetuj</button>
-                        </section>
-                    </div>
-                `;
-            }
-        }
-        renderManageSections();
-    };
-
-    const renderManageSections = () => {
-        const sectionsData = loadSectionsData();
-        const manageSectionsContainer = document.getElementById('manageSectionsContainer');
-        manageSectionsContainer.innerHTML = '';
-        for (const sectionName in sectionsData) {
-            const isVisible = sectionsData[sectionName].visible;
-            manageSectionsContainer.innerHTML += `
-                <div class="section-container">
-                    <section>
-                        <h2>${escapeHtml(sectionName)}</h2>
-                        <label>
-                            <input type="checkbox" id="${escapeHtml(sectionName)}_visible" ${isVisible ? 'checked' : ''} onchange="toggleSectionVisibility('${escapeHtml(sectionName)}')">
-                            Widoczny
-                        </label>
-                        <button onclick="deleteSection('${escapeHtml(sectionName)}')">Usuń sekcję</button>
-                    </section>
-                </div>
-            `;
-        }
-    };
-
-    const renderCharts = () => {
-        const sectionsData = loadSectionsData();
-        const chartsContainer = document.getElementById('chartsContainer');
-        chartsContainer.innerHTML = '';
-        for (const sectionName in sectionsData) {
-            const history = sectionsData[sectionName].history || {};
-            if (history && Object.keys(history).length) {
-                const ctx = document.createElement('canvas');
-                chartsContainer.appendChild(ctx);
-                const data = {
-                    labels: Object.keys(history),
-                    datasets: [{
-                        label: sectionName,
-                        data: Object.values(history),
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
-                };
-                const config = {
-                    type: 'line',
-                    data: data,
-                };
-                new Chart(ctx, config);
-            }
-        }
-    };
-
-    renderSections();
-    renderCharts();
-});
-
-function displaySection(sectionId) {
-    document.querySelectorAll('main .container > div').forEach(el => el.style.display = 'none');
-    document.getElementById(sectionId).style.display = 'block';
-}
-
-function toggleSectionVisibility(sectionName) {
+// Section Management Functions
+const updateSectionCounts = (sectionName, countUpdate, binaryValue = null) => {
     const sectionsData = loadSectionsData();
-    sectionsData[sectionName].visible = !sectionsData[sectionName].visible;
+    const history = sectionsData[sectionName].history || {};
+    const count = sectionsData[sectionName].count || 0;
+
+    if (binaryValue !== null) {
+        history[today] = binaryValue;
+        sectionsData[sectionName].count = binaryValue === 'TAK' ? 1 : 0;
+    } else {
+        sectionsData[sectionName].count = count + countUpdate;
+        history[today] = (history[today] || 0) + countUpdate;
+    }
+
+    sectionsData[sectionName].history = history;
     saveSectionsData(sectionsData);
     renderSections();
     renderCharts();
-}
+};
 
-function deleteSection(sectionName) {
+const deleteSection = (sectionName) => {
     const sectionsData = loadSectionsData();
     delete sectionsData[sectionName];
     saveSectionsData(sectionsData);
     renderSections();
-    renderCharts();
-}
+};
 
-function addNewSection() {
-    const sectionName = document.getElementById('newSectionName').value.trim();
-    const sectionType = document.getElementById('newSectionType').value;
-    const sectionQuestion = document.getElementById('newSectionQuestion').value.trim();
+const addNewSection = () => {
+    const newSectionName = document.getElementById('newSectionName').value;
+    const newSectionType = document.getElementById('newSectionType').value;
+    const newSectionQuestion = document.getElementById('newSectionQuestion').value;
 
-    if (sectionName && sectionType) {
+    if (newSectionName && newSectionQuestion) {
         const sectionsData = loadSectionsData();
-        sectionsData[sectionName] = {
-            type: sectionType,
-            question: sectionQuestion,
+        sectionsData[newSectionName] = {
+            type: newSectionType,
+            question: newSectionQuestion,
             count: 0,
             history: {},
-            visible: true
+            visible: true,
         };
         saveSectionsData(sectionsData);
         renderSections();
-        renderCharts();
+    } else {
+        alert('Wszystkie pola są wymagane!');
     }
-}
+};
+
+// Data Export/Import Functions
+const exportData = () => {
+    const sectionsData = loadSectionsData();
+    const dataStr = JSON.stringify(sectionsData, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sections_data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+};
+
+const importData = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        try {
+            const sectionsData = JSON.parse(e.target.result);
+            saveSectionsData(sectionsData);
+            renderSections();
+            renderCharts();
+        } catch (error) {
+            alert('Błąd podczas importowania danych: ' + error.message);
+        }
+    };
+    reader.readAsText(file);
+};
+
+// Render Functions
+const renderSections = () => {
+    const sectionsData = loadSectionsData();
+    const sectionsContainer = document.getElementById('sectionsContainer');
+    const editSectionsContainer = document.getElementById('editSectionsContainer');
+    const addSectionContainer = document.getElementById('addSectionsContainer');
+
+    sectionsContainer.innerHTML = '';
+    editSectionsContainer.innerHTML = '';
+    addSectionContainer.innerHTML = getAddSectionHTML();
+
+    for (const sectionName in sectionsData) {
+        const section = sectionsData[sectionName];
+        if (section.visible) {
+            sectionsContainer.innerHTML += getSectionHTML(sectionName, section);
+            renderCharts();
+        }
+        editSectionsContainer.innerHTML += getEditSectionHTML(sectionName);
+    }
+};
+
+const getAddSectionHTML = () => `
+    <h2>Dodaj nową sekcję</h2>
+    <div class="section">
+        <div class="input-wrapper">
+            <label for="newSectionType">Nazwa:</label>
+            <input id="newSectionName" placeholder="Nazwa sekcji" type="text">
+        </div>
+        <div class="select-wrapper">
+            <label for="newSectionType">Typ:</label>
+            <select id="newSectionType">
+                <option value="numerical">Licznik +1</option>
+                <option value="binary">"Tak" lub "Nie"</option>
+            </select>
+        </div>
+        <div class="input-wrapper">
+            <label for="newSectionType">Pytanie:</label>
+            <input id="newSectionQuestion" placeholder="Pytanie do sekcji" type="text">
+        </div>
+        <button onclick="addNewSection()">Dodaj</button>
+    </div>
+`;
+
+const getSectionHTML = (sectionName, section) => `
+    <div class="section">
+        <section>
+            <h2>${sectionName}</h2>
+            <p>${section.question}</p>
+            ${section.type === 'numerical' ? getNumericalSectionButtons(sectionName) : getBinarySectionButtons(sectionName)}
+            <table class="section" id="${sectionName}_history_table">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>${section.type === 'numerical' ? 'Ilość' : 'Status'}</th>
+                    </tr>
+                </thead>
+                <tbody>${renderSectionHistory(section.history)}</tbody>
+            </table>
+            <canvas id="${sectionName}_chart" width="400" height="200"></canvas>
+        </section>
+    </div>
+`;
+
+const getNumericalSectionButtons = (sectionName) => `
+    <button onclick="updateSectionCounts('${sectionName}', 1)">+1</button>
+    <button onclick="updateSectionCounts('${sectionName}', -1)">-1</button>
+`;
+
+const getBinarySectionButtons = (sectionName) => `
+    <button onclick="updateSectionCounts('${sectionName}', 0, 'TAK')">Tak</button>
+    <button onclick="updateSectionCounts('${sectionName}', 0, 'NIE')">Nie</button>
+`;
+
+const renderSectionHistory = (history) => {
+    return Object.keys(history).map(date => `
+        <tr>
+            <td>${date}</td>
+            <td>${history[date]}</td>
+        </tr>
+    `).join('');
+};
+
+const renderCharts = () => {
+    const sectionsData = loadSectionsData();
+    for (const sectionName in sectionsData) {
+        const section = sectionsData[sectionName];
+        const ctx = document.getElementById(`${sectionName}_chart`).getContext('2d');
+        const chartData = {
+            labels: Object.keys(section.history),
+            datasets: [{
+                label: sectionName,
+                data: Object.values(section.history),
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+                fill: false
+            }]
+        };
+        if (charts[sectionName]) {
+            charts[sectionName].destroy();
+        }
+        charts[sectionName] = new Chart(ctx, {
+            type: 'line',
+            data: chartData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+};
+
+const getEditSectionHTML = (sectionName) => `
+    <div class="section">
+        <h2>${sectionName}</h2>
+        <button onclick="deleteSection('${sectionName}')">Usuń</button>
+    </div>
+`;
+
+// Toggle Functions
+const toggleHistoryVisibility = () => {
+    const historyTables = document.querySelectorAll('[id$="_history_table"]');
+    historyTables.forEach(table => {
+        table.style.display = table.style.display === 'none' ? 'table' : 'none';
+    });
+};
+
+const toggleChartsVisibility = () => {
+    const chartContainers = document.querySelectorAll('[id$="_chart"]');
+    chartContainers.forEach(container => {
+        container.style.display = container.style.display === 'none' ? 'block' : 'none';
+    });
+};
+
+// Section Display Function
+const displaySection = (sectionId) => {
+    const sections = document.querySelectorAll('main > div');
+    sections.forEach(section => section.style.display = 'none');
+    document.getElementById(sectionId).style.display = 'block';
+};
+
+// Initialization Function
+const init = () => {
+    renderSections();
+};
+
+// Call init to start the application
+init();
