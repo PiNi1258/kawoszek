@@ -31,14 +31,32 @@ h1, h2, h3, p {
     color: #333;
 }
 
-h1 {
-    margin-bottom: 20px;
-    font-size: 32px;
+h2 {
+    font-size: 2em; /* Adjust size of the section name as needed */
+}
+
+p {
+    font-size: 0.8em; /* Make the question smaller */
+    margin-top: 10px; /* Add some space between the section name and question */
 }
 
 .section h2 {
     margin: 0 0 20px;
     font-size: 24px;
+}
+.section h2 {
+    display: flex;
+    justify-content: center; /* Wyśrodkowanie w poziomie */
+    align-items: center; /* Wyśrodkowanie w pionie */
+}
+
+.section h2 button {
+    margin-left: 10px; /* Odstęp między tekstem a przyciskiem */
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 32px;
 }
 
 .section h3 {

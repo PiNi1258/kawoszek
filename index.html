@@ -245,17 +245,20 @@
                     sectionsContainer.innerHTML += `
                     <div class="section">
                         <section>
-                            <h2>${sectionName}</h2>
-                            <p>${section.question}
                             ${sectionType === 'numerical' ? `
-                                <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj +1</button>
-                                <h3>   <div>Dziś: ${section.history[today] || 'Brak danych'}</div></h3>
+                                <h2>${sectionName}
+                                <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj +1</button></h2>
+                                <h3>${section.question}
+                                <div>Dziś: ${section.history[today] || 'Brak danych'}</div></h3>
 
                                 <!-- <div>Liczba: ${sectionCount}</div> -->
                            </p>` : `
+                                <h2>${sectionName}
                                 <button class="button-yes" onclick="updateSectionCounts('${sectionName}', 0, 'TAK')">TAK</button>
                                 <button class="button-no" onclick="updateSectionCounts('${sectionName}', 0, 'NIE')">NIE</button>
-                                <h3> <div>Dziś: ${section.history[today] || 'Brak danych'}</div></h3>
+                                </h2>
+                                <h3>${section.question}
+                                <div>Dziś: ${section.history[today] || 'Brak danych'}</div></h3>
                             </p>`}
                             <div>
                                 <table  class = "section id="${sectionName}_history_table">
