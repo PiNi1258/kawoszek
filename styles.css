@@ -175,21 +175,21 @@ textarea:focus {
     background-color: #f8f9fa;
 }
 
-
 table {
-    width: auto; /* Allow table to take up only the needed width */
-    margin: 20px auto; /* Center the table horizontally */
-    border-collapse: collapse; /* Avoid double borders */
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
 }
 
-/* Adjusting table cells */
-th, td {
+th,
+td {
     padding: 12px;
     border: 1px solid #ddd;
-    text-align: center; /* Center text in both header and data cells */
 }
 
-
+th {
+    background-color: #f8f9fa;
+}
 
 
 /* Results */
