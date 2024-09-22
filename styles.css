@@ -12,6 +12,8 @@ body {
 *::before,
 *::after {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 /* Main Container */
@@ -25,13 +27,16 @@ body {
 }
 
 /* Typography */
-h1 {
+h1, h2, h3, p {
     color: #333;
+}
+
+h1 {
     margin-bottom: 20px;
+    font-size: 32px;
 }
 
 .section h2 {
-    color: #333;
     margin: 0 0 20px;
     font-size: 24px;
 }
@@ -42,31 +47,36 @@ h1 {
 }
 
 .section p {
-    color: #555;
     line-height: 1.6;
     margin-bottom: 15px;
+}
+
+/* Consistent Margins for Sections */
+.section {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Navigation */
 .nav {
     display: flex;
     justify-content: space-around;
-    margin: 0;
-    padding: 0;
     list-style: none;
+    margin-bottom: 20px;
 }
 
 .nav-link {
-    display: inline-block;
-    padding: 20px;
+    padding: 15px 20px;
     text-decoration: none;
     color: #007bff;
-    font-weight: normal;
     font-size: 18px;
-    background: #f8f9fa;
+    background-color: #f8f9fa;
     border: 1px solid #ddd;
     border-radius: 5px;
-    position: relative;
     transition: background 0.3s, color 0.3s, box-shadow 0.3s;
     flex: 1;
     text-align: center;
@@ -75,30 +85,52 @@ h1 {
 .nav-link.active {
     font-weight: bold;
     color: #fff;
-    background: #007bff;
-    border-bottom: 10px solid #007bff;
+    background-color: #007bff;
 }
 
 .nav-link:hover {
-    background: #e9ecef;
+    background-color: #e9ecef;
     color: #0056b3;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Buttons */
-button {
+button,
+.button-yes,
+.button-no,
+.button-reset {
     padding: 12px 24px;
     font-size: 16px;
-    background-color: #007bff;
-    color: #ffffff;
-    border: none;
     border-radius: 8px;
+    border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
 }
 
-button:hover {
-    background-color: #0056b3;
+button {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.button-yes {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.button-no {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.button-reset {
+    background-color: #ffc107;
+    color: #fff;
+}
+
+button:hover,
+.button-yes:hover,
+.button-no:hover,
+.button-reset:hover {
     transform: scale(1.05);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -110,20 +142,15 @@ input[type="password"],
 input[type="number"],
 input[type="search"],
 textarea {
-    width: 100%; /* Full width */
+    width: 100%;
     padding: 12px;
     font-size: 16px;
     border: 1px solid #ced4da;
     border-radius: 8px;
-    box-sizing: border-box;
     transition: border-color 0.3s;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="number"]:focus,
-input[type="search"]:focus,
+input:focus,
 textarea:focus {
     border-color: #007bff;
     outline: none;
@@ -132,18 +159,35 @@ textarea:focus {
 /* Calendar Styles */
 .calendar {
     width: 100%;
-    border-collapse: collapse;
     margin-top: 20px;
+    border-collapse: collapse;
 }
 
 .calendar th,
 .calendar td {
     padding: 12px;
-    text-align: center;
     border: 1px solid #ddd;
+    text-align: center;
 }
 
 .calendar th {
+    background-color: #f8f9fa;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+th {
     background-color: #f8f9fa;
 }
 
@@ -154,32 +198,8 @@ textarea:focus {
     color: #333;
 }
 
-/* Tables */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-table,
-th,
-td {
-    border: 1px solid #ddd;
-}
-
-th,
-td {
-    padding: 12px;
-    text-align: center;
-}
-
-th {
-    background-color: #f8f9fa;
-}
-
-/* Reset Links */
+/* Reset Link */
 .reset-link {
-    display: block;
     margin-top: 20px;
     font-size: 16px;
     color: #dc3545;
@@ -190,106 +210,41 @@ th {
     text-decoration: underline;
 }
 
-/* Sections */
-.section {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;
-    box-sizing: border-box;
-}
-
-/* Forms */
-.section input {
-    margin-bottom: 15px;
-}
-
-/* Reports Page */
-#reportsPage {
-    display: none;
-}
-
-/* Focus States */
-a:focus,
-button:focus,
-input:focus {
-    outline: 2px solid #007bff;
-    outline-offset: 2px;
-}
-
-/* Media Queries */
-@media (max-width: 768px) {
-    .nav {
-        flex-direction: column; /* Stack navigation links vertically on small screens */
-    }
-
-    .nav-link {
-        padding: 15px;
-        font-size: 16px;
-        margin-bottom: 5px; /* Add space between links */
-    }
-
-    .nav-link.active {
-        border-bottom: none; /* Remove bottom border when active on small screens */
-    }
-
-    .container {
-        padding: 15px;
-    }
-
-    h1 {
-        font-size: 28px;
-    }
-
-    button {
-        padding: 10px 20px;
-        font-size: 14px;
-    }
-
-    th,
-    td {
-        padding: 8px;
-    }
-}
-
 /* Footer Styles */
 .footer {
     text-align: center;
     padding: 20px;
-    background-color: #282c34; /* Dark background color */
+    background-color: #282c34;
+    color: #f8f9fa;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px 12px 0 0;
     margin-top: 40px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Subtle top border */
-    font-size: 16px;
-    color: #f8f9fa; /* Light text color */
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Slight shadow above the footer */
-    border-radius: 12px 12px 0px 0px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .footer a {
-    color: #61dafb; /* Light blue color for the link */
+    color: #61dafb;
     text-decoration: none;
     font-weight: bold;
-    transition: color 0.3s; /* Smooth transition for color change */
+    transition: color 0.3s;
 }
 
 .footer a:hover {
-    color: #21a1f1; /* Darker blue on hover */
+    color: #21a1f1;
     text-decoration: underline;
 }
 
 .footer .heart {
     display: inline-block;
-    color: #e25555; /* Red color for the heart */
-    animation: heartbeat 1.2s infinite; /* Heartbeat animation */
+    color: #e25555;
+    animation: heartbeat 1.2s infinite;
 }
 
 .footer p {
     margin: 0;
 }
 
-/* Heartbeat animation */
+/* Heartbeat Animation */
 @keyframes heartbeat {
     0%, 20%, 40%, 60%, 80%, 100% {
         transform: scale(1);
@@ -299,56 +254,31 @@ input:focus {
     }
 }
 
-/* YES Button */
-.button-yes {
-    padding: 12px 24px;
-    font-size: 16px;
-    background-color: #28a745; /* Green background */
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-}
+/* Media Queries */
+@media (max-width: 768px) {
+    .nav {
+        flex-direction: column;
+    }
 
-.button-yes:hover {
-    background-color: #218838; /* Darker green on hover */
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+    .nav-link {
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
 
-/* NO Button */
-.button-no {
-    padding: 12px 24px;
-    font-size: 16px;
-    background-color: #dc3545; /* Red background */
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-}
+    h1 {
+        font-size: 28px;
+    }
 
-.button-no:hover {
-    background-color: #c82333; /* Darker red on hover */
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+    button,
+    .button-yes,
+    .button-no,
+    .button-reset {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
 
-/* Reset Button */
-.button-reset {
-    padding: 12px 24px;
-    font-size: 16px;
-    background-color: #ffc107; /* Yellow background */
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.button-reset:hover {
-    background-color: #e0a800; /* Darker yellow on hover */
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    th,
+    td {
+        padding: 8px;
+    }
 }
