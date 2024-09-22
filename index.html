@@ -58,7 +58,8 @@
 
         <div class="section-container" id="manageSectionsContainer"></div>
 
-        <div class="section">
+        <div class="section-container">
+            <div class="section">
             <h2>Globalne ustawienia:</h2>
             <div class="toggle-container">
                 <label class="switch">
@@ -67,12 +68,14 @@
                 </label>
                 <span>Pokazuj wykresy</span>
             </div>
+            <p></p>
             <div class="toggle-container">
                 <label class="switch">
                     <input type="checkbox" id="globalHistoryToggle" onchange="toggleGlobalHistoryVisibility()">
                     <span class="slider"></span>
                 </label>
                 <span>Pokazuj historię</span>
+            </div>
             </div>
         </div>
 
@@ -160,6 +163,10 @@
             saveSectionsData(sectionsData);
             renderSections();
             renderCharts();
+
+            toggleChartsVisibility(visibilityStates.chartsVisible);
+            toggleHistoryVisibility(visibilityStates.historyVisible);
+
         }
 
         const exportData = () => {
@@ -185,6 +192,9 @@
                     saveSectionsData(sectionsData);
                     renderSections();
                     renderCharts();
+                    toggleChartsVisibility(visibilityStates.chartsVisible);
+                    toggleHistoryVisibility(visibilityStates.historyVisible);
+
                 } catch (error) {
                     alert('Błąd podczas importowania danych: ' + error.message);
                 }
@@ -304,11 +314,16 @@
     <div class="section">
         <section>
             <h2>${sectionName}
-            <label class="switch">
-                <input type="checkbox" id="${sectionName}_visible" ${isVisible ? 'checked' : ''} onchange="toggleSectionVisibility('${sectionName}')">
-                <span class="slider"></span>
-            </label>
             </h2>
+             <div class="toggle-container">
+              <span>Wyświetlaj: </span>
+                <label class="switch">
+                    <input type="checkbox" id="${sectionName}_visible" ${isVisible ? 'checked' : ''} onchange="toggleSectionVisibility('${sectionName}')">
+                    <span class="slider"></span>
+                </label>
+
+            </div>
+
             <button class="button-no" onclick="deleteSection('${sectionName}')">Usuń sekcję</button>
         </section>
     </div>
@@ -471,8 +486,9 @@
         window.addNewSection = () => {
             const newSectionName = document.getElementById('newSectionName').value;
             const newSectionType = document.getElementById('newSectionType').value;
-            const newSectionQuestion = document.getElementById('newSectionQuestion').value;
-            if (newSectionName && newSectionQuestion) {
+            const newSectionQuestion = document.getElementById('newSectionQuestion').value || "";
+
+            if (newSectionName) {
                 const sectionsData = loadSectionsData();
                 if (!sectionsData[newSectionName]) {
                     sectionsData[newSectionName] = {
@@ -485,6 +501,9 @@
                     saveSectionsData(sectionsData);
                     renderSections();
                     renderCharts();
+                    toggleChartsVisibility(visibilityStates.chartsVisible);
+                    toggleHistoryVisibility(visibilityStates.historyVisible);
+
                 }
             }
         }
@@ -499,6 +518,9 @@
                 saveSectionsData(sectionsData);
                 renderSections();
                 renderCharts();
+                toggleChartsVisibility(visibilityStates.chartsVisible);
+                toggleHistoryVisibility(visibilityStates.historyVisible);
+
             }
         }
         window.resetSectionHistory = (sectionName) => {
@@ -508,6 +530,9 @@
             saveSectionsData(sectionsData);
             renderSections();
             renderCharts();
+            toggleChartsVisibility(visibilityStates.chartsVisible);
+            toggleHistoryVisibility(visibilityStates.historyVisible);
+
         }
 
         window.displaySection = (sectionId) => {
@@ -554,6 +579,9 @@
             saveSectionsData(sectionsData);
             renderSections();
             renderCharts();
+            toggleChartsVisibility(visibilityStates.chartsVisible);
+            toggleHistoryVisibility(visibilityStates.historyVisible);
+
         }
 
         window.toggleChartsVisibility = () => {
