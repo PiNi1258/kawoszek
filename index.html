@@ -1,817 +1,538 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <title>Śledź Suplementy, Kawę i Wodę</title>
+    <title>Śledź Stany Różnych Kategorii</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description"
-          content="Aplikacja do śledzenia spożycia suplementów, kawy i wody. Monitoruj swoje spożycie i osiągaj swoje cele zdrowotne z naszą prostą aplikacją.">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Śledź Suplementy, Kawę i Wodę">
-    <link rel="icon" href="icon.png" type="image/png">
-    <link rel="apple-touch-icon" href="icon.png">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="manifest.json">
+    <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
+    <meta content="Aplikacja do śledzenia różnych kategorii. Monitoruj swoje działania z naszą prostą aplikacją."
+          name="description">
+    <meta content="yes" name="mobile-web-app-capable">
+    <meta content="black-translucent" name="mobile-web-app-status-bar-style">
+    <meta content="Śledź Kategorii" name="apple-mobile-web-app-title">
+    <link href="icon.png" rel="icon" type="image/png">
+    <link href="icon.png" rel="apple-touch-icon">
+    <link href="styles.css" rel="stylesheet">
+    <link href="manifest.json" rel="manifest">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>// Funkcja do ustawiania danych w localStorage
-    function setStorageItem(name, value) {
-        localStorage.setItem(name, value);
-    }
 
-    // Funkcja do pobierania danych z localStorage
-    function getStorageItem(name) {
-        return localStorage.getItem(name);
-    }
-
-    // Funkcja do usuwania danych z localStorage
-    function removeStorageItem(name) {
-        localStorage.removeItem(name);
-    }
-
-    // Pobranie zapisanej liczby kaw i wody, historii oraz statusu suplementów z localStorage
-    let coffeeCount = parseInt(getStorageItem('coffeeCount') || 0);
-    let coffeeHistory = JSON.parse(getStorageItem('coffeeHistory')) || {};
-    let waterCount = parseFloat(getStorageItem('waterCount') || 0);
-    let waterHistory = JSON.parse(getStorageItem('waterHistory')) || {};
-    let supplementStatus = JSON.parse(getStorageItem('supplementStatus')) || {};
-    let oilStatus = JSON.parse(getStorageItem('oilStatus')) || {};
-    let spanishStatus = JSON.parse(getStorageItem('spanishStatus')) || {};
-
-    const today = new Date().toISOString().split('T')[0]; // Data w formacie YYYY-MM-DD
-    let coffeeChart = null;
-    let waterChart = null;
-    let supplementChart = null;
-    let oilChart = null;
-    let spanishChart = null;
-
-    // Funkcja do dodawania kawy
-    function addCoffee() {
-        coffeeCount = (parseInt(coffeeCount) || 0) + 1;
-        setStorageItem('coffeeCount', coffeeCount);
-
-        // Aktualizacja historii kaw
-        coffeeHistory[today] = (coffeeHistory[today] || 0) + 1;
-        setStorageItem('coffeeHistory', JSON.stringify(coffeeHistory));
-
-        updateCoffeeResult();
-        updateCoffeeHistory();
-        updateCharts();
-    }
-
-    // Funkcja do dodawania wody
-    function addWater() {
-        waterCount = (parseFloat(waterCount) || 0) + 0.25; // Załóżmy, że każdorazowo dodajemy 0.25 litra wody
-        setStorageItem('waterCount', waterCount);
-
-        // Aktualizacja historii wody
-        waterHistory[today] = (waterHistory[today] || 0) + 0.25;
-        setStorageItem('waterHistory', JSON.stringify(waterHistory));
-
-        updateWaterResult();
-        updateWaterHistory();
-        updateCharts();
-    }
-
-    // Funkcja do resetowania licznika kawy
-    function resetCoffeeCounter() {
-        coffeeCount = 0;
-        setStorageItem('coffeeCount', coffeeCount);
-
-        // Wyczyszczenie historii kawy
-        coffeeHistory = {};
-        setStorageItem('coffeeHistory', JSON.stringify(coffeeHistory));
-
-        updateCoffeeResult();
-        updateCoffeeHistory();
-        updateCharts();
-    }
-
-    // Funkcja do resetowania licznika wody
-    function resetWaterCounter() {
-        waterCount = 0;
-        setStorageItem('waterCount', waterCount);
-
-        // Wyczyszczenie historii wody
-        waterHistory = {};
-        setStorageItem('waterHistory', JSON.stringify(waterHistory));
-
-        updateWaterResult();
-        updateWaterHistory();
-        updateCharts();
-    }
-
-    // Funkcja do aktualizacji liczby kawy
-    function updateCoffeeCount() {
-        const newCount = parseInt(document.getElementById('editCoffeeCount').value) || 0;
-        const editDate = document.getElementById('editCoffeeDate').value;
-
-        coffeeHistory[editDate] = newCount;
-        setStorageItem('coffeeHistory', JSON.stringify(coffeeHistory));
-
-        updateCoffeeHistory();
-        updateCharts();
-    }
-
-    // Funkcja do aktualizacji liczby wody
-    function updateWaterCount() {
-        const newCount = parseFloat(document.getElementById('editWaterCount').value) || 0;
-        const editDate = document.getElementById('editWaterDate').value;
-
-        waterHistory[editDate] = newCount;
-        setStorageItem('waterHistory', JSON.stringify(waterHistory));
-
-        updateWaterHistory();
-        updateCharts();
-    }
-
-    // Funkcja do aktualizacji liczby kawy
-    function historicSupplement(status) {
-        const editDate = document.getElementById('editSupplementsDate').value;
-
-        supplementStatus[editDate] = status;
-        setStorageItem('supplementStatus', JSON.stringify(supplementStatus));
-
-        updateSupplementHistory();
-        updateCharts();
-    }
-
-
-    function historicOil(status) {
-        const editDate = document.getElementById('editOilDate').value;
-
-        oilStatus[editDate] = status;
-        setStorageItem('oilStatus', JSON.stringify(oilStatus));
-
-        updateOilHistory();
-        updateCharts();
-    }
-
-    function historicSpanish(status) {
-        const editDate = document.getElementById('editSpanishDate').value;
-
-        spanishStatus[editDate] = status;
-        setStorageItem('spanishStatus', JSON.stringify(oilStatus));
-
-        updateSpanishHistory();
-        updateCharts();
-    }
-
-    // Funkcja do aktualizacji wyświetlanej liczby kawy
-    function updateCoffeeResult() {
-        document.getElementById('coffeeResult').innerHTML = `Liczba wypitych kaw: <b>${coffeeCount}</b>`;
-    }
-
-    // Funkcja do aktualizacji wyświetlanej liczby wody
-    function updateWaterResult() {
-        document.getElementById('waterResult').innerHTML = `Liczba wypitych litrów wody: <b>${parseFloat(waterCount).toFixed(2)}</b>`;
-    }
-
-    function updateSupplementResult() {
-        const status = supplementStatus[today] || 'Brak danych';
-        document.getElementById('supplementResult').innerHTML = `Czy zażyłeś suplementy dzisiaj? <b>${status}</b>`;
-    }
-
-    function updateSupplementHistory() {
-        const sortedEntries = Object.entries(supplementStatus).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
-        const tbody = document.getElementById('supplementHistoryTable').getElementsByTagName('tbody')[0];
-        tbody.innerHTML = ''; // Clear the table before adding new data
-
-        for (const [date, status] of sortedEntries) {
-            const row = tbody.insertRow();
-            const cellDate = row.insertCell(0);
-            const cellStatus = row.insertCell(1);
-
-            cellDate.textContent = date;
-            cellStatus.textContent = status;
-        }
-    }
-
-    function updateWaterHistory() {
-        const sortedEntries = Object.entries(waterHistory).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
-        const tbody = document.getElementById('waterHistoryTable').getElementsByTagName('tbody')[0];
-        tbody.innerHTML = ''; // Clear the table before adding new data
-
-        for (const [date, count] of sortedEntries) {
-            const row = tbody.insertRow();
-            const cellDate = row.insertCell(0);
-            const cellCount = row.insertCell(1);
-
-            cellDate.textContent = date;
-            cellCount.textContent = parseFloat(count).toFixed(2); // Format the number
-        }
-    }
-
-    function updateCoffeeHistory() {
-        const sortedEntries = Object.entries(coffeeHistory).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
-        const tbody = document.getElementById('coffeeHistoryTable').getElementsByTagName('tbody')[0];
-        tbody.innerHTML = ''; // Clear the table before adding new data
-
-        for (const [date, count] of sortedEntries) {
-            const row = tbody.insertRow();
-            const cellDate = row.insertCell(0);
-            const cellCount = row.insertCell(1);
-
-            cellDate.textContent = date;
-            cellCount.textContent = count;
-        }
-    }
-
-    // Funkcja do resetowania historii suplementów
-    function resetOilHistory() {
-        oilStatus = {}; // Wyczyszczenie historii suplementów
-        getStorageItem('oilStatus', JSON.stringify(oilStatus), 7); // Zapisz w ciasteczkach
-
-        updateOilHistory();
-        updateOilResult();
-    }
-
-    // Funkcja do resetowania historii suplementów
-    function resetSpanishHistory() {
-        spanishStatus = {}; // Wyczyszczenie historii suplementów
-        getStorageItem('spanishStatus', JSON.stringify(spanishStatus), 7); // Zapisz w ciasteczkach
-
-        updateSpanishHistory();
-        updateSpanishResult();
-    }
-
-
-    // Funkcja do rysowania wykresów
-    function updateCharts() {
-        const coffeeHistory = JSON.parse(getStorageItem('coffeeHistory') || '{}');
-        const waterHistory = JSON.parse(getStorageItem('waterHistory') || '{}');
-        const supplementHistory = JSON.parse(getStorageItem('supplementStatus') || '{}');
-        const oilHistory = JSON.parse(getStorageItem('oilStatus') || '{}');
-        const spanishHistory = JSON.parse(getStorageItem('spanishStatus') || '{}');
-
-        const ctxCoffee = document.getElementById('coffeeChart').getContext('2d');
-        const ctxWater = document.getElementById('waterChart').getContext('2d');
-        const ctxSupplement = document.getElementById('supplementChart').getContext('2d');
-        const ctxOil = document.getElementById('oilChart').getContext('2d');
-        const ctxSpanish = document.getElementById('spanishChart').getContext('2d');
-
-        // Sprawdzenie i zniszczenie poprzednich wykresów
-        if (coffeeChart) {
-            coffeeChart.destroy();
-        }
-        if (waterChart) {
-            waterChart.destroy();
-        }
-        if (supplementChart) {
-            supplementChart.destroy();
-        }
-        if (oilChart) {
-            oilChart.destroy();
-        }
-        if (spanishChart) {
-            spanishChart.destroy();
-        }
-
-        coffeeChart = new Chart(ctxCoffee, {
-            type: 'line',
-            data: {
-                labels: Object.keys(coffeeHistory),
-                datasets: [{
-                    label: 'Liczba wypitych kaw',
-                    data: Object.values(coffeeHistory),
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)', // Nice pink color
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        waterChart = new Chart(ctxWater, {
-            type: 'line',
-            data: {
-                labels: Object.keys(waterHistory),
-                datasets: [{
-                    label: 'Liczba wypitych litrów wody',
-                    data: Object.values(waterHistory),
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)', // Cool blue color
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        supplementChart = new Chart(ctxSupplement, {
-            type: 'bar',
-            data: {
-                labels: Object.keys(supplementHistory),
-                datasets: [{
-                    label: 'Zażyte suplementy',
-                    data: Object.keys(supplementHistory).map(date => supplementHistory[date] === 'TAK' ? 1 : -1),
-                    backgroundColor: 'rgba(75, 192, 192, 0.5)', // Soft teal color
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                if (value === 1) {
-                                    return 'TAK';
-                                } else if (value === -1) {
-                                    return 'NIE';
-                                } else if (value === 0) {
-                                    return '?';
-                                }
-                                return null;
-                            },
-                            stepSize: 1,
-                        },
-                        min: -1,
-                        max: 1
-                    }
-                }
-            }
-        });
-
-        oilChart = new Chart(ctxOil, {
-            type: 'bar',
-            data: {
-                labels: Object.keys(oilHistory),
-                datasets: [{
-                    label: 'Olejowanie',
-                    data: Object.keys(oilHistory).map(date => oilHistory[date] === 'TAK' ? 1 : -1),
-                    backgroundColor: 'rgba(255, 159, 64, 0.5)', // Warm orange color
-                    borderColor: 'rgba(255, 159, 64, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                if (value === 1) {
-                                    return 'TAK';
-                                } else if (value === -1) {
-                                    return 'NIE';
-                                } else if (value === 0) {
-                                    return '?';
-                                }
-                                return null;
-                            },
-                            stepSize: 1,
-                        },
-                        min: -1,
-                        max: 1
-                    }
-                }
-            }
-        });
-
-        spanishChart = new Chart(ctxSpanish, {
-            type: 'bar',
-            data: {
-                labels: Object.keys(spanishHistory),
-                datasets: [{
-                    label: 'Hiszpański',
-                    data: Object.keys(spanishHistory).map(date => spanishHistory[date] === 'TAK' ? 1 : -1),
-                    backgroundColor: 'rgba(153, 102, 255, 0.5)', // Light purple color
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                if (value === 1) {
-                                    return 'TAK';
-                                } else if (value === -1) {
-                                    return 'NIE';
-                                } else if (value === 0) {
-                                    return '?';
-                                }
-                                return null;
-                            },
-                            stepSize: 1,
-                        },
-                        min: -1,
-                        max: 1
-                    }
-                }
-            }
-        });
-    }
-
-
-
-
-    function updateOilResult() {
-        const status = oilStatus[today] || 'Brak danych';
-        document.getElementById('oilStatusResult').innerHTML = `Czy olejowałaś dzisiaj? <b>${status}</b>`;
-    }
-
-    function updateOilHistory() {
-        const sortedEntries = Object.entries(oilStatus).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
-
-        const tbody = document.getElementById('oilHistoryTable').getElementsByTagName('tbody')[0];
-        tbody.innerHTML = ''; // Clear the table before adding new data
-
-        for (const [date, status] of sortedEntries) {
-            const row = tbody.insertRow();
-            const cellDate = row.insertCell(0);
-            const cellStatus = row.insertCell(1);
-
-            cellDate.textContent = date;
-            cellStatus.textContent = status;
-        }
-    }
-
-    function updateSpanishResult() {
-        const status = spanishStatus[today] || 'Brak danych';
-        document.getElementById('spanishStatusResult').innerHTML = `Czy hiszpański był? <b>${status}</b>`;
-    }
-
-    function updateSpanishHistory() {
-        const sortedEntries = Object.entries(spanishStatus).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
-
-        const tbody = document.getElementById('spanishHistoryTable').getElementsByTagName('tbody')[0];
-        tbody.innerHTML = ''; // Clear the table before adding new data
-
-        for (const [date, status] of sortedEntries) {
-            const row = tbody.insertRow();
-            const cellDate = row.insertCell(0);
-            const cellStatus = row.insertCell(1);
-
-            cellDate.textContent = date;
-            cellStatus.textContent = status;
-        }
-    }
-
-
-
-    // Funkcja do zaznaczenia, czy zażyłeś suplementy
-    function takeSupplement(status) {
-        supplementStatus[today] = status;
-        setStorageItem('supplementStatus', JSON.stringify(supplementStatus));
-
-        updateSupplementResult();
-        updateSupplementHistory();
-    }
-
-    // Funkcja do resetowania historii suplementów
-    function resetSupplementHistory() {
-        supplementStatus = {}; // Wyczyszczenie historii suplementów
-        setStorageItem('supplementStatus', JSON.stringify(supplementStatus)); // Zapisz w localStorage
-
-        updateSupplementHistory();
-        updateSupplementResult();
-    }
-
-    function didOil(status) {
-        oilStatus[today] = status;
-        setStorageItem('oilStatus', JSON.stringify(oilStatus), 7);
-
-        updateOilResult();
-        updateOilHistory();
-    }
-
-    function didSpanish(status) {
-        spanishStatus[today] = status;
-        localStorage.setItem('spanishStatus', JSON.stringify(spanishStatus));
-
-        updateSpanishResult();
-        updateSpanishHistory();
-    }
-
-
-    function setDefaultDate() {
-        const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
-        document.getElementById('editWaterDate').value = today;
-        document.getElementById('editCoffeeDate').value = today;
-        document.getElementById('editSupplementsDate').value = today;
-        document.getElementById('editOilDate').value = today;
-        document.getElementById('editSpanishDate').value = today;
-    }
-
-
-    // Funkcja do pokazania strony głównej
-    function showHome() {
-        document.getElementById('homePage').style.display = 'block';
-        document.getElementById('editPage').style.display = 'none';
-        document.getElementById('reportsPage').style.display = 'none';
-
-        setActiveLink('homeLink');
-    }
-
-    // Funkcja do pokazania strony edycji
-    function showEdit() {
-        document.getElementById('homePage').style.display = 'none';
-        document.getElementById('reportsPage').style.display = 'none';
-        document.getElementById('editPage').style.display = 'block';
-
-        setActiveLink('editLink');
-    }
-
-    // Funkcja do wyświetlania zakładki Raporty
-    function showReports() {
-        document.getElementById('homePage').style.display = 'none';
-        document.getElementById('editPage').style.display = 'none';
-        document.getElementById('reportsPage').style.display = 'block';
-
-        setActiveLink('reportsLink');
-
-        updateCharts(); // Rysowanie wykresów po przejściu na stronę raportów
-    }
-
-    function setActiveLink(activeLinkId) {
-        ['homeLink', 'editLink', 'reportsLink'].forEach(linkId => {
-            document.getElementById(linkId).classList.toggle('active', linkId === activeLinkId);
-        });
-    }
-
-
-    // Funkcja inicjalizacyjna
-    function init() {
-        console.log('Initializing from localStorage...');
-        initializeSectionVisibility();
-        coffeeCount = parseInt(getStorageItem('coffeeCount') || 0);
-        coffeeHistory = JSON.parse(getStorageItem('coffeeHistory')) || {};
-        waterCount = parseFloat(getStorageItem('waterCount') || 0);
-        waterHistory = JSON.parse(getStorageItem('waterHistory')) || {};
-        supplementStatus = JSON.parse(getStorageItem('supplementStatus')) || {};
-        oilStatus = JSON.parse(getStorageItem('oilStatus')) || {};
-        spanishStatus = JSON.parse(getStorageItem('spanishStatus')) || {};
-
-        console.log('Retrieved coffeeCount:', coffeeCount);
-        console.log('Retrieved coffeeHistory:', coffeeHistory);
-        console.log('Retrieved waterCount:', waterCount);
-        console.log('Retrieved waterHistory:', waterHistory);
-        console.log('Retrieved supplementStatus:', supplementStatus);
-        console.log('Retrieved oilStatus:', oilStatus);
-        console.log('Retrieved spanishStatus:', spanishStatus);
-
-        updateCoffeeResult();
-        updateWaterResult();
-        updateSupplementResult();
-        updateCoffeeHistory();
-        updateWaterHistory();
-        updateSupplementHistory();
-        updateOilResult();
-        updateOilHistory();
-        updateSpanishResult();
-        updateSpanishHistory();
-
-        setDefaultDate();
-    }
-
-    function toggleSection(sectionId) {
-        const section = document.getElementById(sectionId);
-        const isVisible = section.style.display !== 'none';
-
-        section.style.display = isVisible ? 'none' : 'block';
-        localStorage.setItem(sectionId, isVisible ? 'hidden' : 'visible');
-
-        let visibility = isVisible ? 'hidden' : 'visible';
-
-        const div = document.getElementById(sectionId + '_chart');
-        if (div) {
-            div.style.display = visibility === 'visible' ? 'block' : 'none';
-        }
-    }
-
-
-    // Funkcja inicjalizująca widoczność sekcji
-    function initializeSectionVisibility() {
-        const sections = document.querySelectorAll('section');
-
-        sections.forEach(section => {
-            const sectionId = section.id;
-            let visibility = localStorage.getItem(sectionId);
-
-            if (visibility === null) {
-                visibility = 'visible';
-                localStorage.setItem(sectionId, visibility);
-            }
-
-            section.style.display = visibility === 'visible' ? 'block' : 'none';
-
-            // Ustawienie checkboxa
-            const checkbox = document.getElementById(sectionId + '_checkbox');
-            if (checkbox) {
-                checkbox.checked = visibility === 'visible';
-            }
-
-            const div = document.getElementById(sectionId + '_chart');
-            console.log(`Updating visibility for ${div}`);
-
-            if (div) {
-                div.style.display = visibility === 'visible' ? 'block' : 'none';
-            }
-        });
-    }
-
-
-    // Wywołanie funkcji inicjalizującej przy załadowaniu strony
-    window.onload = function() {
-        init();
-    };
-    </script>
 </head>
 <body>
 <header>
-    <div class="container">
-        <nav class="nav">
-            <a class="nav-link active" href="#" id="homeLink" onclick="showHome()">Strona główna</a>
-            <a class="nav-link" href="#" id="reportsLink" onclick="showReports()">Raporty</a>
-            <a class="nav-link" href="#" id="editLink" onclick="showEdit()">Edycja danych</a>
-        </nav>
+    <div class="section-container">
+        <div class="section">
+            <nav class="nav">
+                <a class="nav-link active" href="#" id="homeLink" onclick="displaySection('homePage')">Strona główna</a>
+                <!-- <a class="nav-link" href="#" id="reportsLink" onclick="displaySection('reportsPage')">Raporty</a> -->
+                <a class="nav-link" href="#" id="editLink" onclick="displaySection('editPage')">Edycja danych</a>
+                <a class="nav-link" href="#" id="manageLink" onclick="displaySection('managePage')">Zarządzaj sekcjami</a>
+            </nav>
+        </div>
     </div>
 </header>
 <main class="container">
     <div id="homePage">
-        <section class="section" id="Supplements">
-            <h2>Suplementy</h2>
-            <div id="supplementSection">
-                <p id="supplementResult">Czy zażyłeś suplementy dzisiaj?</p>
-                <button id="takeSupplementYes" onclick="takeSupplement('TAK')"
-                        aria-label="Zaznacz, że zażyłeś suplementy dzisiaj">TAK
-                </button>
-                <button id="takeSupplementNo" onclick="takeSupplement('NIE')"
-                        aria-label="Zaznacz, że nie zażyłeś suplementów dzisiaj">NIE
-                </button>
-            </div>
-            <table id="supplementHistoryTable">
-                <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Suplementy</th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </section>
-        <section class="section" id="Oil">
-            <h2>Olejowanie</h2>
-            <div id="oilSection">
-                <p id="oilStatusResult">Czy zażyłeś suplementy dzisiaj?</p>
-                <button id="didOilYes" onclick="didOil('TAK')" aria-label="Zaznacz, olejowałaś">TAK</button>
-                <button id="didOilNo" onclick="didOil('NIE')" aria-label="Zaznacz, że nie olejowałaś">NIE</button>
-            </div>
-            <table id="oilHistoryTable">
-                <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Olejowanie</th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </section>
-        <section class="section" id="Spanish">
-            <h2>Hiszpański</h2>
-            <div id="spanishSection">
-                <p id="spanishStatusResult">Czy zażyłeś suplementy dzisiaj?</p>
-                <button id="didSpanishYes" onclick="didSpanish('TAK')" aria-label="TAK">TAK</button>
-                <button id="didSpanishNo" onclick="didSpanish('NIE')" aria-label="NIE">NIE</button>
-            </div>
-            <table id="spanishHistoryTable">
-                <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Hiszpański (5 słówek)</th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </section>
-        <section class="section" id="Coffee">
-            <h2>Kawa</h2>
-            <button onclick="addCoffee()" aria-label="Dodaj kawę">Dodaj kawę</button>
-            <div class="results" id="coffeeResult">Liczba wypitych kaw: 0</div>
-            <table id="coffeeHistoryTable">
-                <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Liczba kaw</th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </section>
-        <section class="section" id="Water">
-            <h2>Woda</h2>
-            <button onclick="addWater()" aria-label="Dodaj wodę">Dodaj wodę</button>
-            <div class="results" id="waterResult">Liczba wypitych litrów wody: 0</div>
-            <table id="waterHistoryTable">
-                <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Liczba litrów wody</th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </section>
+        <div class="section-container" id="sectionsContainer"></div>
     </div>
     <div id="reportsPage" style="display: none;">
+        <h2>Raporty</h2>
+        <div id="chartsContainer" style="display: none;"></div>
+        <button id="toggleButton" onclick="toggleChartsVisibility()">Pokaż/Ukryj wykresy</button>
+        <div id="chartsContainerReports"></div>
+    </div>
+    <div class="section-container" id="editPage" style="display: none;">
         <div class="section">
-            <h2>Raporty</h2>
-            <div id="Coffee_chart">
-                <h3>Kawa</h3>
-                <canvas id="coffeeChart" width="400" height="200"></canvas>
-            </div>
-            <div id="Watter_chart">
-                <h3>Woda</h3>
-                <canvas id="waterChart" width="400" height="200"></canvas>
-            </div>
-            <div id="Supplements_chart">
-                <h3>Suplementy</h3>
-                <canvas id="supplementChart" width="400" height="200"></canvas>
-            </div>
-            <div id="Oil_chart">
-                <h3>Olejowanie</h3>
-                <canvas id="oilChart" width="400" height="200"></canvas>
-            </div>
-            <div id="Spanish_chart">
-                <h3>Hiszpański</h3>
-                <canvas id="spanishChart" width="400" height="200"></canvas>
+            <h2>Edycja danych</h2>
+            <div id="editSectionsContainer"></div>
+        </div>
+        <div class="section">
+            <h2>Eksportuj/Importuj</h2>
+            <button onclick="exportData()">Eksportuj</button>
+            <button>
+                <input accept=".json" id="importFile" onchange="importData(event)" style="display: none;" type="file">
+                <label class="button" for="importFile">Importuj</label>
+            </button>
+        </div>
+    </div>
+    <div id="managePage" style="display: none;">
+        <div class="section-container" id="addSectionsContainer"></div>
+
+        <div class="section-container" id="manageSectionsContainer"></div>
+
+        <div class="section-container">
+            <div class="section">
+                <h2>Globalne ustawienia:</h2>
+                <button onclick="toggleHistoryVisibility()">Pokaż/Ukryj historię</button>
+                <button onclick="toggleChartsVisibility()">Pokaż/Ukryj wykresy</button>
             </div>
         </div>
     </div>
-
-    <div id="editPage" style="display: none;">
-        <section class="section">
-            <h2>Suplementy<input type="checkbox" id="Supplements_checkbox" checked
-                                 onclick="toggleSection('Supplements')"/></h2>
-            <input type="date" id="editSupplementsDate" name="date-picker" aria-label="Data suplementów">
-            <button id="historicSupplementYes" onclick="historicSupplement('TAK')"
-                    aria-label="Zaznacz, że zażyłeś suplementy dzisiaj">TAK
-            </button>
-            <button id="historicSupplementNo" onclick="historicSupplement('NIE')"
-                    aria-label="Zaznacz, że nie zażyłeś suplementów dzisiaj">NIE
-            </button>
-            <a class="reset-link" href="#" onclick="resetSupplementHistory()" aria-label="Resetuj historię suplementów">Resetuj
-                suplementy</a>
-        </section>
-
-        <section class="section">
-            <h2>Olejowanie <input id="Oil_checkbox" type="checkbox" checked onclick="toggleSection('Oil')"/></h2>
-            <input type="date" id="editOilDate" name="date-picker" aria-label="Data olejowania">
-            <button id="historicOilYes" onclick="historicOil('TAK')" aria-label="TAK">TAK</button>
-            <button id="historicOilNo" onclick="historicOil('NIE')" aria-label="NIE">NIE</button>
-            <a class="reset-link" href="#" onclick="resetOilHistory()" aria-label="Resetuj historię olejowania">Resetuj
-                olejowanie</a>
-        </section>
-
-        <section class="section">
-            <h2>Hiszpański<input type="checkbox" id="Spanish_checkbox" checked onclick="toggleSection('Spanish')"/></h2>
-            <input type="date" id="editSpanishDate" name="date-picker" aria-label="Data hiszpańskiego">
-            <button id="historicSpanishYes" onclick="historicSpanish('TAK')" aria-label="TAK">TAK</button>
-            <button id="historicSpanishNo" onclick="historicSpanish('NIE')" aria-label="NIE">NIE</button>
-            <a class="reset-link" href="#" onclick="resetSpanishHistory()" aria-label="Resetuj historię hiszpańskiego">Resetuj
-                hiszpański</a>
-        </section><section class="section">
-            <h2>Kawa<input type="checkbox" id="Coffee_checkbox"  checked onclick="toggleSection('Coffee')"/></h2>
-            <input type="date" id="editCoffeeDate" name="date-picker" aria-label="Data kawy">
-            <input aria-label="Liczba wypitych kaw" id="editCoffeeCount" placeholder="Liczba wypitych kaw"
-                   type="number">
-            <button onclick="updateCoffeeCount()" aria-label="Aktualizuj liczbę kaw">Aktualizuj liczbę kaw</button>
-            <a class="reset-link" href="#" onclick="resetCoffeeCounter()" aria-label="Resetuj licznik kawy">Resetuj
-                licznik kawy</a>
-        </section>
-
-        <section class="section">
-            <h2>Woda<input type="checkbox" id="Water_checkbox"  checked onclick="toggleSection('Water')"/></h2>
-            <input type="date" id="editWaterDate" name="date-picker" aria-label="Data wody">
-            <input aria-label="Liczba litrów wody" id="editWaterCount" placeholder="Liczba litrów wody" step="0.01"
-                   type="number">
-            <button onclick="updateWaterCount()" aria-label="Aktualizuj liczbę wody">Aktualizuj liczbę wody</button>
-            <a class="reset-link" href="#" onclick="resetWaterCounter()" aria-label="Resetuj licznik wody">Resetuj
-                licznik wody</a>
-        </section>
-    </div>
 </main>
 <footer class="footer">
-    <p>Made with ❤️ by <a href="https://pini1258.github.io/kawoszek/#" target="_blank">PiZi</a> inspired by <a
-            href="https://pini1258.github.io/kawoszek/#" target="_blank">NiiX</a> 🥰</p>
+    <p>Made with ❤️ by PiZi inspired by NiiX 🥰</p>
 </footer>
-<script src="script.js"></script>
+<script>
+    window.onload = function () {
+        const sectionsDataKey = 'sectionsData';
+        const today = new Date().toISOString().split('T')[0];
+
+        let charts = {};
+
+        const loadSectionsData = () => JSON.parse(localStorage.getItem(sectionsDataKey)) || {};
+        const saveSectionsData = (data) => localStorage.setItem(sectionsDataKey, JSON.stringify(data));
+        const updateSectionCounts = (sectionName, countUpdate, binaryValue = null) => {
+            const sectionsData = loadSectionsData();
+            const history = sectionsData[sectionName].history || {};
+            const count = sectionsData[sectionName].count || 0;
+            if (binaryValue !== null) {
+                history[today] = binaryValue;
+                sectionsData[sectionName].count = binaryValue === 'TAK' ? 1 : 0;
+            } else {
+                sectionsData[sectionName].count = count + countUpdate;
+                history[today] = (history[today] || 0) + countUpdate;
+            }
+            sectionsData[sectionName].history = history;
+            saveSectionsData(sectionsData);
+            renderSections();
+            renderCharts();
+        }
+
+        const exportData = () => {
+            const sectionsData = loadSectionsData();
+            const dataStr = JSON.stringify(sectionsData, null, 2);
+            const blob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'sections_data.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+
+        const importData = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const sectionsData = JSON.parse(e.target.result);
+                    saveSectionsData(sectionsData);
+                    renderSections();
+                    renderCharts();
+                } catch (error) {
+                    alert('Błąd podczas importowania danych: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        };
+
+
+        const renderSections = () => {
+            const sectionsData = loadSectionsData();
+            const sectionsContainer = document.getElementById('sectionsContainer');
+            const editSectionsContainer = document.getElementById('editSectionsContainer');
+            const addSectionContainer = document.getElementById('addSectionsContainer')
+
+            sectionsContainer.innerHTML = '';
+            editSectionsContainer.innerHTML = '';
+
+            addSectionContainer.innerHTML = `<h2>Dodaj nową sekcję</h2>
+             <div class ="section">
+             <div class="input-wrapper">
+               <label for="newSectionType">Nazwa:</label>
+             <input id="newSectionName"placeholder="Nazwa sekcji" type="text">
+               </div>
+             <div class="select-wrapper">
+                <label for="newSectionType">Typ:</label>
+                <select id="newSectionType">
+
+                         <option value="numerical">Licznik +1</option>
+                      <option value="binary">"Tak" lub "Nie"</option>
+
+                      </select>
+             </div>
+                          <div class="input-wrapper">
+               <label for="newSectionType">Pytanie:</label>
+             <input id="newSectionQuestion" placeholder="Pytanie do sekcji" type="text">
+             </div>
+            <button onclick="addNewSection()">Dodaj</button>
+        </div>`;
+
+
+            for (const sectionName in sectionsData) {
+                const section = sectionsData[sectionName];
+                const sectionType = section.type;
+                const sectionCount = section.count || 0;
+                const isVisible = section.visible;
+                // Render sections only if they are visible
+                if (isVisible) {
+                    sectionsContainer.innerHTML += `
+                    <div class="section">
+                        <section>
+                            <h2>${sectionName}</h2>
+                            <p>${section.question}</p>
+                            ${sectionType === 'numerical' ? `
+                                <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj +1</button>
+                                <h3>   <div>Dziś: ${section.history[today] || 'Brak danych'}</div></h3>
+
+                                <!-- <div>Liczba: ${sectionCount}</div> -->
+                            ` : `
+                                <button class="button-yes" onclick="updateSectionCounts('${sectionName}', 0, 'TAK')">TAK</button>
+                                <button class="button-no" onclick="updateSectionCounts('${sectionName}', 0, 'NIE')">NIE</button>
+                                <h3> <div>Dziś: ${section.history[today] || 'Brak danych'}</div></h3>
+                            `}
+                            <table class = "section" id="${sectionName}_history_table">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>${sectionType === 'numerical' ? 'Ilość' : 'Status'}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${renderSectionHistory(section.history)}</tbody>
+                            </table>
+                            <div class = "section" id="${sectionName}_section_chart">
+                                <canvas id="${sectionName}_chart" class="section-chart"></canvas>
+                            </div>
+                        </section>
+                    </div>
+                `;
+                    editSectionsContainer.innerHTML += `
+                    <div class="section">
+                        <section>
+                            <h2>${sectionName}</h2>
+                            <div class="action-container">
+                            <input type="date"  class="input-calendar"  id="${sectionName}_date" value="${today}">
+                            ${sectionType === 'numerical' ? `
+                                <input type="number" id="${sectionName}_count" placeholder="Liczba">
+
+                                <button onclick="editSectionHistory('${sectionName}')">Aktualizuj</button>
+                                </div>
+                            ` : `
+                                <button class="button-yes" onclick="editSectionHistory('${sectionName}', 'TAK')">TAK</button>
+                                <button class="button-no" onclick="editSectionHistory('${sectionName}', 'NIE')">NIE</button>
+                                </div>
+                            `}
+
+                            <button class = "button-reset" onclick="resetSectionHistory('${sectionName}')">Resetuj</button>
+
+                        </section>
+                    </div>
+                `;
+                }
+            }
+
+            sectionsContainer.innerHTML += '</div>';
+            editSectionsContainer.innerHTML += '</div>';
+
+            renderManageSections();
+        }
+        const renderManageSections = () => {
+            const sectionsData = loadSectionsData();
+            const manageSectionsContainer = document.getElementById('manageSectionsContainer');
+
+            manageSectionsContainer.innerHTML = '<h2>Istniejące sekcje</h2>';
+
+            for (const sectionName in sectionsData) {
+                const isVisible = sectionsData[sectionName].visible;
+                manageSectionsContainer.innerHTML += `
+    <div class="section">
+        <section>
+            <h2>${sectionName}
+            <label class="switch">
+                <input type="checkbox" id="${sectionName}_visible" ${isVisible ? 'checked' : ''} onchange="toggleSectionVisibility('${sectionName}')">
+                <span class="slider"></span>
+            </label>
+            </h2>
+            <button class="button-no" onclick="deleteSection('${sectionName}')">Usuń sekcję</button>
+        </section>
+    </div>
+`;
+            }
+            manageSectionsContainer.innerHTML += '';
+
+        }
+        const renderSectionHistory = (history) => {
+            return Object.entries(history || {}).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA))
+                .map(([date, count]) => `<tr><td>${date}</td><td>${count}</td></tr>`).join('');
+        }
+
+        const renderCharts = () => {
+            const sectionsData = loadSectionsData();
+            const chartsContainerHome = document.getElementById('chartsContainer');
+
+            const chartsContainerReports = document.getElementById('chartsContainerReports');
+
+            // Clear existing charts
+            chartsContainerHome.innerHTML = '';
+            chartsContainerReports.innerHTML = '';
+
+            for (const sectionName in sectionsData) {
+                const history = sectionsData[sectionName].history || {};
+                const type = sectionsData[sectionName].type || "bar";
+                // Skip sections with no data
+                if (!Object.keys(history).length) continue;
+
+                // Sanitize the section name for valid HTML IDs
+                const sanitizedSectionName = sectionName.replace(/[^a-zA-Z0-9_-]/g, '_');
+                const canvasIdHome = `${sanitizedSectionName}_home`;
+                const canvasIdReports = `${sanitizedSectionName}_reports`;
+
+                // Create a single section container for all charts
+                chartsContainerHome.innerHTML += `
+                    <div class="section-container">
+                        <section>
+                            <h2>${sanitizedSectionName}</h2>
+                            <div id="chartsSectionHome" class="charts-wrapper">
+                                <canvas id="${canvasIdHome}"></canvas>
+                            </div>
+                        </section>
+                    </div>
+                `;
+
+                chartsContainerReports.innerHTML += `
+                    <div class="section-container">
+                        <section>
+                            <h2>${sanitizedSectionName}</h2>
+                            <div id="chartsSectionReports" class="charts-wrapper">
+                                <canvas id="${canvasIdReports}"></canvas>
+                            </div>
+                        </section>
+                    </div>
+                `;
+
+                setTimeout(() => {
+                    createChart(canvasIdHome, history, sanitizedSectionName, type);
+                    createChart(canvasIdReports, history, sanitizedSectionName, type);
+                    createChart(`${sectionName}_chart`, history, sectionName, type);
+                }, 0);
+            }
+        }
+
+        const createChart = (canvasId, history, sanitizedSectionName, type) => {
+            const canvasElement = document.getElementById(canvasId);
+
+            // Check if the canvas element exists before proceeding
+            if (!canvasElement) {
+                console.log(`Canvas element with id "${canvasId}" not found or is hidden.`);
+                return;
+            }
+
+            if (canvasElement.tagName !== 'CANVAS') {
+                console.error(`Element with id "${canvasId}" is not a canvas.`);
+                return;
+            }
+
+            // Destroy the previous chart instance if it exists
+            if (charts[canvasId]) {
+                charts[canvasId].destroy();
+            }
+
+            let chart_type;
+            let isBinary = false;
+            let data;
+
+            let sortedHistory = Object.entries(history).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
+            sortedHistory = history
+
+            switch (type) {
+                case "numerical":
+                    chart_type = "line";
+                    data = Object.values(sortedHistory)
+                    break;
+                case "binary":
+                    isBinary = true;
+                    chart_type = "bar";
+
+                    data = Object.fromEntries(
+                        Object.entries(sortedHistory).map(([key, value]) => [
+                            key,
+                            value === 'TAK' ? 1 : value === 'NIE' ? -1 : value
+                        ])
+                    );
+                    break;
+                default:
+                    chart_type = "bubble";
+                    data = Object.values(sortedHistory)
+            }
+
+            // Create and render the chart for the current section
+            const chart = new Chart(canvasElement.getContext('2d'), {
+                type: chart_type,
+                data: {
+                    labels: Object.keys(sortedHistory),
+                    datasets: [{
+                        label: sanitizedSectionName,
+                        data: data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: isBinary ? {
+                                callback(value) {
+                                    if (value === 1) {
+                                        return 'TAK';
+                                    }
+                                    if (value === -1) {
+                                        return 'NIE';
+                                    }
+                                    return '';
+                                },
+                                stepSize: 1,
+                            } : undefined,
+                            min: isBinary ? -1 : undefined,
+                            max: isBinary ? 1 : undefined
+                        }
+                    }
+                }
+            });
+
+            // Store the new chart instance in the charts object
+            charts[canvasId] = chart;
+        }
+
+        window.updateSectionCounts = updateSectionCounts;
+        window.renderSections = renderSections;
+        window.renderCharts = renderCharts;
+
+        window.importData = importData;
+        window.exportData = exportData;
+
+        window.addNewSection = () => {
+            const newSectionName = document.getElementById('newSectionName').value;
+            const newSectionType = document.getElementById('newSectionType').value;
+            const newSectionQuestion = document.getElementById('newSectionQuestion').value;
+            if (newSectionName && newSectionQuestion) {
+                const sectionsData = loadSectionsData();
+                if (!sectionsData[newSectionName]) {
+                    sectionsData[newSectionName] = {
+                        type: newSectionType,
+                        count: 0,
+                        history: {},
+                        visible: true,
+                        question: newSectionQuestion
+                    };
+                    saveSectionsData(sectionsData);
+                    renderSections();
+                    renderCharts();
+                }
+            }
+        }
+        window.editSectionHistory = (sectionName, binaryValue = null) => {
+            const date = document.getElementById(`${sectionName}_date`).value;
+            const newCount = parseInt(document.getElementById(`${sectionName}_count`)?.value) || 0;
+            if (date) {
+                const sectionsData = loadSectionsData();
+                const history = sectionsData[sectionName].history || {};
+                history[date] = binaryValue !== null ? binaryValue : newCount;
+                sectionsData[sectionName].history = history;
+                saveSectionsData(sectionsData);
+                renderSections();
+                renderCharts();
+            }
+        }
+        window.resetSectionHistory = (sectionName) => {
+            const sectionsData = loadSectionsData();
+            sectionsData[sectionName].count = 0;
+            sectionsData[sectionName].history = {};
+            saveSectionsData(sectionsData);
+            renderSections();
+            renderCharts();
+        }
+
+        window.displaySection = (sectionId) => {
+            const sections = ['homePage', 'reportsPage', 'editPage', 'managePage'];
+
+            // Show the selected section, hide others
+            sections.forEach(id => {
+                document.getElementById(id).style.display = id === sectionId ? 'block' : 'none';
+            });
+
+            // Remove the 'active' class from all nav links
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(link => link.classList.remove('active'));
+
+            // Calculate the section name without "Page"
+            const section_tmp = sectionId.replace("Page", '');
+
+            // Find the matching link and add the 'active' class
+            links.forEach(link => {
+                const lnk = link.id.replace("Link", '');  // Assuming link IDs are like 'homeLink', 'reportsLink', etc.
+
+                if (lnk === section_tmp) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Render charts if reportsPage is active
+            if (sectionId === 'reportsPage') {
+                renderCharts();
+            }
+        }
+
+
+        window.toggleSectionVisibility = (sectionName) => {
+            const sectionsData = loadSectionsData();
+            sectionsData[sectionName].visible = !sectionsData[sectionName].visible;
+            saveSectionsData(sectionsData);
+            renderSections();
+            renderCharts();
+        }
+        window.deleteSection = (sectionName) => {
+            const sectionsData = loadSectionsData();
+            delete sectionsData[sectionName];
+            saveSectionsData(sectionsData);
+            renderSections();
+            renderCharts();
+        }
+
+        window.toggleChartsVisibility = () => {
+            const sectionsData = loadSectionsData();
+
+            for (const sectionName in sectionsData) {
+
+                const canvas = document.getElementById(`${sectionName}_section_chart`);
+                const button = document.getElementById('toggleButton');
+
+                if (canvas) {
+                    if (canvas.style.display === "none") {
+                        canvas.style.display = "block"; // Ustaw na widoczny
+                        button.textContent = "Ukryj Canvas"; // Zmień tekst
+                        button.style.backgroundColor = "gray"; // Zmień kolor
+                    } else {
+                        canvas.style.display = "none"; // Ustaw na niewidoczny
+                        button.textContent = "Pokaż Canvas"; // Zmień tekst
+                        button.style.backgroundColor = ""; // Zmień kolor
+                    }
+                }
+            }
+        }
+
+        window.toggleHistoryVisibility = () => {
+            const sectionsData = loadSectionsData();
+
+            for (const sectionName in sectionsData) {
+
+                const history = document.getElementById(`${sectionName}_history_table`);
+
+                if (history) {
+                    if (history.style.display === "none") {
+                        history.style.display = "block";
+                    } else {
+                        history.style.display = "none";
+                    }
+                }
+            }
+        }
+
+        renderSections();
+        renderCharts();
+    }
+
+</script>
 </body>
 </html>
