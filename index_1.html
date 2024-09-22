@@ -320,6 +320,7 @@
                 case "binary":
                     isBinary = true;
                     chart_type = "bar";
+
                     data = Object.fromEntries(
                         Object.entries(sortedHistory).map(([key, value]) => [
                             key,
@@ -420,31 +421,30 @@
             renderSections();
             renderCharts();
         }
-
         window.displaySection = (sectionId) => {
             const sections = ['homePage', 'reportsPage', 'editPage', 'managePage'];
-
             sections.forEach(id => {
-                const section = document.getElementById(id);
-
-                // Show or hide sections
-                section.style.display = id === sectionId ? 'block' : 'none';
-
-                // Add 'active' class to the currently active section
-                if (id === sectionId) {
-                    section.classList.add('active');
-                } else {
-                    section.classList.remove('active');
-                }
+                document.getElementById(id).style.display = id === sectionId ? 'block' : 'none';
             });
 
-            // Trigger rendering of charts when the reportsPage is active
+
+
+            // Remove the active class from all nav links
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(link => link.classList.remove('active'));
+
+            for(const l in links) {
+                if (l.replace("Link",'') === sectionId.replace("Page",'')) {
+                    console.log(l)
+                    l.classList.add('active');
+                }
+            }
+
+
             if (sectionId === 'reportsPage') {
                 renderCharts();
             }
         }
-
-
         window.toggleSectionVisibility = (sectionName) => {
             const sectionsData = loadSectionsData();
             sectionsData[sectionName].visible = !sectionsData[sectionName].visible;
