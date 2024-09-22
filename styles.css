@@ -186,12 +186,11 @@ table {
 th, td {
     padding: 12px;
     border: 1px solid #ddd;
-    text-align: center; /* Center text in cells */
+    text-align: center; /* Center text in both header and data cells */
 }
 
-th {
-    background-color: #f8f9fa;
-}
+
+
 
 /* Results */
 .results {
@@ -415,9 +414,6 @@ label {
     }
 
     /* Ensure the number input is beneath the calendar input */
-    #${sectionName}_count {
-    z-index: 0; /* Lower than the calendar input */
-}
 }
 
 /* Input Field */

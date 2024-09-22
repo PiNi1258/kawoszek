@@ -257,7 +257,8 @@
                                 <button class="button-no" onclick="updateSectionCounts('${sectionName}', 0, 'NIE')">NIE</button>
                                 <h3> <div>Dziś: ${section.history[today] || 'Brak danych'}</div></h3>
                             </p>`}
-                            <table class = "section" id="${sectionName}_history_table">
+                            <div class = "section">
+                            <table class="section-history" id="${sectionName}_history_table">
                                 <thead>
                                     <tr>
                                         <th>Data</th>
@@ -266,6 +267,7 @@
                                 </thead>
                                 <tbody>${renderSectionHistory(section.history)}</tbody>
                             </table>
+                            </div>
                             <div class = "section" id="${sectionName}_section_chart">
                                 <canvas id="${sectionName}_chart" class="section-chart"></canvas>
                             </div>
