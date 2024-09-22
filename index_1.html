@@ -34,7 +34,7 @@
     <div id="reportsPage" style="display: none;">
         <h2>Raporty</h2>
         <div id="chartsContainer" style="display: none;"></div>
-        <button onclick="toggleChartsVisibility()">Pokaż/Ukryj wykresy</button>
+        <button id="toggleButton" onclick="toggleChartsVisibility()">Pokaż/Ukryj wykresy</button>
         <div id="chartsContainerReports"></div>
     </div>
     <div id="editPage" style="display: none;">
@@ -212,6 +212,7 @@
         const renderCharts = () => {
             const sectionsData = loadSectionsData();
             const chartsContainerHome = document.getElementById('chartsContainer');
+
             const chartsContainerReports = document.getElementById('chartsContainerReports');
 
             // Clear existing charts
@@ -419,12 +420,24 @@
         }
 
         window.toggleChartsVisibility = () => {
-            const chartsContainer = document.getElementById('chartsContainer');
-            if (chartsContainer.style.display === 'none') {
-                chartsContainer.style.display = 'block';
-                renderCharts();
-            } else {
-                chartsContainer.style.display = 'none';
+            const sectionsData = loadSectionsData();
+
+            for (const sectionName in sectionsData) {
+
+                const canvas = document.getElementById(`${sectionName}_chart`);
+                const button = document.getElementById('toggleButton');
+
+                if (canvas) {
+                    if (canvas.style.display === "none") {
+                        canvas.style.display = "block"; // Ustaw na widoczny
+                        button.textContent = "Ukryj Canvas"; // Zmień tekst
+                        button.style.backgroundColor = "gray"; // Zmień kolor
+                    } else {
+                        canvas.style.display = "none"; // Ustaw na niewidoczny
+                        button.textContent = "Pokaż Canvas"; // Zmień tekst
+                        button.style.backgroundColor = ""; // Zmień kolor
+                    }
+                }
             }
         }
 
