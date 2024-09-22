@@ -392,13 +392,30 @@ label {
     margin-right: 10px; /* Adds space between the label and select */
 }
 
-/* Action Container */
 .action-container {
     display: flex; /* Use flexbox for alignment */
     align-items: center; /* Center items vertically */
     justify-content: flex-end; /* Align items to the right */
     gap: 10px; /* Space between elements */
     margin-top: 20px; /* Space above the container */
+}
+
+/* Media query for smaller devices */
+@media (max-width: 600px) {
+    .action-container {
+        flex-direction: column; /* Stack elements vertically */
+        align-items: stretch; /* Align items to stretch the full width */
+    }
+
+    .input-calendar {
+        position: relative; /* Ensure proper stacking context */
+        z-index: 1; /* Bring it above the number input */
+    }
+
+    /* Ensure the number input is beneath the calendar input */
+    #${sectionName}_count {
+    z-index: 0; /* Lower than the calendar input */
+}
 }
 
 /* Input Field */
