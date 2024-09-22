@@ -420,20 +420,31 @@
             renderSections();
             renderCharts();
         }
+
         window.displaySection = (sectionId) => {
             const sections = ['homePage', 'reportsPage', 'editPage', 'managePage'];
+
             sections.forEach(id => {
-                document.getElementById(id).style.display = id === sectionId ? 'block' : 'none';
+                const section = document.getElementById(id);
+
+                // Show or hide sections
+                section.style.display = id === sectionId ? 'block' : 'none';
+
+                // Add 'active' class to the currently active section
+                if (id === sectionId) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
             });
 
-            sections.forEach(sectionId => {
-                document.getElementById(id).classList.toggle('active', id === activeLinkId);
-            });
-
+            // Trigger rendering of charts when the reportsPage is active
             if (sectionId === 'reportsPage') {
                 renderCharts();
             }
         }
+
+
         window.toggleSectionVisibility = (sectionName) => {
             const sectionsData = loadSectionsData();
             sectionsData[sectionName].visible = !sectionsData[sectionName].visible;
