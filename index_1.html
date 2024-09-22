@@ -58,11 +58,6 @@
     <p>Made with ❤️ by PiZi inspired by NiiX 🥰</p>
 </footer>
 <script>
-    window.onkeyup = function () {
-        renderCharts();
-        console.log("A")
-    }
-
     window.onload = function () {
         const sectionsDataKey = 'sectionsData';
         const today = new Date().toISOString().split('T')[0];
@@ -182,7 +177,7 @@
 
             for (const sectionName in sectionsData) {
                 const history = sectionsData[sectionName].history || {};
-
+                const type = sectionsData[sectionName].type || "bar";
                 // Skip sections with no data
                 if (!Object.keys(history).length) continue;
 
@@ -214,28 +209,63 @@
                     </div>
                 `;
 
-                createChart(canvasIdHome, history, sanitizedSectionName);
-                createChart(canvasIdReports, history, sanitizedSectionName);
-                createChart(`${sectionName}_chart`, history, sectionName);
+                setTimeout(() => {
+                    createChart(canvasIdHome, history, sanitizedSectionName, type);
+                    createChart(canvasIdReports, history, sanitizedSectionName, type);
+                    createChart(`${sectionName}_chart`, history, sectionName, type);
+                }, 0);
             }
         }
 
-        const createChart = (canvasId, history, sanitizedSectionName) => {
+        const createChart = (canvasId, history, sanitizedSectionName, type) => {
             const canvasElement = document.getElementById(canvasId);
+
+
+            // Check if the canvas element exists before proceeding
+            if (!canvasElement) {
+                console.error(`Canvas element with id "${canvasId}" not found.`);
+                return;
+            }
+
+            if (canvasElement.tagName !== 'CANVAS') {
+                console.error(`Element with id "${canvasId}" is not a canvas.`);
+                return;
+            }
 
             // Destroy the previous chart instance if it exists
             if (charts[canvasId]) {
                 charts[canvasId].destroy();
             }
 
+            let chart_type;
+            let data;
+            switch(type) {
+                case "numerical":
+                    chart_type = "line";
+                    data = Object.values(history)
+                    break;
+                case "binary":
+                    chart_type = "bar";
+                    data = Object.fromEntries(
+                        Object.entries(history).map(([key, value]) => [
+                            key,
+                            value === 'TAK' ? 1 : value === 'NO' ? -1 : value
+                        ])
+                    );
+                    break;
+                default:
+                    chart_type = "bubble";
+                    data = Object.values(history)
+            }
+
             // Create and render the chart for the current section
-            const chart = new Chart(canvasElement, {
-                type: 'bar',
+            const chart = new Chart(canvasElement.getContext('2d'), {
+                type: chart_type,
                 data: {
                     labels: Object.keys(history),
                     datasets: [{
                         label: sanitizedSectionName,
-                        data: Object.values(history),
+                        data: data,
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1
@@ -342,6 +372,7 @@
         renderSections();
         renderCharts();
     }
+
 </script>
 </body>
 </html>
