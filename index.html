@@ -355,10 +355,10 @@
 
                             <div class="input-wrapper1">
                                <div class="section">
-                                <label for="${sectionName}_lp">ID:
-                                <input type="number" id="${sectionName}_lp" value="${lp}"></label>
-                                <button class="button-aktualizuj" onclick="updateSectionLp('${sectionName}', this.value)')">Ustaw</button>
-
+                 <label for="${sectionName}_lp">ID:
+                        <input type="number" id="${sectionName}_lp" value="${lp}">
+                        </label>
+                        <button class="button-aktualizuj" onclick="updateSectionLp('${sectionName}', document.getElementById('${sectionName}_lp').value)">Ustaw</button>
                             </div>
                             </div>
                             <div class="toggle-container">
@@ -649,7 +649,20 @@
 
         window.updateSectionLp = (sectionName, newLp) => {
             const sectionsData = loadSectionsData();
-            sectionsData[sectionName].lp = parseInt(newLp, 10);
+
+            // Check if the section exists and has an lp value
+            if (sectionsData[sectionName] && sectionsData[sectionName].lp !== undefined) {
+                const existingLp = sectionsData[sectionName].lp; // Store existing lp
+
+                // Swap the lp values
+                sectionsData[sectionName].lp = parseInt(newLp, 10);
+                sectionsData[newLp].lp = existingLp; // Assuming newLp is also a sectionName
+
+            } else {
+                // If it doesn't exist, just set it normally
+                sectionsData[sectionName].lp = parseInt(newLp, 10);
+            }
+
             saveSectionsData(sectionsData);
             renderSections();
             renderCharts();
