@@ -484,6 +484,12 @@
                     data = Object.values(sortedHistory)
             }
 
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            const backgroundColor = `rgba(${r}, ${g}, ${b}, 1)`;
+
+
             // Create and render the chart for the current section
             const chart = new Chart(canvasElement.getContext('2d'), {
                 type: chart_type,
@@ -492,8 +498,8 @@
                     datasets: [{
                         label: sanitizedSectionName,
                         data: data,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: backgroundColor,
+                        borderColor: backgroundColor,
                         borderWidth: 1
                     }]
                 },
