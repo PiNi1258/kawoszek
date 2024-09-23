@@ -540,5 +540,13 @@ h3 {
     margin: 0;
 }
 
+.button-tmp-css {
+    display: flex;
+    flex-direction: row;   /* Align items in a row */
+    justify-content: flex-end;  /* Evenly distribute the content horizontally */
+    width: 100%; /* Full width of parent */
+    gap: 0px;   /* Adds space between elements */
+}
+
 
 
