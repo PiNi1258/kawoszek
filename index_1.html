@@ -4,15 +4,16 @@
     <title>Śledź Stany Różnych Kategorii</title>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
-    <meta content="Aplikacja do śledzenia różnych kategorii. Monitoruj swoje działania z naszą prostą aplikacją." name="description">
+    <meta content="Aplikacja do śledzenia różnych kategorii. Monitoruj swoje działania z naszą prostą aplikacją."
+          name="description">
     <meta content="yes" name="mobile-web-app-capable">
     <meta content="black-translucent" name="mobile-web-app-status-bar-style">
     <meta content="Śledź Kategorii" name="apple-mobile-web-app-title">
     <link href="icon.png" rel="icon" type="image/png">
     <link href="icon.png" rel="apple-touch-icon">
-    <link href="styles.css" rel="stylesheet">
+    <link href="styles_1.css" rel="stylesheet">
+    <link href="manifest.json" rel="manifest">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="script_1.js" defer></script>
 </head>
 <body>
 <header>
@@ -20,6 +21,7 @@
         <div class="section">
             <nav class="nav">
                 <a class="nav-link active" href="#" id="homeLink" onclick="displaySection('homePage')">Strona główna</a>
+                <!-- <a class="nav-link" href="#" id="reportsLink" onclick="displaySection('reportsPage')">Raporty</a> -->
                 <a class="nav-link" href="#" id="editLink" onclick="displaySection('editPage')">Edycja danych</a>
                 <a class="nav-link" href="#" id="manageLink" onclick="displaySection('managePage')">Zarządzaj sekcjami</a>
             </nav>
@@ -52,12 +54,32 @@
     </div>
     <div id="managePage" style="display: none;">
         <div class="section-container" id="addSectionsContainer"></div>
+
         <div class="section-container" id="manageSectionsContainer"></div>
+
         <div class="section-container">
             <div class="section">
-                <h2>Globalne ustawienia:</h2>
-                <button onclick="toggleHistoryVisibility()">Pokaż/Ukryj historię</button>
-                <button onclick="toggleChartsVisibility()">Pokaż/Ukryj wykresy</button>
+                <h2>Ustawienia</h2>
+                <div class="toggle-container">
+                    <div class="section">
+                        <span>Wykresy</span>
+                        <br><br>
+                        <label class="switch">
+                            <input id="globalChartToggle" onchange="toggleGlobalChartsVisibility()" type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="toggle-container">
+                    <div class="section">
+                        <span>Historia</span>
+                        <br><br>
+                        <label class="switch">
+                            <input id="globalHistoryToggle" onchange="toggleGlobalHistoryVisibility()" type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -65,5 +87,499 @@
 <footer class="footer">
     <p>Made with ❤️ by PiZi inspired by NiiX 🥰</p>
 </footer>
+<script>
+    window.onload = function () {
+        const sectionsDataKey = 'sectionsData';
+        const today = new Date().toISOString().split('T')[0];
+
+        // Load visibility states from local storage
+        const loadVisibilityStates = () => {
+            return {
+                chartsVisible: JSON.parse(localStorage.getItem('chartsVisible')) ?? true,
+                historyVisible: JSON.parse(localStorage.getItem('historyVisible')) ?? true,
+            };
+        };
+
+        const saveVisibilityStates = (chartsVisible, historyVisible) => {
+            localStorage.setItem('chartsVisible', JSON.stringify(chartsVisible));
+            localStorage.setItem('historyVisible', JSON.stringify(historyVisible));
+        };
+
+        const visibilityStates = loadVisibilityStates();
+
+        // Set toggle switch states on load
+        document.getElementById('globalChartToggle').checked = visibilityStates.chartsVisible;
+        document.getElementById('globalHistoryToggle').checked = visibilityStates.historyVisible;
+
+        // Toggle global charts visibility
+        window.toggleGlobalChartsVisibility = () => {
+            const isChecked = document.getElementById('globalChartToggle').checked;
+            saveVisibilityStates(isChecked, visibilityStates.chartsVisible);
+            toggleChartsVisibility(isChecked);
+        };
+
+        // Toggle global history visibility
+        window.toggleGlobalHistoryVisibility = () => {
+            const isChecked = document.getElementById('globalHistoryToggle').checked;
+            saveVisibilityStates(visibilityStates.historyVisible, isChecked);
+            toggleHistoryVisibility(isChecked);
+        };
+
+        const toggleChartsVisibility = (isVisible) => {
+            const sectionsData = loadSectionsData();
+            for (const sectionName in sectionsData) {
+                const canvas = document.getElementById(`${sectionName}_section_chart`);
+                if (canvas) {
+                    canvas.style.display = isVisible ? 'block' : 'none';
+                }
+            }
+        };
+
+        const toggleHistoryVisibility = (isVisible) => {
+            const sectionsData = loadSectionsData();
+            for (const sectionName in sectionsData) {
+                const history = document.getElementById(`${sectionName}_history_table`);
+                if (history) {
+                    history.style.display = isVisible ? 'block' : 'none';
+                }
+            }
+        };
+
+        let charts = {};
+
+        const loadSectionsData = () => JSON.parse(localStorage.getItem(sectionsDataKey)) || {};
+        const saveSectionsData = (data) => localStorage.setItem(sectionsDataKey, JSON.stringify(data));
+        const updateSectionCounts = (sectionName, countUpdate, binaryValue = null) => {
+            const sectionsData = loadSectionsData();
+            const history = sectionsData[sectionName].history || {};
+            const count = sectionsData[sectionName].count || 0;
+            if (binaryValue !== null) {
+                history[today] = binaryValue;
+                sectionsData[sectionName].count = binaryValue === 'TAK' ? 1 : 0;
+            } else {
+                sectionsData[sectionName].count = count + countUpdate;
+                history[today] = (history[today] || 0) + countUpdate;
+            }
+            sectionsData[sectionName].history = history;
+            saveSectionsData(sectionsData);
+
+            renderSections();
+            renderCharts();
+            toggleGlobalChartsVisibility();
+            toggleGlobalHistoryVisibility()
+        }
+
+        const exportData = () => {
+            const sectionsData = loadSectionsData();
+            const dataStr = JSON.stringify(sectionsData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'sections_data.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+
+        const importData = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const sectionsData = JSON.parse(e.target.result);
+                    saveSectionsData(sectionsData);
+                    renderSections();
+                    renderCharts();
+                    toggleChartsVisibility(visibilityStates.chartsVisible);
+                    toggleHistoryVisibility(visibilityStates.historyVisible);
+
+                } catch (error) {
+                    alert('Błąd podczas importowania danych: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        };
+
+        const renderSections = () => {
+            const sectionsData = loadSectionsData();
+            const sectionsContainer = document.getElementById('sectionsContainer');
+            const editSectionsContainer = document.getElementById('editSectionsContainer');
+            const addSectionContainer = document.getElementById('addSectionsContainer');
+
+            sectionsContainer.innerHTML = '';
+            editSectionsContainer.innerHTML = '';
+
+            addSectionContainer.innerHTML = `<h2>Dodaj nową sekcję</h2>
+                <div class="section">
+                    <div class="input-wrapper">
+                        <label for="newSectionType">Nazwa:</label>
+                        <input id="newSectionName" placeholder="Nazwa sekcji" type="text">
+                    </div>
+                    <div class="select-wrapper">
+                        <label for="newSectionType">Typ:</label>
+                        <select id="newSectionType">
+                            <option value="numerical">Licznik +1</option>
+                            <option value="binary">"Tak" lub "Nie"</option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="newSectionQuestion">Pytanie:</label>
+                        <input id="newSectionQuestion" placeholder="Pytanie do sekcji" type="text">
+                    </div>
+                    <button onclick="addNewSection()">Dodaj</button>
+                </div>`;
+
+            for (const sectionName in sectionsData) {
+                const section = sectionsData[sectionName];
+                const sectionType = section.type;
+                const sectionCount = section.count || 0;
+                const isVisible = section.visible;
+
+                if (isVisible) {
+                    sectionsContainer.innerHTML += `
+                        <div class="section">
+                            <section>
+                                ${sectionType === 'numerical' ? `
+                                        <h2>${sectionName}</h2>
+                                        <h2><button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj +1</button></h2>
+                                        <h5>${section.question}</h5>
+                                        <div><h4>Dziś: ${section.history[today] || 'Brak danych'}</h4></div>
+                                    ` : `
+                                        <h2>${sectionName}</h2>
+                                        <h2>
+                                            <div>
+                                                <button class="button-yes" onclick="updateSectionCounts('${sectionName}', 0, 'TAK')">TAK</button>
+                                                <button class="button-no" onclick="updateSectionCounts('${sectionName}', 0, 'NIE')">NIE</button>
+                                            </div>
+                                        </h2>
+                                        <h5>${section.question}</h5>
+                                        <div><h4>Dziś: ${section.history[today] || 'Brak danych'}</h4></div>
+                                    `}
+                                <div>
+                                    <table class="section_tab" id="${sectionName}_history_table">
+                                        <thead>
+                                            <tr>
+                                                <th>Data</th>
+                                                <th>${sectionType === 'numerical' ? 'Ilość' : 'Status'}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>${renderSectionHistory(section.history)}</tbody>
+                                    </table>
+                                </div>
+                                <div class="section" id="${sectionName}_section_chart">
+                                    <canvas id="${sectionName}_chart"></canvas>
+                                </div>
+                            </section>
+                        </div>
+                    `;
+
+                    editSectionsContainer.innerHTML += `
+                        <div class="section">
+                            <section>
+                                <h2>${sectionName}</h2>
+                                <div class="action-container">
+                                    <input type="date" class="input-calendar" id="${sectionName}_date" value="${today}">
+                                    ${sectionType === 'numerical' ? `
+                                        <input type="number" id="${sectionName}_count" placeholder="Liczba">
+                                        <button onclick="editSectionHistory('${sectionName}')">Aktualizuj</button>
+                                    ` : `
+                                        <button class="button-yes" onclick="editSectionHistory('${sectionName}', 'TAK')">TAK</button>
+                                        <button class="button-no" onclick="editSectionHistory('${sectionName}', 'NIE')">NIE</button>
+                                    `}
+                                </div>
+                                <button class="button-no" onclick="resetSectionHistory('${sectionName}')">Resetuj</button>
+                            </section>
+                        </div>`;
+                }
+            }
+            sectionsContainer.innerHTML += '</div>';
+            editSectionsContainer.innerHTML += '</div>';
+
+            renderManageSections();
+        };
+
+        const renderManageSections = () => {
+            const sectionsData = loadSectionsData();
+            const manageSectionsContainer = document.getElementById('manageSectionsContainer');
+
+            manageSectionsContainer.innerHTML = '<h2>Istniejące sekcje</h2>';
+
+            for (const sectionName in sectionsData) {
+                const isVisible = sectionsData[sectionName].visible;
+                manageSectionsContainer.innerHTML += `
+                    <div class="section">
+                        <section>
+                            <h2>${sectionName}</h2>
+                            <div class="toggle-container">
+                                <div class="section">
+                                    <span>Wyświetlaj</span>
+                                    <br><br>
+                                    <label class="switch">
+                                        <input type="checkbox" id="${sectionName}_visible" ${isVisible ? 'checked' : ''} onchange="toggleSectionVisibility('${sectionName}')">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <button class="button-no" onclick="deleteSection('${sectionName}')">Usuń sekcję</button>
+                        </section>
+                    </div>`;
+            }
+        };
+
+        const renderSectionHistory = (history) => {
+            return Object.entries(history || {}).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA))
+                .map(([date, count]) => `<tr><td>${date}</td><td>${count}</td></tr>`).join('');
+        };
+
+        const renderCharts = () => {
+            const sectionsData = loadSectionsData();
+            const chartsContainerHome = document.getElementById('chartsContainer');
+            const chartsContainerReports = document.getElementById('chartsContainerReports');
+
+            // Clear existing charts
+            chartsContainerHome.innerHTML = '';
+            chartsContainerReports.innerHTML = '';
+
+            for (const sectionName in sectionsData) {
+                const history = sectionsData[sectionName].history || {};
+                const type = sectionsData[sectionName].type || "bar";
+                if (!Object.keys(history).length) continue;
+
+                const sanitizedSectionName = sectionName.replace(/[^a-zA-Z0-9_-]/g, '_');
+                const canvasIdHome = `${sanitizedSectionName}_home`;
+                const canvasIdReports = `${sanitizedSectionName}_reports`;
+
+                chartsContainerHome.innerHTML += `
+                    <div class="section-container">
+                        <section>
+                            <h2>${sanitizedSectionName}</h2>
+                            <div id="chartsSectionHome" class="charts-wrapper">
+                                <canvas id="${canvasIdHome}"></canvas>
+                            </div>
+                        </section>
+                    </div>`;
+
+                chartsContainerReports.innerHTML += `
+                    <div class="section-container">
+                        <section>
+                            <h2>${sanitizedSectionName}</h2>
+                            <div id="chartsSectionReports" class="charts-wrapper">
+                                <canvas id="${canvasIdReports}"></canvas>
+                            </div>
+                        </section>
+                    </div>`;
+
+                setTimeout(() => {
+                    createChart(canvasIdHome, history, sanitizedSectionName, type);
+                    createChart(canvasIdReports, history, sanitizedSectionName, type);
+                    createChart(`${sectionName}_chart`, history, sectionName, type);
+                }, 0);
+            }
+        };
+
+        const createChart = (canvasId, history, sanitizedSectionName, type) => {
+            const canvasElement = document.getElementById(canvasId);
+
+            if (!canvasElement) {
+                console.log(`Canvas element with id "${canvasId}" not found or is hidden.`);
+                return;
+            }
+
+            if (canvasElement.tagName !== 'CANVAS') {
+                console.error(`Element with id "${canvasId}" is not a canvas.`);
+                return;
+            }
+
+            if (charts[canvasId]) {
+                charts[canvasId].destroy();
+            }
+
+            let chartType, data;
+            let sortedHistory = Object.entries(history || {}).sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA));
+            let isBinary = false;
+
+            switch (type) {
+                case "numerical":
+                    chartType = "line";
+                    data = Object.values(sortedHistory);
+                    break;
+                case "binary":
+                    isBinary = true;
+                    chartType = "bar";
+                    data = Object.fromEntries(
+                        Object.entries(sortedHistory).map(([key, value]) => [
+                            key,
+                            value === 'TAK' ? 1 : value === 'NIE' ? -1 : value
+                        ])
+                    );
+                    break;
+                default:
+                    chartType = "bubble";
+                    data = Object.values(sortedHistory);
+            }
+
+            const chart = new Chart(canvasElement.getContext('2d'), {
+                type: chartType,
+                data: {
+                    labels: Object.keys(sortedHistory),
+                    datasets: [{
+                        label: sanitizedSectionName,
+                        data: data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: isBinary ? {
+                                callback(value) {
+                                    if (value === 1) {
+                                        return 'TAK';
+                                    }
+                                    if (value === -1) {
+                                        return 'NIE';
+                                    }
+                                    return '';
+                                },
+                                stepSize: 1,
+                            } : undefined,
+                            min: isBinary ? -1 : undefined,
+                            max: isBinary ? 1 : undefined,
+                        }
+                    }
+                }
+            });
+
+            charts[canvasId] = chart;
+        };
+
+        window.updateSectionCounts = updateSectionCounts;
+        window.renderSections = renderSections;
+        window.renderCharts = renderCharts;
+        window.importData = importData;
+        window.exportData = exportData;
+
+        window.addNewSection = () => {
+            const newSectionName = document.getElementById('newSectionName').value;
+            const newSectionType = document.getElementById('newSectionType').value;
+            const newSectionQuestion = document.getElementById('newSectionQuestion').value || "";
+
+            if (newSectionName) {
+                const sectionsData = loadSectionsData();
+                if (!sectionsData[newSectionName]) {
+                    sectionsData[newSectionName] = {
+                        type: newSectionType,
+                        count: 0,
+                        history: {},
+                        visible: true,
+                        question: newSectionQuestion
+                    };
+                    saveSectionsData(sectionsData);
+                    renderSections();
+                    renderCharts();
+                    toggleChartsVisibility(visibilityStates.chartsVisible);
+                    toggleHistoryVisibility(visibilityStates.historyVisible);
+                }
+            }
+        };
+
+        window.editSectionHistory = (sectionName, binaryValue = null) => {
+            const date = document.getElementById(`${sectionName}_date`).value;
+            const newCount = parseInt(document.getElementById(`${sectionName}_count`)?.value) || 0;
+            if (date) {
+                const sectionsData = loadSectionsData();
+                const history = sectionsData[sectionName].history || {};
+                history[date] = binaryValue !== null ? binaryValue : newCount;
+                sectionsData[sectionName].history = history;
+                saveSectionsData(sectionsData);
+                renderSections();
+                renderCharts();
+                toggleChartsVisibility(visibilityStates.chartsVisible);
+                toggleHistoryVisibility(visibilityStates.historyVisible);
+            }
+        };
+
+        window.resetSectionHistory = (sectionName) => {
+            const sectionsData = loadSectionsData();
+            sectionsData[sectionName].count = 0;
+            sectionsData[sectionName].history = {};
+            saveSectionsData(sectionsData);
+            renderSections();
+            renderCharts();
+            toggleChartsVisibility(visibilityStates.chartsVisible);
+            toggleHistoryVisibility(visibilityStates.historyVisible);
+        };
+
+        window.displaySection = (sectionId) => {
+            const sections = ['homePage', 'reportsPage', 'editPage', 'managePage'];
+            sections.forEach(id => {
+                document.getElementById(id).style.display = id === sectionId ? 'block' : 'none';
+            });
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(link => link.classList.remove('active'));
+            const sectionTmp = sectionId.replace("Page", '');
+            links.forEach(link => {
+                const lnk = link.id.replace("Link", '');
+                if (lnk === sectionTmp) {
+                    link.classList.add('active');
+                }
+            });
+
+            if (sectionId === 'reportsPage') {
+                renderCharts();
+            }
+        };
+
+        window.toggleSectionVisibility = (sectionName) => {
+            const sectionsData = loadSectionsData();
+            sectionsData[sectionName].visible = !sectionsData[sectionName].visible;
+            saveSectionsData(sectionsData);
+            renderSections();
+            renderCharts();
+            toggleChartsVisibility(visibilityStates.chartsVisible);
+            toggleHistoryVisibility(visibilityStates.historyVisible);
+        };
+
+        window.deleteSection = (sectionName) => {
+            const sectionsData = loadSectionsData();
+            delete sectionsData[sectionName];
+            saveSectionsData(sectionsData);
+            renderSections();
+            renderCharts();
+            toggleChartsVisibility(visibilityStates.chartsVisible);
+            toggleHistoryVisibility(visibilityStates.historyVisible);
+        };
+
+        window.toggleChartsVisibility = () => {
+            const sectionsData = loadSectionsData();
+            for (const sectionName in sectionsData) {
+                const canvas = document.getElementById(`${sectionName}_section_chart`);
+                if (canvas) {
+                    canvas.style.display = canvas.style.display === "none" ? "block" : "none";
+                }
+            }
+        };
+
+        window.toggleHistoryVisibility = () => {
+            const sectionsData = loadSectionsData();
+            for (const sectionName in sectionsData) {
+                const history = document.getElementById(`${sectionName}_history_table`);
+                if (history) {
+                    history.style.display = history.style.display === "none" ? "block" : "none";
+                }
+            }
+        };
+
+        renderSections();
+        renderCharts();
+        toggleChartsVisibility(visibilityStates.chartsVisible);
+        toggleHistoryVisibility(visibilityStates.historyVisible);
+    };
+</script>
 </body>
 </html>
