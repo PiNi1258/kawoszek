@@ -491,4 +491,44 @@ label {
     outline: none; /* Remove default outline */
 }
 
+.tmp-css {
+    display: flex;
+    flex-direction: row;   /* Align items in a row */
+    justify-content: space-between;  /* Evenly distribute the content horizontally */
+    align-items: center;   /* Vertically center the content */
+    padding: 10px 20px;
+    background-color: #f9f9f9;  /* Light gray background */
+    border: 1px solid #ddd;  /* Light border */
+    border-radius: 8px;
+    width: 100%; /* Full width of parent */
+    gap: 20px;   /* Adds space between elements */
+    flex-wrap: wrap;  /* Allow wrapping if content overflows */
+}
 
+.section-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.section-header button {
+    font-size: 16px;
+    padding: 6px 12px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+h5, h3 {
+    display: inline-block;  /* Make sure these elements are inline */
+    margin: 0;
+    line-height: 1.5;
+}
+
+button:hover {
+    background-color: #0056b3;  /* Darker blue on hover */
+}

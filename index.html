@@ -60,29 +60,29 @@
 
         <div class="section-container">
             <div class="section">
-            <h2>Ustawienia</h2>
-            <div class="toggle-container">
-                <div class="section">
-                <span>Wykresy</span>
-                    <br><br>
-                <label class="switch">
-                    <input type="checkbox" id="globalChartToggle" onchange="toggleGlobalChartsVisibility()">
-                    <span class="slider"></span>
-                </label>
+                <h2>Ustawienia</h2>
+                <div class="toggle-container">
+                    <div class="section">
+                        <span>Wykresy</span>
+                        <br><br>
+                        <label class="switch">
+                            <input id="globalChartToggle" onchange="toggleGlobalChartsVisibility()" type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <p></p>
-            <div class="toggle-container">
-                <div class="section">
-                <span>Historia</span>
-                    </br></br>
-                <label class="switch">
-                    <input type="checkbox" id="globalHistoryToggle" onchange="toggleGlobalHistoryVisibility()">
-                    <span class="slider"></span>
-                </label>
-                </div>
+                <p></p>
+                <div class="toggle-container">
+                    <div class="section">
+                        <span>Historia</span>
+                        </br></br>
+                        <label class="switch">
+                            <input id="globalHistoryToggle" onchange="toggleGlobalHistoryVisibility()" type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
 
-            </div>
+                </div>
             </div>
         </div>
 
@@ -94,61 +94,61 @@
 </footer>
 <script>
     window.onload = function () {
-            const sectionsDataKey = 'sectionsData';
-            const today = new Date().toISOString().split('T')[0];
+        const sectionsDataKey = 'sectionsData';
+        const today = new Date().toISOString().split('T')[0];
 
-            // Load visibility states from local storage
-            const loadVisibilityStates = () => {
-                return {
-                    chartsVisible: JSON.parse(localStorage.getItem('chartsVisible')) ?? true,
-                    historyVisible: JSON.parse(localStorage.getItem('historyVisible')) ?? true,
-                };
+        // Load visibility states from local storage
+        const loadVisibilityStates = () => {
+            return {
+                chartsVisible: JSON.parse(localStorage.getItem('chartsVisible')) ?? true,
+                historyVisible: JSON.parse(localStorage.getItem('historyVisible')) ?? true,
             };
+        };
 
-            const saveVisibilityStates = (chartsVisible, historyVisible) => {
-                localStorage.setItem('chartsVisible', JSON.stringify(chartsVisible));
-                localStorage.setItem('historyVisible', JSON.stringify(historyVisible));
-            };
+        const saveVisibilityStates = (chartsVisible, historyVisible) => {
+            localStorage.setItem('chartsVisible', JSON.stringify(chartsVisible));
+            localStorage.setItem('historyVisible', JSON.stringify(historyVisible));
+        };
 
-            const visibilityStates = loadVisibilityStates();
+        const visibilityStates = loadVisibilityStates();
 
-            // Set toggle switch states on load
-            document.getElementById('globalChartToggle').checked = visibilityStates.chartsVisible;
-            document.getElementById('globalHistoryToggle').checked = visibilityStates.historyVisible;
+        // Set toggle switch states on load
+        document.getElementById('globalChartToggle').checked = visibilityStates.chartsVisible;
+        document.getElementById('globalHistoryToggle').checked = visibilityStates.historyVisible;
 
-            // Toggle global charts visibility
-            window.toggleGlobalChartsVisibility = () => {
-                const isChecked = document.getElementById('globalChartToggle').checked;
-                saveVisibilityStates(isChecked, visibilityStates.chartsVisible);
-                toggleChartsVisibility(isChecked);
-            };
+        // Toggle global charts visibility
+        window.toggleGlobalChartsVisibility = () => {
+            const isChecked = document.getElementById('globalChartToggle').checked;
+            saveVisibilityStates(isChecked, visibilityStates.chartsVisible);
+            toggleChartsVisibility(isChecked);
+        };
 
-            // Toggle global history visibility
-            window.toggleGlobalHistoryVisibility = () => {
-                const isChecked = document.getElementById('globalHistoryToggle').checked;
-                saveVisibilityStates(visibilityStates.historyVisible, isChecked);
-                toggleHistoryVisibility(isChecked);
-            };
+        // Toggle global history visibility
+        window.toggleGlobalHistoryVisibility = () => {
+            const isChecked = document.getElementById('globalHistoryToggle').checked;
+            saveVisibilityStates(visibilityStates.historyVisible, isChecked);
+            toggleHistoryVisibility(isChecked);
+        };
 
-            const toggleChartsVisibility = (isVisible) => {
-                const sectionsData = loadSectionsData();
-                for (const sectionName in sectionsData) {
-                    const canvas = document.getElementById(`${sectionName}_section_chart`);
-                    if (canvas) {
-                        canvas.style.display = isVisible ? 'block' : 'none';
-                    }
+        const toggleChartsVisibility = (isVisible) => {
+            const sectionsData = loadSectionsData();
+            for (const sectionName in sectionsData) {
+                const canvas = document.getElementById(`${sectionName}_section_chart`);
+                if (canvas) {
+                    canvas.style.display = isVisible ? 'block' : 'none';
                 }
-            };
+            }
+        };
 
-            const toggleHistoryVisibility = (isVisible) => {
-                const sectionsData = loadSectionsData();
-                for (const sectionName in sectionsData) {
-                    const history = document.getElementById(`${sectionName}_history_table`);
-                    if (history) {
-                        history.style.display = isVisible ? 'block' : 'none';
-                    }
+        const toggleHistoryVisibility = (isVisible) => {
+            const sectionsData = loadSectionsData();
+            for (const sectionName in sectionsData) {
+                const history = document.getElementById(`${sectionName}_history_table`);
+                if (history) {
+                    history.style.display = isVisible ? 'block' : 'none';
                 }
-            };
+            }
+        };
 
 
         let charts = {};
@@ -252,21 +252,25 @@
                     <div class="section">
                         <section>
                             ${sectionType === 'numerical' ? `
-                                <h2 class="section-header">${sectionName}
-                                <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj +1</button></h2>
-                                <h5>${section.question}
-
-                                <div></br><h3>Dziś: ${section.history[today] || 'Brak danych'}</h3></div></h5>
-
+                                <div class = "tmp-css">
+                                    <h2 class="section-header">${sectionName}</h2>
+                                    <h5>${section.question}</h5>
+                                    <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj +1</button>
+                                 </div>
+                                     <div></br><h3>Dziś: ${section.history[today] || 'Brak danych'}</h3></div></h5>
+                                 </div>
                                 <!-- <div>Liczba: ${sectionCount}</div> -->
-                           ` : `
-                                <h2>${sectionName}
-                                <button class="button-yes" onclick="updateSectionCounts('${sectionName}', 0, 'TAK')">TAK</button>
-                                <button class="button-no" onclick="updateSectionCounts('${sectionName}', 0, 'NIE')">NIE</button>
+                           ` : `<div class = "tmp-css">
+                                <h2 class="section-header">${sectionName}</h2>
+                                 <h5>${section.question}</h5>
+                                 <div>
+                                 <button class="button-yes" onclick="updateSectionCounts('${sectionName}', 0, 'TAK')">TAK</button>
+                                 <button class="button-no" onclick="updateSectionCounts('${sectionName}', 0, 'NIE')">NIE</button>
+                                 </div>
                                 </h2>
-                                <h5>${section.question}
-
+                               </div>
                                 <div></br><h3>Dziś: ${section.history[today] || 'Brak danych'}</h3></div></h5>
+                                </div>
                             `}
                             <div>
                                 <table class = "section" id="${sectionName}_history_table">
