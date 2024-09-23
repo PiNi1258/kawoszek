@@ -253,10 +253,10 @@
                             <div class="tmp-css">
                             ${sectionType === 'numerical' ? `
                                     <div>
-                                    <h3>${sectionName}</h3>
-                                     <h4>${section.question}</h4></div>
+                                    <h3>${sectionName}</h3><h4>Dziś: ${section.history[today] || '<br>Brak danych'}</h4>
+                                     </div>
 
-                                      <div><h4>Dziś: ${section.history[today] || '<br>Brak danych'}</h4></div>
+                                      <div><h4>${section.question}</h4></div>
 
                                      <div>
                                      <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj +1</button>
@@ -267,9 +267,9 @@
 
                                 <!-- <div>Liczba: ${sectionCount}</div> -->
                            ` : `<div>
-                                 <h3>${sectionName}</h3>
-                                 <h4>${section.question}</h4></div>
-                                 <div><h4>Dziś: ${section.history[today] || '<br>Brak danych'}</h4></div>
+                                 <h3>${sectionName}</h3><h4>Dziś: ${section.history[today] || '<br>Brak danych'}</h4>
+                                 </div>
+                                 <div><h4>${section.question}</h4></div>
                                  <div>
                                     <button class="button-yes" onclick="updateSectionCounts('${sectionName}', 0, 'TAK')">TAK</button>
                                     <button class="button-no" onclick="updateSectionCounts('${sectionName}', 0, 'NIE')">NIE</button>
