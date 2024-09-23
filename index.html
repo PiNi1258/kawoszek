@@ -339,14 +339,18 @@
             renderManageSections();
         }
         const renderManageSections = () => {
-            const sectionsData = loadSectionsData();
+            const sectionsDataTmp = loadSectionsData();
             const manageSectionsContainer = document.getElementById('manageSectionsContainer');
 
             manageSectionsContainer.innerHTML = '<h2>Istniejące sekcje</h2>';
 
-            for (const sectionName in sectionsData) {
-                const isVisible = sectionsData[sectionName].visible;
-                const lp = sectionsData[sectionName].lp;
+
+            const sectionsData = Object.entries(sectionsDataTmp).sort((a, b) => a[1].lp - b[1].lp);
+
+            for (const [sectionName, section] of sectionsData) {
+                const isVisible = section.visible;
+                const lp = section.lp;
+
                 manageSectionsContainer.innerHTML += `
                     <div class="section">
                         <section>
