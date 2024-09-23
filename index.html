@@ -250,26 +250,34 @@
                     sectionsContainer.innerHTML += `
                     <div class="section-container">
 
-                            <div class="tmp-css">
+                         <div class="tmp-css">
                             ${sectionType === 'numerical' ? `
                                     <div>
-                                    <h4>${sectionName}</h4><h5>Dziś: ${section.history[today] || '<br>Brak danych'}</h5>
+                                        <h4>${sectionName}</h4>
+                                        <h6>${section.question}</h6>
                                      </div>
 
-                                      <div><h5>${section.question}</h5></div>
+                                      <div>
+
+                                        <h5>Dziś: ${section.history[today] || '<br>Brak danych'}</h5>
+                                      </div>
 
                                      <div>
-                                     <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj +1</button>
+                                         <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj +1</button>
                                     </div>
-
-
                               </div>
 
                                 <!-- <div>Liczba: ${sectionCount}</div> -->
                            ` : `<div>
-                                 <h4>${sectionName}</h4><h5>Dziś: ${section.history[today] || '<br>Brak danych'}</h5>
+                                    <h4>${sectionName}</h4>
+                                    <h6>${section.question}</h6>
+
                                  </div>
-                                 <div><h5>${section.question}</h5></div>
+
+                                 <div>
+                                    <h5>Dziś: ${section.history[today] || '<br>Brak danych'}</h5>
+                                 </div>
+
                                  <div>
                                     <button class="button-yes" onclick="updateSectionCounts('${sectionName}', 0, 'TAK')">TAK</button>
                                     <button class="button-no" onclick="updateSectionCounts('${sectionName}', 0, 'NIE')">NIE</button>
@@ -296,7 +304,7 @@
                             </div>
 
                     </div>
-                `;
+                </div>`;
                     editSectionsContainer.innerHTML += `
                     <div class="section">
                         <section>
