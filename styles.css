@@ -201,7 +201,12 @@ table {
     border-collapse: collapse;
 }
 
-
+.section table {
+    .section table {
+        margin: 20px auto; /* Center the table */
+        width: auto; /* Adjust width as necessary */
+    }
+}
 
 tr,
 th,
@@ -486,6 +491,7 @@ label {
     outline: none; /* Remove default outline */
 }
 
+/* CSS for the tmp-css class */
 .tmp-css {
     display: flex;
     flex-direction: row;   /* Align items in a row */
@@ -497,16 +503,12 @@ label {
     border-radius: 8px;
     width: 100%; /* Full width of parent */
     gap: 20px;   /* Adds space between elements */
-    flex-wrap: wrap;  /* Allow wrapping if content overflows */
 }
 
 .section-header {
     font-size: 24px;
     font-weight: bold;
     margin: 0;
-    display: flex;
-    align-items: center;
-    flex: 1;  /* Allow this section to grow */
 }
 
 .section-header button {
@@ -519,11 +521,14 @@ label {
     border-radius: 4px;
 }
 
-h5, h3 {
-    display: inline-block;  /* Inline-block for better horizontal alignment */
+h5 {
+    font-size: 18px;
     margin: 0;
-    line-height: 1.5;
-    flex: 1;  /* Ensure these elements share available space */
+}
+
+h3 {
+    font-size: 20px;
+    margin: 0;
 }
 
 button:hover {
