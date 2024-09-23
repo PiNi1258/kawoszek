@@ -275,10 +275,10 @@
                                  </div>
 
                                  <div>
-                                    <h5>${section.history[today] || 'Brak danych'}<br><h6>(dziś)</h6></h5>
+                                    <h4>${section.history[today] || 'Brak danych'}<br><h6>(dziś)</h6></h4>
                                  </div>
 
-                                 <div class="button-tmp-css">
+                                 <div class="button-container">
                                     <button class="button-yes" onclick="updateSectionCounts('${sectionName}', 0, 'TAK')">TAK</button>
                                     <button class="button-no" onclick="updateSectionCounts('${sectionName}', 0, 'NIE')">NIE</button>
                                  </div>
@@ -316,13 +316,13 @@
                                 <input type="number" id="${sectionName}_count" placeholder="Liczba">
 
                                 <button onclick="editSectionHistory('${sectionName}')">Aktualizuj</button>
-                                </div>
+
                             ` : `
                                 <button class="button-yes" onclick="editSectionHistory('${sectionName}', 'TAK')">TAK</button>
                                 <button class="button-no" onclick="editSectionHistory('${sectionName}', 'NIE')">NIE</button>
-                                </div>
+
                             `}
-                               <div>
+
                                      <button class = "button-reset" onclick="resetSectionHistory('${sectionName}')">Resetuj</button>
                                 </div>
                         </section>
