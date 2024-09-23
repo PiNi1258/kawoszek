@@ -648,22 +648,22 @@
             toggleHistoryVisibility(visibilityStates.historyVisible);
         }
 
-        window.updateSectionLp = (sectionName, newLp) => {
+        window.updateSectionLp = (sectionName, newLPM) => {
             const sectionsData = loadSectionsData();
+            const newLp = newLPM;
 
             for (const tmp_sectionName in sectionsData) {
                 if (sectionsData[tmp_sectionName]) {
-                    const existingLp = sectionsData[tmp_sectionName].lp; // Store existing lp
+                    const existingLp = parseInt(sectionsData[tmp_sectionName].lp); // Store existing lp
 
                     // Ensure newLp is defined and valid
-                    if (newLp === existingLp) {
+                    if (newLp == existingLp) {
                         // Log the current state before the swap for debugging
                         console.log('Before Swap:', sectionsData[tmp_sectionName]);
 
                         // Swap the lp values
                         sectionsData[tmp_sectionName].lp = sectionsData[sectionName].lp; // Set to newLp
                         sectionsData[sectionName].lp = existingLp; // Set sectionName's lp to existingLp
-
                         // Log the state after the swap for debugging
                         console.log('After Swap:', sectionsData[tmp_sectionName]);
                     }
