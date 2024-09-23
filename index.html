@@ -168,12 +168,11 @@
             }
             sectionsData[sectionName].history = history;
             saveSectionsData(sectionsData);
+
             renderSections();
             renderCharts();
-
-            toggleChartsVisibility(visibilityStates.chartsVisible);
-            toggleHistoryVisibility(visibilityStates.historyVisible);
-
+            toggleGlobalChartsVisibility();
+            toggleGlobalHistoryVisibility()
         }
 
         const exportData = () => {
@@ -257,7 +256,7 @@
                                 <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj +1</button></h2>
                                 <h5>${section.question}
 
-                                <div><h3>Dziś: ${section.history[today] || 'Brak danych'}</h3></div></h5>
+                                <div></br><h3>Dziś: ${section.history[today] || 'Brak danych'}</h3></div></h5>
 
                                 <!-- <div>Liczba: ${sectionCount}</div> -->
                            ` : `

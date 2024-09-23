@@ -24,6 +24,7 @@ const updateSectionCounts = (sectionName, countUpdate, binaryValue = null) => {
     saveSectionsData(sectionsData);
     renderSections();
     renderCharts();
+
 };
 
 const deleteSection = (sectionName) => {
@@ -49,6 +50,7 @@ const addNewSection = () => {
         };
         saveSectionsData(sectionsData);
         renderSections();
+
     } else {
         alert('Wszystkie pola są wymagane!');
     }
