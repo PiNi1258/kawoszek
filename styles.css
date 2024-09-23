@@ -136,7 +136,7 @@ button,
 .button-container {
     display: flex;
     flex-direction: column; /* Vertical alignment by default */
-    gap: 10px; /* Adjust spacing as needed */
+    gap: 1px; /* Adjust spacing as needed */
 }
 
 
@@ -547,7 +547,7 @@ h3 {
     display: flex;
     flex-direction: row;   /* Align items in a row */
     justify-content: center;  /* Center align content horizontally */
-    gap: 0px;   /* Adds space between elements */
+    gap: 1px;   /* Adds space between elements */
     max-width: 100%;  /* Ensures the button stays within the parent div */
     box-sizing: border-box; /* Include padding and borders in element’s total width */
     overflow: hidden; /* Prevent content from spilling out */
