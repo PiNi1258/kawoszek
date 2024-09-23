@@ -509,12 +509,12 @@ label {
     flex-direction: row;   /* Align items in a row */
     justify-content: space-between;  /* Evenly distribute the content horizontally */
     align-items: center;   /* Vertically center the content */
-    padding: 10px 20px;
+    padding: 10px 10px;
     background-color: #f9f9f9;  /* Light gray background */
     border: 1px solid #ddd;  /* Light border */
     border-radius: 8px;
     width: 100%; /* Full width of parent */
-    gap: 20px;   /* Adds space between elements */
+    gap: 0px;   /* Adds space between elements */
 }
 
 .section-header {
