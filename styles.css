@@ -201,7 +201,7 @@ textarea:focus {
 
 table {
     max-width: 100%; /* Maximum width to match .section */
-    width: 50%; /* Full width */
+    width: 60%; /* Full width */
     margin: 20px auto; /* Center the table */
     border-collapse: collapse;
     table-layout: fixed; /* Ensure fixed layout for even columns */
@@ -211,11 +211,11 @@ table {
 tr,
 th,
 td {
-    padding: 20px;
+    padding: 10px;
     border: 1px solid #ddd;
-    max-width: 80%; /* Maximum width to match .section */
-    width: 80%; /* Full width */
-    margin: 30px auto; /* Center the table */
+    max-width: 100%; /* Maximum width to match .section */
+    width: 100%; /* Full width */
+    margin: 10px auto; /* Center the table */
     border-collapse: collapse;
 }
 
