@@ -356,10 +356,11 @@
                             <div class="input-wrapper1">
                                <div class="section">
                  <label for="${sectionName}_lp">ID:
-                        <input type="number" id="${sectionName}_lp" value="${lp}">
-                        </label>
-                        <button class="button-aktualizuj" onclick="updateSectionLp('${sectionName}', document.getElementById('${sectionName}_lp').value)">Ustaw</button>
-                            </div>
+               <label for="${sectionName}_lp">
+
+    <input type="number" id="${sectionName}_lp" value="${lp}">
+</label>
+<button class="button-aktualizuj" onclick="updateSectionLp('${sectionName}', document.getElementById('${sectionName}_lp').value)">Ustaw</button>      </div>
                             </div>
                             <div class="toggle-container">
                             <div class="section">
@@ -650,19 +651,24 @@
         window.updateSectionLp = (sectionName, newLp) => {
             const sectionsData = loadSectionsData();
 
-            // Check if the section exists and has an lp value
-            if (sectionsData[sectionName] && sectionsData[sectionName].lp !== undefined) {
-                const existingLp = sectionsData[sectionName].lp; // Store existing lp
+            for (const tmp_sectionName in sectionsData) {
+                if (sectionsData[tmp_sectionName]) {
+                    const existingLp = sectionsData[tmp_sectionName].lp; // Store existing lp
 
-                // Swap the lp values
-                sectionsData[sectionName].lp = parseInt(newLp, 10);
-                sectionsData[newLp].lp = existingLp; // Assuming newLp is also a sectionName
+                    // Ensure newLp is defined and valid
+                    if (newLp === existingLp) {
+                        // Log the current state before the swap for debugging
+                        console.log('Before Swap:', sectionsData[tmp_sectionName]);
 
-            } else {
-                // If it doesn't exist, just set it normally
-                sectionsData[sectionName].lp = parseInt(newLp, 10);
+                        // Swap the lp values
+                        sectionsData[tmp_sectionName].lp = sectionsData[sectionName].lp; // Set to newLp
+                        sectionsData[sectionName].lp = existingLp; // Set sectionName's lp to existingLp
+
+                        // Log the state after the swap for debugging
+                        console.log('After Swap:', sectionsData[tmp_sectionName]);
+                    }
+                }
             }
-
             saveSectionsData(sectionsData);
             renderSections();
             renderCharts();
