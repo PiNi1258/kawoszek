@@ -64,7 +64,7 @@
             <div class="toggle-container">
                 <div class="section">
                 <span>Wykresy</span>
-                    </br></br>
+                    <br><br>
                 <label class="switch">
                     <input type="checkbox" id="globalChartToggle" onchange="toggleGlobalChartsVisibility()">
                     <span class="slider"></span>
@@ -126,7 +126,7 @@
             // Toggle global history visibility
             window.toggleGlobalHistoryVisibility = () => {
                 const isChecked = document.getElementById('globalHistoryToggle').checked;
-                saveVisibilityStates(visibilityStates.chartsVisible, isChecked);
+                saveVisibilityStates(visibilityStates.historyVisible, isChecked);
                 toggleHistoryVisibility(isChecked);
             };
 
@@ -222,7 +222,7 @@
              <div class ="section">
              <div class="input-wrapper">
                <label for="newSectionType">Nazwa:</label>
-             <input id="newSectionName"placeholder="Nazwa sekcji" type="text">
+             <input id="newSectionName" placeholder="Nazwa sekcji" type="text">
                </div>
              <div class="select-wrapper">
                 <label for="newSectionType">Typ:</label>
