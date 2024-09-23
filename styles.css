@@ -199,6 +199,12 @@ textarea:focus {
     background-color: #f8f9fa;
 }
 
+
+tbody,
+thead
+tr,
+th,
+td,
 table {
     max-width: 900px; /* Maximum width to match .section */
     width: 100%; /* Full width */
@@ -206,13 +212,8 @@ table {
     border-collapse: collapse;
 }
 
-.section table {
-    .section table {
-        margin: 20px auto; /* Center the table */
-        width: auto; /* Adjust width as necessary */
-    }
-}
-
+tbody,
+thead
 tr,
 th,
 td {
@@ -539,4 +540,6 @@ h3 {
 button:hover {
     background-color: #0056b3;  /* Darker blue on hover */
 }
+
+
 

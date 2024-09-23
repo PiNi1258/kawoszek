@@ -250,7 +250,7 @@
                 if (isVisible) {
                     sectionsContainer.innerHTML += `
                     <div class="section-container">
-                        <section>
+
                             <div class="tmp-css">
                             ${sectionType === 'numerical' ? `
                                     <h3>${sectionName}</h3>
@@ -273,7 +273,8 @@
 
                             `}
                             <div>
-                                <table class = "section" id="${sectionName}_history_table">
+                                <table class = "section"  id="${sectionName}_history_table">
+                                <div>
                                     <thead>
                                         <tr>
                                             <th>Data</th>
@@ -281,12 +282,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>${renderSectionHistory(section.history)}</tbody>
+                                    </div>
                                 </table>
                             </div>
+
                             <div class = "section" id="${sectionName}_section_chart">
                                 <canvas id="${sectionName}_chart"></canvas>
                             </div>
-                        </section>
+
                     </div>
                 `;
                     editSectionsContainer.innerHTML += `
