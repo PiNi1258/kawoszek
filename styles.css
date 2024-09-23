@@ -202,7 +202,7 @@ textarea:focus {
 table {
     max-width: 100%; /* Maximum width to match .section */
     width: 70%; /* Full width */
-    margin: 20px auto; /* Center the table */
+    margin: 10px auto; /* Center the table */
     border-collapse: collapse;
     table-layout: fixed; /* Ensure fixed layout for even columns */
 
@@ -215,7 +215,7 @@ td {
     border: 1px solid #ddd;
     max-width: 90%; /* Maximum width to match .section */
     width: 90%; /* Full width */
-    margin: 10px auto; /* Center the table */
+    margin: 5px auto; /* Center the table */
     border-collapse: collapse;
 }
 
