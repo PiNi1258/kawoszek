@@ -227,8 +227,9 @@
                 <label for="newSectionType">Typ:</label>
                 <select id="newSectionType">
 
-                         <option value="numerical">Licznik +1</option>
+                      <option value="numerical">Licznik +1</option>
                       <option value="binary">"Tak" lub "Nie"</option>
+                      <option value="ml">Licznik +0,5 ml</option>
 
                       </select>
              </div>
@@ -251,8 +252,8 @@
                     <div class="section-container">
 
                          <div class="tmp-css">
-                            ${sectionType === 'numerical' ? `
-                                    <div >
+                            ${sectionType === 'numerical' || sectionType === 'ml' ? `
+                                    <div>
                                         <h4>${sectionName}</h4>
                                         <h6>${section.question}</h6>
                                      </div>
@@ -263,7 +264,9 @@
                                       </div>
 
                                      <div>
-                                         <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj +1</button>
+                                   <button onclick="updateSectionCounts('${sectionName}', ${sectionType === 'numerical' ? 1 : 0.5})">
+    Dodaj ${sectionType === 'numerical' ? '+1' : '+0,5'}
+</button>
                                     </div>
                               </div>
 
@@ -291,7 +294,7 @@
                                     <thead>
                                         <tr>
                                             <th>Data</th>
-                                            <th>${sectionType === 'numerical' ? 'Ilość' : 'Status'}</th>
+                                            <th>${sectionType === 'numerical' || sectionType === 'ml' ? 'Ilość' : 'Status'}</th>
                                         </tr>
                                     </thead>
                                     <tbody>${renderSectionHistory(section.history)}</tbody>
@@ -312,7 +315,7 @@
                             <div class="action-container">
 
                             <input type="date"  class="input-calendar"  id="${sectionName}_date" value="${today}">
-                            ${sectionType === 'numerical' ? `
+                            ${sectionType === 'numerical' || sectionType === 'ml' ? `
                                 <input type="number" id="${sectionName}_count" placeholder="Liczba">
 
                                 <button onclick="editSectionHistory('${sectionName}')">Aktualizuj</button>
@@ -458,6 +461,10 @@
 
             switch (type) {
                 case "numerical":
+                    chart_type = "line";
+                    data = Object.values(sortedHistory)
+                    break;
+                case "ml":
                     chart_type = "line";
                     data = Object.values(sortedHistory)
                     break;
