@@ -339,6 +339,7 @@
                 manageSectionsContainer.innerHTML += `
     <div class="section">
         <section>
+        <div>
             <h2>${sectionName}
             </h2>
 
@@ -346,7 +347,6 @@
              <div class="section">
               <span>Wyświetlaj</span>
               </br></br>
-
                 <label class="switch">
                     <input type="checkbox" id="${sectionName}_visible" ${isVisible ? 'checked' : ''} onchange="toggleSectionVisibility('${sectionName}')">
                     <span class="slider"></span>
@@ -354,8 +354,8 @@
                 </div>
 
             </div>
-
             <button class="button-no" onclick="deleteSection('${sectionName}')">Usuń sekcję</button>
+            </div>
         </section>
     </div>
 `;
