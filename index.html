@@ -119,7 +119,7 @@
             // Toggle global charts visibility
             window.toggleGlobalChartsVisibility = () => {
                 const isChecked = document.getElementById('globalChartToggle').checked;
-                saveVisibilityStates(isChecked, visibilityStates.historyVisible);
+                saveVisibilityStates(isChecked, visibilityStates.chartsVisible);
                 toggleChartsVisibility(isChecked);
             };
 
