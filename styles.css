@@ -16,7 +16,6 @@ body {
     padding: 0;
 }
 
-/* Main Container */
 .container .section-container {
     max-width: 900px;
     margin: 10px auto;
@@ -25,6 +24,12 @@ body {
     border-radius: 12px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
+
+.container .section-container > * {
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding is included in the width */
+}
+
 
 /* Typography */
 h1, h2, h3, p {

@@ -254,7 +254,7 @@
                             <div class="tmp-css">
                             ${sectionType === 'numerical' ? `
                                     <h3>${sectionName}</h3>
-                                     <h4>${section.question} <br>Dziś: ${section.history[today] || 'Brak danych'}</h4>
+                                     <h4>${section.question || "-"} <br>Dziś: ${section.history[today] || 'Brak danych'}</h4>
                                      <button onclick="updateSectionCounts('${sectionName}', 1)">Dodaj +1</button>
 
 
@@ -274,13 +274,13 @@
                             `}
                             <div>
                                 <table class = "section" id="${sectionName}_history_table">
-                                <thead>
-                                    <tr>
-                                        <th>Data</th>
-                                        <th>${sectionType === 'numerical' ? 'Ilość' : 'Status'}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>${renderSectionHistory(section.history)}</tbody>
+                                    <thead>
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>${sectionType === 'numerical' ? 'Ilość' : 'Status'}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>${renderSectionHistory(section.history)}</tbody>
                                 </table>
                             </div>
                             <div class = "section" id="${sectionName}_section_chart">
